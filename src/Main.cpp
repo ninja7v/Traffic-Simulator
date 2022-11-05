@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////
 
 // Header files
-#include "Network.h"
+#include "../headers/Network.h"
 
 using namespace std;
 

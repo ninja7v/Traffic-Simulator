@@ -1,5 +1,5 @@
 // Header files
-#include "Map.h"
+#include "../headers/Map.h"
 
 Map::Map() {
 }

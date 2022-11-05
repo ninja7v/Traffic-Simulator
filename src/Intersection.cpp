@@ -3,9 +3,9 @@
 #include <GLFW/glfw3.h> // To display
 #include <time.h>       // To use clock()
 // Header files
-#include "Constants.h"
-#include "Global.h"
-#include "Intersection.h"
+#include "../headers/Constants.h"
+#include "../headers/Global.h"
+#include "../headers/Intersection.h"
 
 Intersection::Intersection() {
 

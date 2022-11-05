@@ -9,7 +9,7 @@
 #include <time.h>       // To use clock()
 // Header files
 #include "omp.h"
-#include "Network.h"
+#include "../headers/Network.h"
 
 Network::Network() {
    // Intersections

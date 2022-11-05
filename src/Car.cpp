@@ -6,9 +6,9 @@
 #include <time.h>    // To use clock()
 #include <array>     // To use arrays
 // Header files
-#include "Constants.h"
-#include "Global.h"
-#include "Car.h"
+#include "../headers/Constants.h"
+#include "../headers/Global.h"
+#include "../headers/Car.h"
 
 Car::Car(Intersection* i1, Intersection* i2, int id, Intersection* target, std::list<Road*> track)
    : idCar(id), destination(target), itinerary(track) {

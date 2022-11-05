@@ -1,7 +1,7 @@
 // Libraries
 #include <algorithm> //for pow
 // Header files
-#include "Global.h"
+#include "../headers/Global.h"
 
 namespace global {
    int t0;

@@ -5,8 +5,8 @@
 #include <GLFW/glfw3.h> // To display
 #include <iterator>
 // Header files
-#include "Road.h"
-#include "constants.h"
+#include "../headers/Road.h"
+#include "../headers/constants.h"
 
 Road::Road() {
 
