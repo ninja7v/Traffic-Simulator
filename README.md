@@ -4,7 +4,7 @@
 
 ⚠️ Incoming : Menu with QT + Car itinerary fixed + Sereval type of car + Traffic light optimizer ⚠️
 
-**GUI for raad traffic simulation coded in C++ by Luc PREVOST.**
+**GUI for raad traffic simulation coded in C++ by Luc PREVOST and Claire PREVOST.**
 
 ![traffic_simulator](https://user-images.githubusercontent.com/52052772/142062951-265998b8-a934-4cf3-bd30-fee10bccfbaa.png)
 
