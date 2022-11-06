@@ -6,7 +6,7 @@ namespace constants {
    // Network
    constexpr int sizeX{ 9 };
    constexpr int sizeY{ 6 };
-   constexpr float boost{ 1.0f };
+   constexpr float boost{ 5.0f };
    // Roads
    constexpr int width{ 20 };
    constexpr float speedLimit{ 0.003f };

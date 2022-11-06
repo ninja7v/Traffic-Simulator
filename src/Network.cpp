@@ -8,7 +8,7 @@
 #include <GLFW/glfw3.h> // To display
 #include <time.h>       // To use clock()
 // Header files
-#include "omp.h"
+#include "omp.h"        // To parallelize
 #include "../headers/Network.h"
 
 Network::Network() {
@@ -33,7 +33,9 @@ Network::Network() {
       }
       Intersections.push_back(new Intersection(k, position));
    }
-   std::cout << " +  : Intersection initialized." << std::endl;
+#if DEBUG
+   std::cout << "x   Intersection initialized" << std::endl;
+#endif
    // Roads
    for (Intersection* const& i : Intersections) {
       int nbConnections = rand() % 3 + 1;
@@ -55,8 +57,10 @@ Network::Network() {
          id += 1;
       }
    }
-   std::cout << "== : Roads initialized." << std::endl;
-   std::cout << "Network initialized." << std::endl;
+#if DEBUG
+   std::cout << "=   Roads initialized" << std::endl;
+   std::cout << "*   Network initialized" << std::endl;
+#endif
 }
 
 void Network::displayNetwork() {
@@ -72,7 +76,7 @@ void Network::displayNetwork() {
    glMatrixMode(GL_MODELVIEW); // (default matrix mode) modelview matrix defines how your objects are transformed (meaning translation, rotation and scaling) in your world
    glLoadIdentity(); // same as above comment
 #if DEBUG
-   std::cout << "|_| : Windows created." << std::endl;
+   std::cout << "|_|   Windows created" << std::endl;
 #endif
    // Initialize time
    global::t0 = clock();
@@ -92,8 +96,8 @@ void Network::displayNetwork() {
       this->addCars();
       this->updateCarsPosition();
 #pragma omp parallel for
-      for (Car * c : Cars) {
-         c->displayCar();  
+      for (Car* c : Cars) {
+         c->displayCar();
       }
       // Timer 
       glClearColor(0.1f, 0.5f, 0.1f, 0);
@@ -104,17 +108,15 @@ void Network::displayNetwork() {
       // Poll for and process events
       glfwPollEvents();
 #if DEBUG
-      std::cout << global::numberOfCars << std::endl;
-      std::cout << "Frame displayed." << std::endl;
+      //std::cout << global::numberOfCars << std::endl;
+      //std::cout << "Frame displayed." << std::endl;
 #endif
-
-
    }
    glfwTerminate();
 }
 
 void Network::addCars() {
-   auto target = [&]() {return Intersections[rand() % constants::nbIntersections]; };
+   auto target = [&]() {return Intersections[rand() % constants::nbIntersections];};
 #pragma omp parallel for
    for (Road* r : Roads) {
       if (((r->containCar() && r->getCars().back()->distance(r->getStart()) > constants::distanceSecurity) ||
@@ -126,7 +128,7 @@ void Network::addCars() {
          r->addCar(c);
          global::numberOfCars += 1;
 #if DEBUG
-         std::cout << "o-o : Car added." << std::endl;
+         std::cout << "+   o-o   Car added" << std::endl;
 #endif
       }
    }

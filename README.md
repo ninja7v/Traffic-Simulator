@@ -1,8 +1,8 @@
 # 🚦🚗🚛 Traffic Simulator
 
-!!!!! Warning: this project is under constuction !!!!!
+⚠️ Warning: this project is under constuction ⚠️
 
-!!!!! Incoming : Menu with QT + Car itinerary fixed + Sereval type of car + Traffic light optimizer !!!!!
+⚠️ Incoming : Menu with QT + Car itinerary fixed + Sereval type of car + Traffic light optimizer ⚠️
 
 **GUI for raad traffic simulation coded in C++ by Luc PREVOST.**
 

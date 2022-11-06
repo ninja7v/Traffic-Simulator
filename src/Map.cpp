@@ -7,19 +7,21 @@ Map::Map() {
 Road* Map::connection(Intersection* i1, Intersection* i2) {
    return connections[i1->getID()][i2->getID()];
 }
-
+// This function find the optimal path using Dijkstra algorithn
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
    float cost[constants::nbIntersections][constants::nbIntersections];
    float distance[constants::nbIntersections];
    int pred[constants::nbIntersections];
    int visited[constants::nbIntersections], count, mindistance, nextnode, i, j;
+   // Fill cost matrix
    for (i = 0; i < constants::nbIntersections; i++)
       for (j = 0; j < constants::nbIntersections; j++)
          if (connections[i][j] == nullptr)
             cost[i][j] = INFINITY;
          else
             cost[i][j] = connections[i][j]->getLength();
+   // Parameters initialization
    for (i = 0; i < constants::nbIntersections; i++) {
       distance[i] = cost[begin->getID()][i];
       pred[i] = begin->getID();
@@ -27,9 +29,8 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    }
    distance[begin->getID()] = 0;
    visited[begin->getID()] = 1;
-   count = 1;
    bool exists = false;
-   while (count < constants::nbIntersections - 1) {
+   for (count = 1; count < constants::nbIntersections - 1; count ++) {
       exists = false;
       mindistance = INFINITY;
       for (i = 0; i < constants::nbIntersections; i++)
@@ -47,7 +48,6 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
                distance[i] = mindistance + cost[nextnode][i];
                pred[i] = nextnode;
             }
-      count++;
    }
    i = end->getID();
    count = 0;

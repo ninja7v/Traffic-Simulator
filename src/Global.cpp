@@ -1,5 +1,3 @@
-// Libraries
-#include <algorithm> //for pow
 // Header files
 #include "../headers/Global.h"
 

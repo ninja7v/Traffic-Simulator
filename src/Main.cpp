@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////
-// Traffic light modelisation by Luc PREVOST, 2021
-//////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+// Traffic light modelisation by Luc PREVOST, 2022 //
+/////////////////////////////////////////////////////
 
 // Header files
 #include "../headers/Network.h"
@@ -10,10 +10,10 @@ using namespace std;
 int main(void) {
    // INITIALIZATION
    Network net = Network();
-   
+ 
    // VISUALTISATION
    net.displayNetwork();
-   
+
    // OPTIMIZATION
    //net.optimization(0);
 

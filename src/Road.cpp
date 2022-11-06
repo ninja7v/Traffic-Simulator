@@ -3,7 +3,7 @@
 #include <iostream>     // To use input/output
 #include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
-#include <iterator>
+//#include <iterator>
 // Header files
 #include "../headers/Road.h"
 #include "../headers/constants.h"
@@ -55,7 +55,9 @@ void Road::moveCar() {
             this->removeCar();
             delete c;
             global::numberOfCars -= 1;
-            std::cout << "--------------------------------------" << std::endl;
+#if DEBUG
+            std::cout << "-   o-o   Car deleted" << std::endl;
+#endif
          }
          else if ((c->nextRoad()->containCar() && c->distance(i1) > constants::distanceSecurity) || !c->nextRoad()->containCar()) {
             c->nextRoad()->addCar(c);
