@@ -3,5 +3,5 @@
 
 namespace global {
    int t0;
-   int numberOfCars = 0;
+   int numberOfVehicles = 0;
 }

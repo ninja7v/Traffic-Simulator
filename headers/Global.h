@@ -1,4 +1,5 @@
 namespace global {
    extern int t0;
-   extern int numberOfCars;
+   extern int numberOfVehicles;
+   extern int test;
 }

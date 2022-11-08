@@ -7,20 +7,20 @@
 #include <array>     // To use arrays
 // Header files
 #include "../headers/Constants.h"
-#include "../headers/Car.h"
+#include "../headers/Truck.h"
 
-const float Car::speedMax = constants::speedMaxCar;
-const float Car::acceleration = constants::accelerationCar;
-const float Car::color[3] = { 0, 0, 0.5 }; // Blue
+const float Truck::speedMax = constants::speedMaxTruck;
+const float Truck::acceleration = constants::accelerationTruck;
+const float Truck::color[3] = {0.7, 0.7, 0}; // Yellow
 
-const float Car::getSpeedMax() {
+const float Truck::getSpeedMax() {
    return speedMax;
 }
 
-const float Car::getAcceleration() {
+const float Truck::getAcceleration() {
    return acceleration;
 }
 
-const float* Car::getColor() {
+const float* Truck::getColor() {
    return color;
 }

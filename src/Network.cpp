@@ -2,13 +2,16 @@
 #include <cstdlib>      // To use rand()
 #include <string>       // To debug
 #include <iostream>     // To use input/output
-#include <list>         // To manipulate lists
+#include <list>         // To use lists
 //#include <algorithm>
 #include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
 #include <time.h>       // To use clock()
 // Header files
 #include "omp.h"        // To parallelize
+#include "../headers/Global.h"
+#include "../headers/Car.h"
+#include "../headers/Truck.h"
 #include "../headers/Network.h"
 
 Network::Network() {
@@ -92,13 +95,20 @@ void Network::displayNetwork() {
       for (Intersection* i : Intersections) {
          i->displayIntersection();
       }
-      // Cars
-      this->addCars();
-      this->updateCarsPosition();
+      // Vehicle
+      this->addVehicle();
+      this->updateVehiclesPosition();
+      std::list<std::list<Vehicle*>::iterator> toDelete;
 #pragma omp parallel for
-      for (Car* c : Cars) {
-         c->displayCar();
-      }
+      for (auto v = Vehicles.begin(); v != Vehicles.end(); v++)
+         if ((*v)->getStatus())
+            toDelete.push_back(v);
+         else
+            (*v)->displayVehicle();
+#pragma omp parallel for
+      for (auto it : toDelete)
+         Vehicles.erase(it);
+
       // Timer 
       glClearColor(0.1f, 0.5f, 0.1f, 0);
       //glColor3f(1.0f, 1.0f, 1.0f);
@@ -108,36 +118,43 @@ void Network::displayNetwork() {
       // Poll for and process events
       glfwPollEvents();
 #if DEBUG
-      //std::cout << global::numberOfCars << std::endl;
+      //std::cout << global::numberOfVehicle << std::endl;
       //std::cout << "Frame displayed." << std::endl;
 #endif
    }
    glfwTerminate();
 }
 
-void Network::addCars() {
+void Network::addVehicle() {
    auto target = [&]() {return Intersections[rand() % constants::nbIntersections];};
 #pragma omp parallel for
    for (Road* r : Roads) {
-      if (((r->containCar() && r->getCars().back()->distance(r->getStart()) > constants::distanceSecurity) ||
-           !r->containCar()) &&
+      if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > constants::distanceSecurity) ||
+           !r->containVehicle()) &&
             rand() % 1000 < constants::flow) {
          Intersection* destination = target();
-         Car* c = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getStart(), destination));
-         Cars.push_back(c);
-         r->addCar(c);
-         global::numberOfCars += 1;
+         if (rand() % 2 == 0) {
+            Car* v = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getStart(), destination));
+            Vehicles.push_back(v);
+            r->addVehicle(v);
+         }
+         else {
+            Truck* v = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getStart(), destination));
+            Vehicles.push_back(v);
+            r->addVehicle(v);
+         }
+         global::numberOfVehicles += 1;
 #if DEBUG
-         std::cout << "+   o-o   Car added" << std::endl;
+         std::cout << "+   o-o   Vehicle added" << std::endl;
 #endif
       }
    }
 }
 
-void Network::updateCarsPosition() {
+void Network::updateVehiclesPosition() {
 #pragma omp parallel for
    for (Road* r : Roads) {
-      r->moveCar();
+      r->moveVehicle();
    }
 }
 
@@ -146,10 +163,10 @@ void Network::optimization(bool travelDirection) {
 // "duration" and "start" (phase)
 }
 
-void Network::resetCars() {
+void Network::resetVehicles() {
 #pragma omp parallel for
-   for (Car* c : Cars) {
-      delete c;
+   for (Vehicle* v : Vehicles) {
+      delete v;
    }
-   global::numberOfCars = 0;
+   global::numberOfVehicles = 0;
 };

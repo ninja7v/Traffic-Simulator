@@ -5,7 +5,6 @@
 #include "Intersection.h"
 #include "Constants.h"
 #include "Road.h"
-#include "Car.h"
 
 class Map
 {public:

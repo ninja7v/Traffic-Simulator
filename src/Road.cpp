@@ -20,60 +20,62 @@ Road::Road(int n, Intersection* begin, Intersection* end)
                  (end->getPosition()[1] - begin->getPosition()[1]) / length };
 }
 
-bool Road::containCar() {
-   return (cars.empty()) ? false : true;
+bool Road::containVehicle() {
+   return (Vehicles.empty()) ? false : true;
 }
 
-int Road::numberOfCars() {
-   return cars.size();
+int Road::CountVehicles() {
+   return Vehicles.size();
 }
 
-void Road::addCar(Car* c) {
+void Road::addVehicle(Vehicle* v) {
    // Add at the end
-   cars.push_back(c);
+   Vehicles.push_back(v);
    // Update direction
-   c->updateDirection(i2);
+   v->updateDirection(i2);
    // Update itinerary
-   c->updateItinerary();
+   v->updateItinerary();
    // Set the car at the intersection
-   c->setPosition(i1->getPosition());
+   v->setPosition(i1->getPosition());
 }
 
-void Road::removeCar() {
+void Road::removeVehicle() {
    // Remove at the begining
-   cars.pop_front();
+   Vehicles.pop_front();
 }
 
-void Road::moveCar() {
+void Road::moveVehicle() {
    // Condition contain car
-   if (containCar()) {
+   if (containVehicle()) {
       // For the first car
-      Car* c = cars.front();
+      Vehicle* v = Vehicles.front();
       // Conditions at the intersection
-      if (c->distance(i2) < 0.001f) {
-         if (c->nextRoad() == nullptr) {
-            this->removeCar();
-            delete c;
-            global::numberOfCars -= 1;
+      if (v->distance(i2) < 0.001f) {
+         if (v->nextRoad() == nullptr) {
+            this->removeVehicle();
+            //Network::removeVehicle(v);
+            delete v;
+            //v->setStatus(true);
+            global::numberOfVehicles -= 1;
 #if DEBUG
-            std::cout << "-   o-o   Car deleted" << std::endl;
+            std::cout << "-   o-o   Vehicle deleted" << std::endl;
 #endif
          }
-         else if ((c->nextRoad()->containCar() && c->distance(i1) > constants::distanceSecurity) || !c->nextRoad()->containCar()) {
-            c->nextRoad()->addCar(c);
-            this->removeCar();
+         else if ((v->nextRoad()->containVehicle() && v->distance(i1) > constants::distanceSecurity) || !v->nextRoad()->containVehicle()) {
+            v->nextRoad()->addVehicle(v);
+            this->removeVehicle();
          }
       }
       else {
-         c->moveToIntersection(i2, idRoad);
+         v->moveToIntersection(i2, idRoad);
       }
       // For the folowing cars
-      if (cars.size() > 1) {
-         std::list<Car*>::iterator c;
-         Car* carNext = *cars.begin();
-         for (Car* c : cars) {
-            c->moveToCar(carNext);
-            carNext = c;
+      if (Vehicles.size() > 1) {
+         std::list<Vehicle*>::iterator v;
+         Vehicle* VehicleNext = *Vehicles.begin();
+         for (Vehicle* v : Vehicles) {
+            v->moveToVehicle(VehicleNext);
+            VehicleNext = v;
          }
       }
    }
@@ -124,7 +126,7 @@ void Road::displayRoad() {
    GLfloat x =  direction[1] * constants::width /2 + ((float)i2->getPosition()[0] - direction[0]/4) * constants::ratioX + constants::margin;
    GLfloat y = -direction[0] * constants::width /2 + ((float)i2->getPosition()[1] - direction[1]/4) * constants::ratioY + constants::margin;
    GLfloat radius = 10;
-   GLfloat twoPi = 2.0f * 3.1415;
+   GLfloat twoPi = 2.0f * 3.1415f;
    int i;
    int n = 10; //# of triangles used to draw circle
    glBegin(GL_TRIANGLE_FAN);
@@ -164,8 +166,8 @@ Intersection* Road::getEnd() {
    return i2;
 }
 
-std::list<Car*> Road::getCars() {
-   return cars;
+std::list<Vehicle*> Road::getVehicles() {
+   return Vehicles;
 }
 
 std::array<float, 2> Road::getDirection() {

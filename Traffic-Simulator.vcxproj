@@ -133,6 +133,8 @@
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Network.cpp" />
     <ClCompile Include="src\Road.cpp" />
+    <ClCompile Include="src\Vehicle.cpp" />
+    <ClCompile Include="src\Truck.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\glfw\include\glfw\glfw3.h" />
@@ -147,6 +149,8 @@
     <ClInclude Include="headers\Map.h" />
     <ClInclude Include="headers\Network.h" />
     <ClInclude Include="headers\Road.h" />
+    <ClInclude Include="headers\Vehicle.h" />
+    <ClInclude Include="headers\Truck.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

@@ -4,12 +4,12 @@
 // Header files
 #include "Vehicle.h"
 
-class Car : public Vehicle {
+class Truck : public Vehicle {
 public:
    using Vehicle::Vehicle;
-   const float Car::getSpeedMax();
-   const float Car::getAcceleration();
-   const float* Car::getColor();
+   const float getSpeedMax();
+   const float getAcceleration();
+   const float* getColor();
 protected:
 
 private:

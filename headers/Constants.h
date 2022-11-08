@@ -1,6 +1,4 @@
 #pragma once
-// Libraries
-#include <algorithm> //for pow
 
 namespace constants {
    // Network
@@ -12,12 +10,12 @@ namespace constants {
    constexpr float speedLimit{ 0.003f };
    constexpr int nbRoads{ (sizeX * (sizeY - 1)) + (sizeY * (sizeX - 1)) };
    constexpr int capacity{ 4 };
-   // Cars
+   // Vehicles
    constexpr float flow{ 1 }; // in [0, 99]
-   constexpr float speedMaxCar{ 0.002f * boost };
-   constexpr float speedMaxTruck{ 0.0001f * boost };
-   constexpr float accelerationCar{ 0.000002f * boost };
-   constexpr float accelerationTruck{ 0.0000002f * boost };
+   constexpr float speedMaxCar  { 0.002f  * boost };
+   constexpr float speedMaxTruck{ 0.0015f * boost };
+   constexpr float accelerationCar  { 0.000003f * boost };
+   constexpr float accelerationTruck{ 0.000002f * boost };
    constexpr float distanceSecurity{ 0.1f };
    //constexpr float coefficient{ speedMax * distanceSecurity };
    // Intersections
