@@ -1,4 +1,6 @@
 #pragma once
+// Libraries
+#include<algorithm>
 
 namespace constants {
    // Network
@@ -19,7 +21,7 @@ namespace constants {
    constexpr float distanceSecurity{ 0.1f };
    //constexpr float coefficient{ speedMax * distanceSecurity };
    // Intersections
-   constexpr int nbIntersections{ sizeX * sizeY / 4 };
+   constexpr int nbIntersections{ std::max(sizeX, sizeY) }; // To have something visible -> o(n)
    constexpr int furthest{ sizeX + sizeY - 1 };
    constexpr int period{ (int)(1000 / boost) };
    //constexpr int durationMax{ (int)(flow / speedMax) * 20 };

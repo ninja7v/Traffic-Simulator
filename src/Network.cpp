@@ -1,7 +1,9 @@
 // Libraries
 #include <cstdlib>      // To use rand()
 #include <string>       // To debug
+#if DEBUG
 #include <iostream>     // To use input/output
+#endif
 #include <list>         // To use lists
 //#include <algorithm>
 #include <GL/glut.h>    // To display
@@ -17,6 +19,7 @@
 Network::Network() {
    // Intersections
    std::array<float, 2> position = {0, 0};
+   srand(time(NULL));
 #pragma omp parallel for
    for (int k = 0; k < constants::nbIntersections; k++) {
       bool validPosition = false;

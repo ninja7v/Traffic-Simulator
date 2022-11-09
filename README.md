@@ -2,9 +2,9 @@
 
 ⚠️ Warning: this project is under constuction ⚠️
 
-⚠️ Incoming : Menu with QT + Car itinerary fixed + Sereval type of car + Traffic light optimizer ⚠️
+⚠️ The first release TS1 is coming soon! ⚠️
 
-**GUI for raad traffic simulation coded in C++ by Luc PREVOST and Claire PREVOST.**
+**GUI for road traffic simulation coded in C++ by Luc and Claire PREVOST.**
 
 ![traffic_simulator](https://user-images.githubusercontent.com/52052772/142062951-265998b8-a934-4cf3-bd30-fee10bccfbaa.png)
 
@@ -19,9 +19,9 @@ Traffic Simulator requires the folowing dependencies:
 - [List](https://www.cplusplus.com/reference/list/list/)
 - [Time](https://www.cplusplus.com/reference/ctime/time/)
 
-To execute it, set the all the files in the same folder, compile the _Main.cpp_ file and run it.
+The easyest way to execute the program is with Visual Studio: open the .sln file and hit F5!
 
-After launching the program, a window pops up with a default case.
+After launching the program, a window pops up with a random case.
 
 ## ⚙️Parameters
 ### 🕸Network

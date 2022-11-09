@@ -1,6 +1,8 @@
 // Libraries
 #include <list>         // To manipulate lists
+#if DEBUG
 #include <iostream>     // To use input/output
+#endif
 #include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
 //#include <iterator>
