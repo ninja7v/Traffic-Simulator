@@ -31,7 +31,7 @@ Intersections have a number of intersection and a traffic light period parameter
 ### 🛣Roads
 Roads have a speed limit, a number of road and a car capacity parameter. Each road is initialized with 2 intersections.
 ### 🚗🚛Vehicules
-Vehicules have a flow parameter, which gives the amout of car in the network. They also have a maximum speed, an acceleration and a security distance parameter. Each Vehicules is initialized with a random taget intersection on a random from a random intersection. Then their itinerary is obtained using the Dijkstra algorithm.
+Vehicules have a flow parameter, which gives the amout of car in the network. They also have a maximum speed, an acceleration and a security distance parameter. Each Vehicules is initialized with a random taget intersection on a random road from a random intersection. Then their itinerary is obtained using the Dijkstra algorithm.
 ### 💻Optimizer
 Incoming :)
 
