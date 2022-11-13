@@ -29,7 +29,8 @@ protected:
 private:
    int idRoad;
    float length;
-   Intersection* i1, i2;
+   Intersection* i1;
+   Intersection* i2;
    std::list<Vehicle*> Vehicles;
    std::array<float, 2> direction;
 };

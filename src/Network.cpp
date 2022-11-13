@@ -1,6 +1,7 @@
 // Libraries
 //#include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
+#include <time.h>       // To use clock()
 #if DEBUG
 #include <iostream>     // To use input/output
 #endif
