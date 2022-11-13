@@ -137,7 +137,9 @@
     <ClCompile Include="src\Truck.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Downloads\stb-master\stb-master\stb_image.h" />
     <ClInclude Include="dependencies\glfw\include\glfw\glfw3.h" />
+    <ClInclude Include="Dependencies\GLFW\include\GLFW\stb_image.h" />
     <ClInclude Include="dependencies\gl\include\gl\freeglut.h" />
     <ClInclude Include="dependencies\gl\include\gl\freeglut_ext.h" />
     <ClInclude Include="dependencies\gl\include\gl\freeglut_std.h" />

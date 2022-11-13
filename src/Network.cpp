@@ -1,12 +1,14 @@
 // Libraries
-//#include <GL/glut.h>    // To display
-#include <GLFW/glfw3.h> // To display
-#include <time.h>       // To use clock()
+#define STB_IMAGE_IMPLEMENTATION
+#include <GLFW/stb_image.h> // To use stbi_load(), placed in GLFW even though it doesn't belong there
+//#include <GL/glut.h>        // To display
+#include <GLFW/glfw3.h>     // To display
+#include <time.h>           // To use clock()
 #if DEBUG
-#include <iostream>     // To use input/output
+#include <iostream>         // To use input/output
 #endif
 // Header files
-#include "omp.h"        // To parallelize
+#include "omp.h"            // To parallelize
 #include "../headers/Global.h"
 #include "../headers/Car.h"
 #include "../headers/Truck.h"
@@ -77,6 +79,15 @@ void Network::displayNetwork() {
    GLFWwindow* window;
    glfwInit();
    window = glfwCreateWindow(constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT, "Traffic Simulator", NULL, NULL);
+   // Add icon
+   int width, height, channels; // Doesn't need to be initialized
+   unsigned char* pixels = stbi_load("logo_TS.png", &width, &height, &channels, 4);
+   GLFWimage logo;
+   logo.width  = width;
+   logo.height = height;
+   logo.pixels = pixels;
+   glfwSetWindowIcon(window, 1, &logo);
+   // Do some stuff
    glfwMakeContextCurrent(window);
    glViewport(0.0f, 0.0f, constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT); // specifies the part of the window to which OpenGL will draw (in pixels), convert from normalised to pixels
    glMatrixMode(GL_PROJECTION); // projection matrix defines the properties of the camera that views the objects in the world coordinate frame. Here you typically set the zoom factor, aspect ratio and the near and far clipping planes
