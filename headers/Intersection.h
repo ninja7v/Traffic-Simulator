@@ -20,6 +20,5 @@ protected:
 private:
    int idIntersection, durationTrafficLight, periodTrafficLight;
    std::array<float, 2> position;
-   std::vector<int> input;
-   std::vector<int> output;
+   std::vector<int> input, output;
 };

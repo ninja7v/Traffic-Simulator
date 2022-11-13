@@ -1,5 +1,6 @@
 // Libraries
-#include <GL/glut.h>    // To display
+#include <string>       // To use to_string()
+//#include <GL/glut.h>    // To display (glutBitmapCharacter())
 #include <GLFW/glfw3.h> // To display
 #include <time.h>       // To use clock()
 // Header files
@@ -20,15 +21,14 @@ bool Intersection::isRed(int id) {
    //return (rl->numberOfCars() > rd->numberOfCars() == 0) ? false : true;
    //constant with every identical intersection
    int currentPeriod = ((clock() - global::t0) / constants::period);
-   return (input[currentPeriod % input.size()] == id) ? true : false;
+   return (input[currentPeriod % input.size()] == id) ? false : true;
 }
 
 void Intersection::displayIntersection() {
-   glColor3f(0.0f, 0.0f, 0.0f);
+   glColor3f(0.0f, 0.0f, 0.0f); // Black
    GLfloat x = position[0] * constants::ratioX + constants::margin;
    GLfloat y = position[1] * constants::ratioY + constants::margin;
    GLfloat radius = 25;
-   int i;
    int triangleAmount = 20; //# of triangles used to draw circle
 
    //GLfloat radius = 0.8f; //radius
@@ -36,14 +36,23 @@ void Intersection::displayIntersection() {
 
    glBegin(GL_TRIANGLE_FAN);
    glVertex2f(x, y); // center of circle
-   for (i = 0; i <= triangleAmount; i++) {
+   for (int i = 0; i <= triangleAmount; i++) {
       glVertex2f(
          x + (radius * cos(i * twicePi / triangleAmount)),
          y + (radius * sin(i * twicePi / triangleAmount))
       );
    }
    glEnd();
-
+#if DEBUG
+   // Display idIntersection
+   //glColor3f(0, 0, 0);
+   //glRasterPos2f(x, y);
+   //int len, i;
+   //std::string string = std::to_string(idIntersection);
+   //len = (int)strlen(std::to_string(idIntersection).c_str());
+   //for (i = 0; i < len; i++)
+   //   glutBitmapCharacter(GLUT_BITMAP_8_BY_13, string[i]);
+#endif
 
    /*glEnable(GL_POINT_SMOOTH);
    glEnableClientState(GL_VERTEX_ARRAY);

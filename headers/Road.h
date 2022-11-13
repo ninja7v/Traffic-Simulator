@@ -1,6 +1,7 @@
 #pragma once
 // Libraries
-#include <list> // To manipulate lists
+//#include <array> // To use arrays // alreads included in vehicle.h
+//#include <list>  // To use lists // alreads included in vehicle.h
 // Header files
 #include "Global.h"
 #include "Intersection.h"
@@ -28,8 +29,7 @@ protected:
 private:
    int idRoad;
    float length;
-   Intersection* i1;
-   Intersection* i2;
+   Intersection* i1, i2;
    std::list<Vehicle*> Vehicles;
    std::array<float, 2> direction;
 };

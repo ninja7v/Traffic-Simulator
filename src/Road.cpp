@@ -1,11 +1,10 @@
 // Libraries
-#include <list>         // To manipulate lists
+//#include <list>         // To use lists // already included in vehicle.h
+//#include <GL/glut.h>    // To display
+#include <GLFW/glfw3.h> // To display
 #if DEBUG
 #include <iostream>     // To use input/output
 #endif
-#include <GL/glut.h>    // To display
-#include <GLFW/glfw3.h> // To display
-//#include <iterator>
 // Header files
 #include "../headers/Road.h"
 #include "../headers/constants.h"
@@ -31,14 +30,9 @@ int Road::CountVehicles() {
 }
 
 void Road::addVehicle(Vehicle* v) {
-   // Add at the end
    Vehicles.push_back(v);
-   // Update direction
-   v->updateDirection(i2);
-   // Update itinerary
-   v->updateItinerary();
-   // Set the car at the intersection
    v->setPosition(i1->getPosition());
+   v->setDirection(i2);
 }
 
 void Road::removeVehicle() {
@@ -51,33 +45,35 @@ void Road::moveVehicle() {
    if (containVehicle()) {
       // For the first car
       Vehicle* v = Vehicles.front();
-      // Conditions at the intersection
-      if (v->distance(i2) < 0.001f) {
+      bool atIntersection = v->distance(i2) < 0.1f;
+      if (atIntersection) {
          if (v->nextRoad() == nullptr) {
             this->removeVehicle();
             //Network::removeVehicle(v);
+            v->setStatus(true);
             delete v;
-            //v->setStatus(true);
             global::numberOfVehicles -= 1;
-#if DEBUG
-            std::cout << "-   o-o   Vehicle deleted" << std::endl;
-#endif
          }
-         else if ((v->nextRoad()->containVehicle() && v->distance(i1) > constants::distanceSecurity) || !v->nextRoad()->containVehicle()) {
-            v->nextRoad()->addVehicle(v);
-            this->removeVehicle();
+         else {
+            bool isEnoughSpace = v->nextRoad()->containVehicle() && v->nextRoad()->getVehicles().back()->distance(i2) > constants::distanceSecurity;
+            if (!v->nextRoad()->containVehicle() || isEnoughSpace) {
+               v->nextRoad()->addVehicle(v);
+               v->updateItinerary();
+               this->removeVehicle();
+            }
          }
       }
       else {
          v->moveToIntersection(i2, idRoad);
       }
       // For the folowing cars
+      // We ignore the case atIntersection = true, were the first car is gone
       if (Vehicles.size() > 1) {
          std::list<Vehicle*>::iterator v;
          Vehicle* VehicleNext = *Vehicles.begin();
-         for (Vehicle* v : Vehicles) {
-            v->moveToVehicle(VehicleNext);
-            VehicleNext = v;
+         for (v = std::next(Vehicles.begin()); v != Vehicles.end(); ++v){//(Vehicle* v : Vehicles) {
+            (*v)->moveToVehicle(VehicleNext);
+            VehicleNext = (*v);
          }
       }
    }
@@ -88,7 +84,7 @@ void Road::displayRoad() {
    glEnableClientState(GL_VERTEX_ARRAY);
    // Road
    glScalef(1.f, 1.f, 0);
-   glColor3f(0.3f, 0.3f, 0.3f);
+   glColor3f(0.3f, 0.3f, 0.3f); // Grey
    GLfloat lineRoad[] = { direction[1] * constants::width / 2 + i1->getPosition()[0] * constants::ratioX + constants::margin,
                          -direction[0] * constants::width / 2 + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
                           direction[1] * constants::width / 2 + i2->getPosition()[0] * constants::ratioX + constants::margin,
@@ -98,7 +94,7 @@ void Road::displayRoad() {
    glDrawArrays(GL_LINES, 0, 2);
    // Sides left
    glScalef(1.f, 1.f, 0);
-   glColor3f(1.0f, 1.0f, 1.0f);
+   glColor3f(1.0f, 1.0f, 1.0f); // White
    GLfloat lineSideLeft[] = { i1->getPosition()[0] * constants::ratioX + constants::margin,
                               i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
                               i2->getPosition()[0] * constants::ratioX + constants::margin,
@@ -108,7 +104,7 @@ void Road::displayRoad() {
    glDrawArrays(GL_LINES, 0, 2);
    // Sides right
    glScalef(1.f, 1.f, 0);
-   glColor3f(1.0f, 1.0f, 1.0f);
+   glColor3f(1.0f, 1.0f, 1.0f); // White
    GLfloat lineSideRight[] = { direction[1] * constants::width + i1->getPosition()[0] * constants::ratioX + constants::margin,
                               -direction[0] * constants::width + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
                                direction[1] * constants::width + i2->getPosition()[0] * constants::ratioX + constants::margin,
@@ -120,17 +116,17 @@ void Road::displayRoad() {
    glDisable(GL_LINE_SMOOTH);
    // Trafic light
    if (i2->isRed(idRoad)) {
-      glColor3f(1.0f, 0.0f, 0.0f);
+      glColor3f(1.0f, 0.0f, 0.0f); // Red
    }
    else {
-      glColor3f(0.0f, 1.0f, 0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f); // Green
    }
    GLfloat x =  direction[1] * constants::width /2 + ((float)i2->getPosition()[0] - direction[0]/4) * constants::ratioX + constants::margin;
    GLfloat y = -direction[0] * constants::width /2 + ((float)i2->getPosition()[1] - direction[1]/4) * constants::ratioY + constants::margin;
    GLfloat radius = 10;
    GLfloat twoPi = 2.0f * 3.1415f;
    int i;
-   int n = 10; //# of triangles used to draw circle
+   int n = 10; // # of triangles used to draw circle
    glBegin(GL_TRIANGLE_FAN);
    glVertex2f(x, y); // center of circle
    for (i = 0; i <= n; i++) {
@@ -141,7 +137,7 @@ void Road::displayRoad() {
    }
    glEnd();
    glLineWidth(5);
-   glColor3f(0.0f, 0.0f, 0.0f);
+   glColor3f(0.0f, 0.0f, 0.0f); // Black
    glBegin(GL_LINE_LOOP);
    for (i = 0; i <= n; i++) {
       glVertex2f(

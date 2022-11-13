@@ -1,14 +1,9 @@
 // Libraries
-#include <cstdlib>      // To use rand()
-#include <string>       // To debug
+//#include <GL/glut.h>    // To display
+#include <GLFW/glfw3.h> // To display
 #if DEBUG
 #include <iostream>     // To use input/output
 #endif
-#include <list>         // To use lists
-//#include <algorithm>
-#include <GL/glut.h>    // To display
-#include <GLFW/glfw3.h> // To display
-#include <time.h>       // To use clock()
 // Header files
 #include "omp.h"        // To parallelize
 #include "../headers/Global.h"
@@ -19,7 +14,7 @@
 Network::Network() {
    // Intersections
    std::array<float, 2> position = {0, 0};
-   srand(time(NULL));
+   srand(time(nullptr));
 #pragma omp parallel for
    for (int k = 0; k < constants::nbIntersections; k++) {
       bool validPosition = false;
@@ -43,23 +38,30 @@ Network::Network() {
    std::cout << "x   Intersection initialized" << std::endl;
 #endif
    // Roads
+   int id = 0;
    for (Intersection* const& i : Intersections) {
       int nbConnections = rand() % 3 + 1;
-      int id = 0;
       int idIntersection;
       bool validIntersection = false;
       for (int k = 0; k < nbConnections; k++) {
          validIntersection = false;
          while (!validIntersection) {
             idIntersection = rand() % constants::nbIntersections;
-            if (!(map.getConnection(i->getID(), idIntersection) != nullptr || (idIntersection == i->getID()))) {
+            if (map.getConnection(i->getID(), idIntersection) == nullptr && (idIntersection != i->getID())) {
                validIntersection = true;
             }
          }
-         Road* r(new Road(id, i, Intersections[idIntersection]));
-         Roads.push_back(r);
-         map.setConnection(i->getID(), idIntersection, r);
-         Intersections[idIntersection]->addInputRoad(r->getID());
+         // One-way road
+         Road* r0(new Road(id, i, Intersections[idIntersection]));
+         Roads.push_back(r0);
+         map.setConnection(i->getID(), idIntersection, r0);
+         Intersections[idIntersection]->addInputRoad(r0->getID());
+         id += 1;
+         // Two-way road
+         Road* r1(new Road(id, Intersections[idIntersection], i));
+         Roads.push_back(r1);
+         map.setConnection(idIntersection, i->getID(), r1);
+         i->addInputRoad(r1->getID());
          id += 1;
       }
    }
@@ -109,10 +111,14 @@ void Network::displayNetwork() {
          else
             (*v)->displayVehicle();
 #pragma omp parallel for
-      for (auto it : toDelete)
+      for (auto it : toDelete) {
          Vehicles.erase(it);
+#if DEBUG
+         std::cout << "-   o-o   Vehicle deleted" << std::endl;
+#endif
+      }
 
-      // Timer 
+      // Timer
       glClearColor(0.1f, 0.5f, 0.1f, 0);
       //glColor3f(1.0f, 1.0f, 1.0f);
       //timer.displayTime(std::to_string(timer.timer(timeMax)));
@@ -129,29 +135,39 @@ void Network::displayNetwork() {
 }
 
 void Network::addVehicle() {
-   auto target = [&]() {return Intersections[rand() % constants::nbIntersections];};
+   // To Do: add check target
+   auto target = [&](int idStart) {int destination;
+                                   do {destination = rand() % constants::nbIntersections;
+                                   } while (destination == idStart);
+                                   return Intersections[destination];};
+   if (Vehicles.size() < constants::nbCarMax)
 #pragma omp parallel for
-   for (Road* r : Roads) {
-      if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > constants::distanceSecurity) ||
-           !r->containVehicle()) &&
-            rand() % 1000 < constants::flow) {
-         Intersection* destination = target();
-         if (rand() % 2 == 0) {
-            Car* v = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getStart(), destination));
-            Vehicles.push_back(v);
-            r->addVehicle(v);
-         }
-         else {
-            Truck* v = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getStart(), destination));
-            Vehicles.push_back(v);
-            r->addVehicle(v);
-         }
-         global::numberOfVehicles += 1;
+      for (Road* r : Roads) {
+         if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > constants::distanceSecurity) ||
+               !r->containVehicle()) &&
+                rand() % 1000 < constants::flow) {
+            
+            Intersection* destination = target(r->getEnd()->getID());
+            switch (rand() % 2) {
+               case 0:{
+                  Car* c = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
+                  Vehicles.push_back(c);
+                  r->addVehicle(c);
+                  break;
+               }
+               case 1:{
+                  Truck* t = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
+                  Vehicles.push_back(t);
+                  r->addVehicle(t);
+                  break;
+               }
+            }
+            global::numberOfVehicles += 1;
 #if DEBUG
-         std::cout << "+   o-o   Vehicle added" << std::endl;
+            std::cout << "+   o-o   Vehicle added " << std::endl;
 #endif
+         }
       }
-   }
 }
 
 void Network::updateVehiclesPosition() {

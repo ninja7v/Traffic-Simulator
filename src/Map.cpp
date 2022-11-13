@@ -1,13 +1,25 @@
+// Libraries
+//#include <list> // To use lists // alreads included in vehicle.h
+#if DEBUG
+#include <iostream>     // To use input/output
+#endif
 // Header files
 #include "../headers/Map.h"
 
-Map::Map() {
+namespace {
+   const int INFINTY = 9999; // INFINITY not supported by floats
 }
 
+Map::Map() {
+}
+// This function find the optimal path using Dijkstra algorithn
+// Source: https://www.tutorialspoint.com/cplusplus-program-for-dijkstra-s-shortest-path-algorithm
+// Problem: There is not always a solution because of the graph initialization
+// Temporary solution: set every road as double way. This didn't work...
 Road* Map::connection(Intersection* i1, Intersection* i2) {
    return connections[i1->getID()][i2->getID()];
 }
-// This function find the optimal path using Dijkstra algorithn
+
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
    float cost[constants::nbIntersections][constants::nbIntersections];
@@ -18,10 +30,10 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    for (i = 0; i < constants::nbIntersections; i++)
       for (j = 0; j < constants::nbIntersections; j++)
          if (connections[i][j] == nullptr)
-            cost[i][j] = INFINITY;
+            cost[i][j] = INFINTY;
          else
             cost[i][j] = connections[i][j]->getLength();
-   // Parameters initialization
+   // Parameters initialization from start
    for (i = 0; i < constants::nbIntersections; i++) {
       distance[i] = cost[begin->getID()][i];
       pred[i] = begin->getID();
@@ -30,17 +42,14 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    distance[begin->getID()] = 0;
    visited[begin->getID()] = 1;
    bool exists = false;
-   for (count = 1; count < constants::nbIntersections - 1; count ++) {
-      exists = false;
-      mindistance = INFINITY;
+   for (count = 1; count < constants::nbIntersections; count ++) {
+      mindistance = INFINTY;
       for (i = 0; i < constants::nbIntersections; i++)
-         if (distance[i] < mindistance && !visited[i]) {
+         if (distance[i] <= mindistance && !visited[i]) {
             mindistance = distance[i];
             nextnode = i;
-            exists = true;
          }
-      if (exists == false)
-         break;
+      //   break;
       visited[nextnode] = 1;
       for (i = 0; i < constants::nbIntersections; i++)
          if (!visited[i])
@@ -49,22 +58,13 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
                pred[i] = nextnode;
             }
    }
+   // Affect result
    i = end->getID();
-   count = 0;
-   do {
-      count++;
-      j = i;
+   while (i != begin->getID()) {
+      path.push_front(connections[pred[i]][i]);
       i = pred[i];
-      path.push_front(connections[i][j]);
-   } while (i != begin->getID() && count< constants::nbIntersections);
-   if (count == constants::nbIntersections) {
-      path.clear();
-      return path;
-   }
-   else {
-      path.push_front(connections[i][j]);
-      return path;
-   }
+   };
+   return path;
 };
 
 Road* Map::getConnection(int a, int b) {
