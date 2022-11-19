@@ -85,11 +85,11 @@ void Road::displayRoad() {
    // Road
    glScalef(1.f, 1.f, 0);
    glColor3f(0.3f, 0.3f, 0.3f); // Grey
-   GLfloat lineRoad[] = { direction[1] * constants::width / 2 + i1->getPosition()[0] * constants::ratioX + constants::margin,
-                         -direction[0] * constants::width / 2 + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
-                          direction[1] * constants::width / 2 + i2->getPosition()[0] * constants::ratioX + constants::margin,
-                         -direction[0] * constants::width / 2 + i2->getPosition()[1] * constants::ratioY + constants::margin, 0};
-   glLineWidth(constants::width);
+   GLfloat lineRoad[] = { direction[1] * constants::widthRoad / 2 + i1->getPosition()[0] * constants::ratioX + constants::margin,
+                         -direction[0] * constants::widthRoad / 2 + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
+                          direction[1] * constants::widthRoad / 2 + i2->getPosition()[0] * constants::ratioX + constants::margin,
+                         -direction[0] * constants::widthRoad / 2 + i2->getPosition()[1] * constants::ratioY + constants::margin, 0};
+   glLineWidth(constants::widthRoad);
    glVertexPointer(3, GL_FLOAT, 0, lineRoad);
    glDrawArrays(GL_LINES, 0, 2);
    // Sides left
@@ -99,31 +99,33 @@ void Road::displayRoad() {
                               i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
                               i2->getPosition()[0] * constants::ratioX + constants::margin,
                               i2->getPosition()[1] * constants::ratioY + constants::margin, 0 };
-   glLineWidth(constants::width /10);
+   glLineWidth(constants::widthRoad /10);
    glVertexPointer(3, GL_FLOAT, 0, lineSideLeft);
    glDrawArrays(GL_LINES, 0, 2);
    // Sides right
    glScalef(1.f, 1.f, 0);
    glColor3f(1.0f, 1.0f, 1.0f); // White
-   GLfloat lineSideRight[] = { direction[1] * constants::width + i1->getPosition()[0] * constants::ratioX + constants::margin,
-                              -direction[0] * constants::width + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
-                               direction[1] * constants::width + i2->getPosition()[0] * constants::ratioX + constants::margin,
-                              -direction[0] * constants::width + i2->getPosition()[1] * constants::ratioY + constants::margin, 0 };
-   glLineWidth(constants::width /10);
+   GLfloat lineSideRight[] = { direction[1] * constants::widthRoad + i1->getPosition()[0] * constants::ratioX + constants::margin,
+                              -direction[0] * constants::widthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
+                               direction[1] * constants::widthRoad + i2->getPosition()[0] * constants::ratioX + constants::margin,
+                              -direction[0] * constants::widthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0 };
+   glLineWidth(constants::widthRoad / 10);
    glVertexPointer(3, GL_FLOAT, 0, lineSideRight);
    glDrawArrays(GL_LINES, 0, 2);
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisable(GL_LINE_SMOOTH);
-   // Trafic light
+}
+
+void Road::displayLight() {
    if (i2->isRed(idRoad)) {
       glColor3f(1.0f, 0.0f, 0.0f); // Red
    }
    else {
       glColor3f(0.0f, 1.0f, 0.0f); // Green
    }
-   GLfloat x =  direction[1] * constants::width /2 + ((float)i2->getPosition()[0] - direction[0]/4) * constants::ratioX + constants::margin;
-   GLfloat y = -direction[0] * constants::width /2 + ((float)i2->getPosition()[1] - direction[1]/4) * constants::ratioY + constants::margin;
-   GLfloat radius = 10;
+   GLfloat x =  direction[1] * constants::widthRoad / 2 + ((float)i2->getPosition()[0] - direction[0] / 6) * constants::ratioX + constants::margin;
+   GLfloat y = -direction[0] * constants::widthRoad / 2 + ((float)i2->getPosition()[1] - direction[1] / 6) * constants::ratioY + constants::margin;
+   GLfloat radius = constants::widthRoad / 2.5;
    GLfloat twoPi = 2.0f * 3.1415f;
    int i;
    int n = 10; // # of triangles used to draw circle
@@ -136,7 +138,7 @@ void Road::displayRoad() {
       );
    }
    glEnd();
-   glLineWidth(5);
+   glLineWidth(constants::widthRoad / 5);
    glColor3f(0.0f, 0.0f, 0.0f); // Black
    glBegin(GL_LINE_LOOP);
    for (i = 0; i <= n; i++) {

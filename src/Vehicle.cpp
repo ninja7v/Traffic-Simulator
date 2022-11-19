@@ -82,15 +82,27 @@ void Vehicle::updateItinerary() {
 }
 
 void Vehicle::displayVehicle() {
-   float size = 15;
-   float frame[4][2] = { {direction[1] * constants::width / 2 + (-direction[0] - direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-                         -direction[0] * constants::width / 2 + (+direction[0] / 2 - direction[1]) * size + position[1] * constants::ratioY + constants::margin},
-                         {direction[1] * constants::width / 2 + (-direction[0] + direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-                         -direction[0] * constants::width / 2 + (-direction[0] / 2 - direction[1]) * size + position[1] * constants::ratioY + constants::margin},
-                         {direction[1] * constants::width / 2 + (+direction[0] + direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-                         -direction[0] * constants::width / 2 + (-direction[0] / 2 + direction[1]) * size + position[1] * constants::ratioY + constants::margin},
-                         {direction[1] * constants::width / 2 + (+direction[0] - direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-                         -direction[0] * constants::width / 2 + (+direction[0] / 2 + direction[1]) * size + position[1] * constants::ratioY + constants::margin}, };
+   const float size = 15;
+   const float W = getWidth();
+   const float H = getHeight();
+   //float frame[4][2] = { {direction[1] * constants::width / 2 + (-direction[0] - direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
+   //                      -direction[0] * constants::width / 2 + (+direction[0] / 2 - direction[1]) * size + position[1] * constants::ratioY + constants::margin},
+   //                      {direction[1] * constants::width / 2 + (-direction[0] + direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
+   //                      -direction[0] * constants::width / 2 + (-direction[0] / 2 - direction[1]) * size + position[1] * constants::ratioY + constants::margin},
+   //                      {direction[1] * constants::width / 2 + (+direction[0] + direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
+   //                      -direction[0] * constants::width / 2 + (-direction[0] / 2 + direction[1]) * size + position[1] * constants::ratioY + constants::margin},
+   //                      {direction[1] * constants::width / 2 + (+direction[0] - direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
+   //                      -direction[0] * constants::width / 2 + (+direction[0] / 2 + direction[1]) * size + position[1] * constants::ratioY + constants::margin}, };
+   float center[2] = { direction[1] * constants::widthRoad / 2 + position[0] * constants::ratioX + constants::margin,
+                      -direction[0] * constants::widthRoad / 2 + position[1] * constants::ratioY + constants::margin };
+   float frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
+                          center[1] + direction[0] * W - direction[1] * H},
+                         {center[0] - direction[0] * H + direction[1] * W,
+                          center[1] - direction[0] * W - direction[1] * H},
+                         {center[0] + direction[0] * H + direction[1] * W,
+                          center[1] - direction[0] * W + direction[1] * H},
+                         {center[0] + direction[0] * H - direction[1] * W,
+                          center[1] + direction[0] * W + direction[1] * H}, };
    const float* color = getColor();
    glColor3f(color[0], color[1], color[2]);
    glBegin(GL_QUADS);

@@ -28,7 +28,7 @@ void Intersection::displayIntersection() {
    glColor3f(0.0f, 0.0f, 0.0f); // Black
    GLfloat x = position[0] * constants::ratioX + constants::margin;
    GLfloat y = position[1] * constants::ratioY + constants::margin;
-   GLfloat radius = 25;
+   GLfloat radius = constants::radiusIntersection;
    int triangleAmount = 20; //# of triangles used to draw circle
 
    //GLfloat radius = 0.8f; //radius

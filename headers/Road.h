@@ -17,6 +17,7 @@ public:
    void removeVehicle();
    void moveVehicle();
    void displayRoad();
+   void displayLight();
    int                  getID();
    float                getLength();
    Intersection*        getStart();

@@ -3,7 +3,7 @@
 // Header files
 #include "Vehicle.h"
 
-class Car : public Vehicle {
+class Bike : public Vehicle {
 public:
    using Vehicle::Vehicle;
    const float  getSpeedMax();

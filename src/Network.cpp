@@ -1,6 +1,6 @@
 // Libraries
 #define STB_IMAGE_IMPLEMENTATION
-#include <GLFW/stb_image.h> // To use stbi_load(), placed in GLFW even though it doesn't belong there
+#include <stb/stb_image.h> // To use stbi_load(), placed in GLFW even though it doesn't belong there
 //#include <GL/glut.h>        // To display
 #include <GLFW/glfw3.h>     // To display
 #include <time.h>           // To use clock()
@@ -11,6 +11,7 @@
 #include "omp.h"            // To parallelize
 #include "../headers/Global.h"
 #include "../headers/Car.h"
+#include "../headers/Bike.h"
 #include "../headers/Truck.h"
 #include "../headers/Network.h"
 
@@ -107,11 +108,6 @@ void Network::displayNetwork() {
       for (Road* const& r : Roads) {
          r->displayRoad();
       }
-      // Intersections
-#pragma omp parallel for
-      for (Intersection* i : Intersections) {
-         i->displayIntersection();
-      }
       // Vehicle
       this->addVehicle();
       this->updateVehiclesPosition();
@@ -128,6 +124,16 @@ void Network::displayNetwork() {
 #if DEBUG
          std::cout << "-   o-o   Vehicle deleted" << std::endl;
 #endif
+      }
+      // Intersections
+#pragma omp parallel for
+      for (Intersection* i : Intersections) {
+         i->displayIntersection();
+      }
+      // Traffic lights
+#pragma omp parallel for
+      for (Road* const& r : Roads) {
+         r->displayLight();
       }
 
       // Timer
@@ -160,7 +166,7 @@ void Network::addVehicle() {
                 rand() % 1000 < constants::flow) {
             
             Intersection* destination = target(r->getEnd()->getID());
-            switch (rand() % 2) {
+            switch (rand() % 3) {
                case 0:{
                   Car* c = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
                   Vehicles.push_back(c);
@@ -171,6 +177,12 @@ void Network::addVehicle() {
                   Truck* t = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
                   Vehicles.push_back(t);
                   r->addVehicle(t);
+                  break;
+               }
+               case 2:{
+                  Bike* b = new Bike(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
+                  Vehicles.push_back(b);
+                  r->addVehicle(b);
                   break;
                }
             }

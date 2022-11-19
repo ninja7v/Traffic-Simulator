@@ -13,6 +13,8 @@ public:
    Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* target, std::list<Road*> track);
    const virtual float  getSpeedMax()     = 0;
    const virtual float  getAcceleration() = 0;
+   const virtual float  getWidth()        = 0;
+   const virtual float  getHeight()       = 0;
    const virtual float* getColor()        = 0;
    float breakingSpeed(float dist);
    void moveToVehicle(Vehicle* v);
