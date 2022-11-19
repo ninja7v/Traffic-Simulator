@@ -6,6 +6,7 @@
 const float Truck::speedMax = constants::speedMaxTruck;
 const float Truck::acceleration = constants::accelerationTruck;
 const float Truck::color[3] = {0.7, 0.7, 0}; // Yellow
+const float Truck::color[3] = {0.0, 0.0, 0.9}; // Yellow
 
 const float Truck::getSpeedMax() {
    return speedMax;
