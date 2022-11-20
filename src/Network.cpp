@@ -42,6 +42,7 @@ Network::Network() {
    std::cout << "x   Intersection initialized" << std::endl;
 #endif
    // Roads
+   // TO DO: Initilize roads to make a random planar strongly connected directed graph
    int id = 0;
    for (Intersection* const& i : Intersections) {
       int nbConnections = rand() % 3 + 1;
@@ -123,7 +124,7 @@ void Network::displayNetwork() {
       for (auto it : toDelete) {
          Vehicles.erase(it);
 #if DEBUG
-         std::cout << "-   o-o   Vehicle deleted" << std::endl;
+         //std::cout << "-   o-o   Vehicle deleted" << std::endl;
 #endif
       }
       // Intersections
@@ -144,7 +145,7 @@ void Network::displayNetwork() {
       glfwPollEvents();
 #if DEBUG
       //std::cout << global::numberOfVehicle << std::endl;
-      //std::cout << "Frame displayed " << clock() - T1 << std::endl;
+      //std::cout << "Frame displayed " << clock() - T1  << "ms" << std::endl;
       //T1 = clock();
 #endif
    }
@@ -160,10 +161,13 @@ void Network::addVehicle() {
    if (Vehicles.size() < constants::nbCarMax)
 #pragma omp parallel for
       for (Road* r : Roads) {
-         if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > constants::distanceSecurity) ||
-               !r->containVehicle()) &&
-                rand() % 1000 < constants::flow) {
-            
+         if (r->containVehicle()) {
+            float dist = r->getVehicles().back()->distance(r->getStart());
+            bool isEnoughtRoom = r->getVehicles().back()->distance(r->getStart()) > 0.01;// constants::heightTruck;
+         }
+         if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
+              !r->containVehicle()) &&
+               rand() % 100 < constants::flow) {
             Intersection* destination = target(r->getEnd()->getID());
             switch (rand() % 3) {
                case 0:{
@@ -173,21 +177,21 @@ void Network::addVehicle() {
                   break;
                }
                case 1:{
-                  Truck* t = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
-                  Vehicles.push_back(t);
-                  r->addVehicle(t);
-                  break;
-               }
-               case 2:{
                   Bike* b = new Bike(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
                   Vehicles.push_back(b);
                   r->addVehicle(b);
                   break;
                }
+               case 2:{
+                  Truck* t = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
+                  Vehicles.push_back(t);
+                  r->addVehicle(t);
+                  break;
+               }
             }
             global::numberOfVehicles += 1;
 #if DEBUG
-            std::cout << "+   o-o   Vehicle added " << std::endl;
+            //std::cout << "+   o-o   Vehicle added " << std::endl;
 #endif
          }
       }

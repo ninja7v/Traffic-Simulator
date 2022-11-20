@@ -9,7 +9,7 @@
 
 class Road {
 public:
-   Road();
+   Road() = delete;
    Road(int n, Intersection* begin, Intersection* end);
    bool containVehicle();
    int CountVehicles();
@@ -28,10 +28,14 @@ public:
 protected:
 
 private:
-   int idRoad;
-   float length;
+   const int idRoad;
+   const float length;
    Intersection* i1;
    Intersection* i2;
    std::list<Vehicle*> Vehicles;
    std::array<float, 2> direction;
+   const float roadCoordinates[6];
+   const float sideLeft[6];
+   const float sideRight[6];
+   const float lightCoordinates[2];
 };

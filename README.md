@@ -30,9 +30,9 @@ A network has a size (X, Y), a flow, a maximal number of car and a boost paramet
 ### ⚫🚦Intersections
 Intersections have a positon and input/output roads as parameters. Each intersection is initialized with a random points on a squared grid. Intersections manages the traffic lights. Input roads have the green light one by one.
 ### 🛣Roads
-Roads have a speed limit, lenght parameter. Each road is initialized with 2 intersections.
-### 🚗🚛🏍️Vehicules
-There are 3 types of vehicules: cars, trucks and motorcycles. Each of them have a maximum speed and an acceleration parameter. They have a smooth displacement. Every Vehicules is initialized with a random road with a random target intersection. Their itinerary is obtained using the Dijkstra algorithm.
+Roads have a lenght parameter and contains a list of vehicle. Each road is initialized with 2 intersections.
+### 🚗🚛🏍️Vehicles
+There are 3 types of vehicles: cars, trucks and motorcycles. Each of them have a maximum speed and an acceleration parameter. They have a smooth displacement. Every Vehicules is initialized with a random road with a random target intersection. Their itinerary is obtained using the Dijkstra algorithm.
 ### 💻Optimizer
 ⚠️No implemented yet⚠️
 #### Approach of the problem
@@ -51,7 +51,7 @@ we can then introduce the folowing normalized parameters:
 - S = first car speed / speed max
 - D = the distance of the first car / max distance
 
-We can therefore define the folowing function: ***road index green = argmax{α*N(i)+ß*S(i)+(1-α-ß)*D(i)}***
+We can therefore define the folowing function: ***road index green = argmax{αN(i)+ßS(i)+(1-α-ß)D(i)}***
 
 with α,ß constants to be found by the optimizer, and i the road index.
 α and ß will tell which parameter is the most important to consider.
@@ -59,7 +59,6 @@ We initialized them both at 1/3 to give a neutral initialization.
 #### Under the hood
 As this is a non differentiable problem, we discretize the set of solution, find the values of the control points, and fill the set of solution by doing a 2D interpolation.
 Finally, we find the maximum value of this set.
-
 
 Now it is your turn to create traffic jams !
 

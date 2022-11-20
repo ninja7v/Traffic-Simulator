@@ -19,13 +19,12 @@ Road* Map::connection(Intersection* i1, Intersection* i2) {
 
 // This function find the optimal path using Dijkstra algorithn
 // Source: https://www.tutorialspoint.com/cplusplus-program-for-dijkstra-s-shortest-path-algorithm
-// Problem: There is not always a solution because of the graph initialization
-// Temporary solution: set every road as double way. This didn't work...
+// Condition: the graph must be strongly connected to ensure the existence of a solution.
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
    float distance[constants::nbIntersections];
    int pred[constants::nbIntersections];
-   int visited[constants::nbIntersections], count, mindistance, nextnode, i, j;
+   int visited[constants::nbIntersections], mindistance, nextnode, i, j;
    // Parameters initialization from start
    for (i = 0; i < constants::nbIntersections; i++) {
       distance[i] = cost[begin->getID()][i];
@@ -35,7 +34,7 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    distance[begin->getID()] = 0;
    visited[begin->getID()] = 1;
    bool exists = false;
-   for (count = 1; count < constants::nbIntersections; count ++) {
+   for (j = 1; j < constants::nbIntersections; j ++) {
       mindistance = INFINTY;
       for (i = 0; i < constants::nbIntersections; i++)
          if (distance[i] <= mindistance && !visited[i]) {

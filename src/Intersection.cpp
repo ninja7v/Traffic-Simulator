@@ -8,27 +8,23 @@
 #include "../headers/Global.h"
 #include "../headers/Intersection.h"
 
-Intersection::Intersection() {
-
-}
-
 Intersection::Intersection(int n = 0, std::array<float, 2> pos = { 0, 0 })
-   :idIntersection(n), position(pos) {
+   :idIntersection(n), position(pos),
+    coordinates{ position[0] * constants::ratioX + constants::margin,
+                 position[1] * constants::ratioY + constants::margin } {
 }
 
 bool Intersection::isRed(int id) {
-   int currentPeriod = ((clock() - global::t0) / constants::period);
+   const int currentPeriod = ((clock() - global::t0) / constants::period);
    return (input[currentPeriod % input.size()] == id) ? false : true;
 }
 
 void Intersection::displayIntersection() {
-   GLfloat x = position[0] * constants::ratioX + constants::margin;
-   GLfloat y = position[1] * constants::ratioY + constants::margin;
    glPointSize(constants::diameterIntersection);
    glColor3f(0.0f, 0.0f, 0.0f); // Black
    glEnable(GL_POINT_SMOOTH);
    glBegin(GL_POINTS);
-   glVertex2f(x, y);
+   glVertex2f(coordinates[0], coordinates[1]);
    glEnd();
    glDisable(GL_POINT_SMOOTH);
 }
@@ -43,12 +39,4 @@ std::array<float, 2> Intersection::getPosition() {
 
 int Intersection::getID() {
    return idIntersection;
-}
-
-int Intersection::getDurationTrafficLight() {
-   return durationTrafficLight;
-}
-
-int Intersection::getPeriodTrafficLight() {
-   return periodTrafficLight;
 }

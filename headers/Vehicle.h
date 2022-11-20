@@ -25,17 +25,18 @@ public:
    Intersection*        getDestination();
    std::list<Road*>     getItinerary();
    std::array<float, 2> getPosition();
-   const virtual float  getSpeedMax() = 0;
+   const virtual float  getSpeedMax()     = 0;
    const virtual float  getAcceleration() = 0;
-   const virtual float  getWidth() = 0;
-   const virtual float  getHeight() = 0;
-   const virtual float* getColor() = 0;
+   const virtual float  getWidth()        = 0;
+   const virtual float  getHeight()       = 0;
+   const virtual float* getColor()        = 0;
    void                 setDirection(Intersection* i);
    void                 setStatus(bool arrived);
    void                 setPosition(std::array<float, 2>);
 
 protected:
-   int idVehicle, tc = 0;
+   const int idVehicle;
+   //int tc = 0;
    bool isArrived = false;
    float speed;
    Intersection* destination;

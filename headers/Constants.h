@@ -10,10 +10,10 @@ namespace constants {
    constexpr float zoom{ 1.0f };
    // Roads
    constexpr float widthRoad{ 15 * zoom };
-   constexpr float speedLimit{ 0.003f * boost };
+   //constexpr float speedLimit{ 0.003f * boost };
    // Vehicles
-   constexpr int flow{ 1 }; // in [0, 99]
-   constexpr int nbCarMax{ 40 };
+   constexpr int flow{ 10 }; // in [0, 99]
+   constexpr int nbCarMax{ 50 };
    constexpr float speedMaxCar  { 0.002f  * boost };
    constexpr float speedMaxBike { 0.002f * boost };
    constexpr float speedMaxTruck{ 0.0015f * boost };
