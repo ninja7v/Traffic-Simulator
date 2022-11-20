@@ -1,14 +1,14 @@
 // Libraries
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h> // To use stbi_load(), placed in GLFW even though it doesn't belong there
-//#include <GL/glut.h>        // To display
-#include <GLFW/glfw3.h>     // To display
-#include <time.h>           // To use clock()
+//#include <GL/glut.h>       // To display
+#include <GLFW/glfw3.h>    // To display
+#include <time.h>          // To use clock()
 #if DEBUG
-#include <iostream>         // To use input/output
+#include <iostream>        // To use input/output
 #endif
 // Header files
-#include "omp.h"            // To parallelize
+#include "omp.h"           // To parallelize
 #include "../headers/Global.h"
 #include "../headers/Car.h"
 #include "../headers/Bike.h"
@@ -98,6 +98,7 @@ void Network::displayNetwork() {
    glLoadIdentity(); // same as above comment
 #if DEBUG
    std::cout << "|_|   Windows created" << std::endl;
+   //int T1 = global::t0; // For the frame timer
 #endif
    // Initialize time
    global::t0 = clock();
@@ -135,18 +136,16 @@ void Network::displayNetwork() {
       for (Road* const& r : Roads) {
          r->displayLight();
       }
-
-      // Timer
-      glClearColor(0.1f, 0.5f, 0.1f, 0);
-      //glColor3f(1.0f, 1.0f, 1.0f);
-      //timer.displayTime(std::to_string(timer.timer(timeMax)));
+      // Set background color
+      glClearColor(0.1f, 0.5f, 0.1f, 0); // Green
       // Swap front and back buffers
       glfwSwapBuffers(window);
       // Poll for and process events
       glfwPollEvents();
 #if DEBUG
       //std::cout << global::numberOfVehicle << std::endl;
-      //std::cout << "Frame displayed." << std::endl;
+      //std::cout << "Frame displayed " << clock() - T1 << std::endl;
+      //T1 = clock();
 #endif
    }
    glfwTerminate();
@@ -201,15 +200,11 @@ void Network::updateVehiclesPosition() {
    }
 }
 
-void Network::optimization(bool travelDirection) {
-// for a constant duration, there are 2 variables to optimize:
-// "duration" and "start" (phase)
-}
-
-void Network::resetVehicles() {
-#pragma omp parallel for
-   for (Vehicle* v : Vehicles) {
-      delete v;
-   }
-   global::numberOfVehicles = 0;
-};
+// Unused
+//void Network::resetVehicles() {
+//#pragma omp parallel for
+//   for (Vehicle* v : Vehicles) {
+//      delete v;
+//   }
+//   global::numberOfVehicles = 0;
+//};

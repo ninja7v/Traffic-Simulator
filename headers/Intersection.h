@@ -10,10 +10,10 @@ public:
    bool isRed(int id);
    void displayIntersection();
    void addInputRoad(int id);
-   std::array<float, 2> getPosition();
    int                  getID();
    int                  getDurationTrafficLight();
    int                  getPeriodTrafficLight();
+   std::array<float, 2> getPosition();
 
 protected:
 

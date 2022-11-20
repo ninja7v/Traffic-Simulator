@@ -14,10 +14,5 @@ int main(void) {
    // VISUALTISATION
    net.displayNetwork();
 
-   // OPTIMIZATION
-   //net.optimization(0);
-
-   // VISUALTISATION
-   //net.displayNetwork();
    return 0;
 }

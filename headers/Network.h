@@ -8,7 +8,6 @@
 #include "Road.h"
 #include "Map.h"
 
-//we consider a Manhatan network
 class Network {
 public:
    Network();
@@ -26,6 +25,5 @@ private:
 
    void addVehicle();
    void updateVehiclesPosition();
-   void resetVehicles();
-   void optimization(bool travelDirection);
+   //void resetVehicles();
 };

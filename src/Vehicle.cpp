@@ -31,12 +31,10 @@ void Vehicle::moveToVehicle(Vehicle* v) {
    // Distance with the intersection ahead
    float d = distance(v);
    // Update speed
-   if (d < constants::distanceSecurity) {
+   if (d < constants::distanceSecurity)
       speed = 0; // Pound!
-   }
-   else {
+   else
       speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
-   }
    // Move
    float coef = speed * 15;//(clock() - tc);
    position[0] += direction[0] * coef;
@@ -48,15 +46,13 @@ void Vehicle::moveToIntersection(Intersection* i, int idRoad) {
    // Distance with the intersection ahead
    float d = distance(i);
    // Update speed
-   if (i->isRed(idRoad)) {
+   if (i->isRed(idRoad))
       if (d < constants::distanceSecurity)
          speed = 0; // Pound!
       else
          speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
-   }
-   else {
+   else
       speed = (speed < getSpeedMax()) ? speed + getAcceleration() : getSpeedMax();
-   }
    // To add: case where next road is full
    // Move
    float coef = speed * 15;//(clock() - tc);
@@ -85,14 +81,6 @@ void Vehicle::displayVehicle() {
    const float size = 15;
    const float W = getWidth();
    const float H = getHeight();
-   //float frame[4][2] = { {direction[1] * constants::width / 2 + (-direction[0] - direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-   //                      -direction[0] * constants::width / 2 + (+direction[0] / 2 - direction[1]) * size + position[1] * constants::ratioY + constants::margin},
-   //                      {direction[1] * constants::width / 2 + (-direction[0] + direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-   //                      -direction[0] * constants::width / 2 + (-direction[0] / 2 - direction[1]) * size + position[1] * constants::ratioY + constants::margin},
-   //                      {direction[1] * constants::width / 2 + (+direction[0] + direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-   //                      -direction[0] * constants::width / 2 + (-direction[0] / 2 + direction[1]) * size + position[1] * constants::ratioY + constants::margin},
-   //                      {direction[1] * constants::width / 2 + (+direction[0] - direction[1] / 2) * size + position[0] * constants::ratioX + constants::margin,
-   //                      -direction[0] * constants::width / 2 + (+direction[0] / 2 + direction[1]) * size + position[1] * constants::ratioY + constants::margin}, };
    float center[2] = { direction[1] * constants::widthRoad / 2 + position[0] * constants::ratioX + constants::margin,
                       -direction[0] * constants::widthRoad / 2 + position[1] * constants::ratioY + constants::margin };
    float frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
@@ -115,11 +103,6 @@ void Vehicle::displayVehicle() {
    glFlush();
    glDrawArrays(GL_QUADS, 0, 1);
    glEnableClientState(GL_VERTEX_ARRAY);
-   /*GLfloat point[] = { posX * constants::ratioX, posY * constants::ratioY };
-   glPointSize(15);
-   glColor3f(0.0f, 0.0f, 0.5f);
-   glVertexPointer(2, GL_FLOAT, 0, point);
-   glDrawArrays(GL_POINTS, 0, 1);*/
 }
 
 Road* Vehicle::nextRoad() {

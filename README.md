@@ -11,12 +11,14 @@ Traffic Simulator requires the folowing dependencies:
 - [GLFW](https://www.glfw.org/download)
 - [GLUT](https://www.opengl.org/resources/libraries/glut/glut_downloads.php)
 - [stb](https://github.com/nothings/stb)
+
 and uses from std:
-- [Array](https://en.cppreference.com/w/cpp/container/array)
-- [List](https://www.cplusplus.com/reference/list/list/)
+- [Array](https://cplusplus.com/reference/array/array/)
+- [List](https://cplusplus.com/reference/list/list/)
+- [Vector](https://cplusplus.com/reference/vector/vector/)
 - [Iterator](https://pypi.org/project/numpy/)
-- [Time](https://www.cplusplus.com/reference/ctime/time/)
-- [Iostream](https://www.cplusplus.com/reference/iostream/) (in debug mode)
+- [Time](https://cplusplus.com/reference/ctime/time/)
+- [Iostream](https://cplusplus.com/reference/iostream/) (in debug mode)
 
 The easyest way to execute the program is with Visual Studio: open the .sln file and hit F5!
 
@@ -38,22 +40,26 @@ We are making a real time optimizer to optimize the discrete traffic flow, playi
 Below is a descrition of our approach to the problem.
 The relevant local input data at each intersection are:
 - the number of road
+
 and for each road:
 - the number of vehicule
 - the speed of the first car
 - the distance of the first car
+
 we can then introduce the folowing normalized parameters:
 - N = number of cars / road capacity
-- S = first car spedd / speed max
+- S = first car speed / speed max
 - D = the distance of the first car / max distance
-We can therefore define the folowing function:
-road index green = argmax{α*N(i)+ß*S(i)+(1-α-ß)*D(i)}
+
+We can therefore define the folowing function: ***road index green = argmax{α*N(i)+ß*S(i)+(1-α-ß)*D(i)}***
+
 with α,ß constants to be found by the optimizer, and i the road index.
 α and ß will tell which parameter is the most important to consider.
-We initialized them both at 0.33 to give a neutral initialization.
+We initialized them both at 1/3 to give a neutral initialization.
 #### Under the hood
 As this is a non differentiable problem, we discretize the set of solution, find the values of the control points, and fill the set of solution by doing a 2D interpolation.
-Finally, be find the maximum value of this set.
+Finally, we find the maximum value of this set.
+
 
 Now it is your turn to create traffic jams !
 

@@ -12,27 +12,20 @@ namespace {
 
 Map::Map() {
 }
-// This function find the optimal path using Dijkstra algorithn
-// Source: https://www.tutorialspoint.com/cplusplus-program-for-dijkstra-s-shortest-path-algorithm
-// Problem: There is not always a solution because of the graph initialization
-// Temporary solution: set every road as double way. This didn't work...
+
 Road* Map::connection(Intersection* i1, Intersection* i2) {
    return connections[i1->getID()][i2->getID()];
 }
 
+// This function find the optimal path using Dijkstra algorithn
+// Source: https://www.tutorialspoint.com/cplusplus-program-for-dijkstra-s-shortest-path-algorithm
+// Problem: There is not always a solution because of the graph initialization
+// Temporary solution: set every road as double way. This didn't work...
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
-   float cost[constants::nbIntersections][constants::nbIntersections];
    float distance[constants::nbIntersections];
    int pred[constants::nbIntersections];
    int visited[constants::nbIntersections], count, mindistance, nextnode, i, j;
-   // Fill cost matrix
-   for (i = 0; i < constants::nbIntersections; i++)
-      for (j = 0; j < constants::nbIntersections; j++)
-         if (connections[i][j] == nullptr)
-            cost[i][j] = INFINTY;
-         else
-            cost[i][j] = connections[i][j]->getLength();
    // Parameters initialization from start
    for (i = 0; i < constants::nbIntersections; i++) {
       distance[i] = cost[begin->getID()][i];
@@ -49,7 +42,6 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
             mindistance = distance[i];
             nextnode = i;
          }
-      //   break;
       visited[nextnode] = 1;
       for (i = 0; i < constants::nbIntersections; i++)
          if (!visited[i])
@@ -73,4 +65,5 @@ Road* Map::getConnection(int a, int b) {
 
 void Map::setConnection(int a, int b, Road* r) {
    connections[a][b] = r;
+   cost       [a][b] = r->getLength();
 }
