@@ -1,6 +1,6 @@
 # 🚦🚗🚛🏍️ Traffic Simulator
 
-**GUI for road traffic simulation coded in C++ by Luc and Claire PREVOST.**
+**GUI for a road traffic simulation coded in C++ by Luc and Claire PREVOST.**
 
 ![traffic_simulator](https://user-images.githubusercontent.com/52052772/202865554-04ef6c69-5e1e-49a1-bf79-edb52018b80e.png)
 
@@ -26,6 +26,7 @@ The easyest way to execute the program is with Visual Studio: open the .sln file
 After launching the program, a window pops up with a random network.
 
 ## ⚙️Parameters
+Relevants parameters are stored in the *Constants.h* file.
 ### 🕸Network
 A network has a size (X, Y), a flow, a maximal number of car and a boost parameter. The flow gives the frequency of appearance of cars in the network. The boost parameter accelerate the simulation by keeping the ratios.
 ### ⚫🚦Intersections
@@ -38,9 +39,9 @@ There are 3 types of vehicles:
 - trucks 🚛
 - Bikes 🏍️
 
-Each of them have a maximum speed and an acceleration parameter. They have a smooth displacement. Every Vehicules is initialized with a random road with a random target intersection. Their itinerary is obtained using the Dijkstra algorithm.
+Each of them have a maximum speed and an acceleration parameter. They have a smooth displacement. Every Vehicules is initialized on a random road with a random target intersection. Their itinerary is obtained using the Dijkstra algorithm. Finally, the vehicles are not Britich, they drive on the right lane.
 ### 💻Optimizer
-⚠️No implemented yet⚠️
+⚠️Not implemented yet⚠️
 #### Approach of the problem
 We are making a real time optimizer to optimize the discrete traffic flow, playing with traffic light having a non constant period.
 Below is a descrition of our approach to the problem.
@@ -59,15 +60,13 @@ we can then introduce the folowing normalized parameters:
 
 We can therefore define the folowing function: ***road index green = argmax{αN(i)+ßS(i)+(1-α-ß)D(i)}***
 
-with α,ß constants to be found by the optimizer, and i the road index.
-α and ß will tell which parameter is the most important to consider.
-We initialized them both at 1/3 to give a neutral initialization.
+with α,ß constants to be found by the optimizer, and i the road index. α and ß will tell which parameter is the most important to consider. We initialized them both at 1/3 to give a neutral initialization.
 #### Under the hood
 As this is a non differentiable problem, we discretize the set of solution, find the values of the control points, and fill the set of solution by doing a 2D interpolation.
 Finally, we find the maximum value of this set.
 
-## 💻Documentation
-This code is well commented for [Doxygen](https://www.doxygen.nl/index.html). Then for more information, open your [Doxywizard](https://www.doxygen.nl/manual/doxywizard_usage.html) and generate the full documentation.
+## 📖Documentation
+This code is well commented for [Doxygen](https://www.doxygen.nl/index.html). Hence for more informations, a full documentation can be generated with Doxygen.
 
 Now it is your turn to create traffic jams !
 

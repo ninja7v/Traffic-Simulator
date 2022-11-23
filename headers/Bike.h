@@ -11,19 +11,19 @@ class Bike : public Vehicle {
 public:
    using Vehicle::Vehicle;
 /** @brief Getter.
-    @returns Bike maximum speed.*/
+    @returns Bike maximum speed*/
    const float  getSpeedMax();
 /** @brief Getter.
-    @returns Bike acceleration.*/
+    @returns Bike acceleration*/
    const float  getAcceleration();
 /** @brief Getter.
-    @returns Bike width.*/
+    @returns Bike width*/
    const float  getWidth();
 /** @brief Getter.
-    @returns Bike height.*/
+    @returns Bike height*/
    const float  getHeight();
 /** @brief Getter.
-    @returns Bike color.*/
+    @returns Bike color*/
    const float* getColor();
 protected:
 

@@ -1,7 +1,5 @@
 /**
- * @brief Free an object.
- *
- * @return 0 on success.
+ * @brief Map of the Network.
  */
 
 #pragma once

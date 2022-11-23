@@ -161,10 +161,6 @@ void Network::addVehicle() {
    if (Vehicles.size() < constants::nbVehicleMax)
 #pragma omp parallel for
       for (Road* r : Roads) {
-         if (r->containVehicle()) {
-            float dist = r->getVehicles().back()->distance(r->getStart());
-            bool isEnoughtRoom = r->getVehicles().back()->distance(r->getStart()) > 0.01;// constants::heightTruck;
-         }
          if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
               !r->containVehicle()) &&
                rand() % 100 < constants::flow) {

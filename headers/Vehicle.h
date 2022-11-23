@@ -18,7 +18,7 @@ public:
   * @param id Vehicle ID
   * @param target Destination
   * @param track Itinerary
-  * @returns Vehicle.*/
+  * @returns Vehicle*/
    Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* target, std::list<Road*> track);
 /** @brief Theoritical speed function.
   * @param dist Distance with the front obstacle

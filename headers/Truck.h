@@ -11,19 +11,19 @@ class Truck : public Vehicle {
 public:
    using Vehicle::Vehicle;
 /** @brief Getter.
-    @returns Truck maximum speed.*/
+    @returns Truck maximum speed*/
    const float  getSpeedMax();
 /** @brief Getter.
-    @returns Truck acceleration.*/
+    @returns Truck acceleration*/
    const float  getAcceleration();
 /** @brief Getter.
-    @returns Truck width.*/
+    @returns Truck width*/
    const float  getWidth();
 /** @brief Getter.
-    @returns Truck height.*/
+    @returns Truck height*/
    const float  getHeight();
 /** @brief Getter.
-    @returns Truck color.*/
+    @returns Truck color*/
    const float* getColor();
 protected:
 

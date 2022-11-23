@@ -41,7 +41,7 @@ private:
    const std::array<float, 2> position;
 /** Position coordinates. */
    const std::array<float, 2> coordinates;
-/** Input / output road identifiers */
+/** Input / output road identifiers. */
    std::vector<int> input, output;
    //static float a, b; // for the opimizer
 };
