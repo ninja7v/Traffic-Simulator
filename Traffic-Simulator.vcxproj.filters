@@ -105,9 +105,10 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+    <None Include="LICENSE.md" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="logo_TS.png">
+    <Image Include="Graphics\logo_TS.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

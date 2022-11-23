@@ -16,7 +16,8 @@ and uses from std:
 - [Array](https://cplusplus.com/reference/array/array/)
 - [List](https://cplusplus.com/reference/list/list/)
 - [Vector](https://cplusplus.com/reference/vector/vector/)
-- [Iterator](https://pypi.org/project/numpy/)
+- [Iterator](https://cplusplus.com/reference/iterator/iterator/)
+- [Algorithm](https://cplusplus.com/reference/algorithm/)
 - [Time](https://cplusplus.com/reference/ctime/time/)
 - [Iostream](https://cplusplus.com/reference/iostream/) (in debug mode)
 
@@ -32,7 +33,12 @@ Intersections have a positon and input/output roads as parameters. Each intersec
 ### 🛣Roads
 Roads have a lenght parameter and contains a list of vehicle. Each road is initialized with 2 intersections.
 ### 🚗🚛🏍️Vehicles
-There are 3 types of vehicles: cars, trucks and motorcycles. Each of them have a maximum speed and an acceleration parameter. They have a smooth displacement. Every Vehicules is initialized with a random road with a random target intersection. Their itinerary is obtained using the Dijkstra algorithm.
+There are 3 types of vehicles:
+- cars 🚗
+- trucks 🚛
+- Bikes 🏍️
+
+Each of them have a maximum speed and an acceleration parameter. They have a smooth displacement. Every Vehicules is initialized with a random road with a random target intersection. Their itinerary is obtained using the Dijkstra algorithm.
 ### 💻Optimizer
 ⚠️No implemented yet⚠️
 #### Approach of the problem
@@ -59,6 +65,9 @@ We initialized them both at 1/3 to give a neutral initialization.
 #### Under the hood
 As this is a non differentiable problem, we discretize the set of solution, find the values of the control points, and fill the set of solution by doing a 2D interpolation.
 Finally, we find the maximum value of this set.
+
+## 💻Documentation
+This code is well commented for [Doxygen](https://www.doxygen.nl/index.html). Then for more information, open your [Doxywizard](https://www.doxygen.nl/manual/doxywizard_usage.html) and generate the full documentation.
 
 Now it is your turn to create traffic jams !
 

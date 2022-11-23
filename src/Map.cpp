@@ -13,13 +13,10 @@ namespace {
 Map::Map() {
 }
 
-Road* Map::connection(Intersection* i1, Intersection* i2) {
-   return connections[i1->getID()][i2->getID()];
-}
+//Road* Map::connection(Intersection* i1, Intersection* i2) {
+//   return connections[i1->getID()][i2->getID()];
+//}
 
-// This function find the optimal path using Dijkstra algorithn
-// Source: https://www.tutorialspoint.com/cplusplus-program-for-dijkstra-s-shortest-path-algorithm
-// Condition: the graph must be strongly connected to ensure the existence of a solution.
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
    float distance[constants::nbIntersections];

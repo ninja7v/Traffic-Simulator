@@ -83,7 +83,7 @@ void Network::displayNetwork() {
    window = glfwCreateWindow(constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT, "Traffic Simulator", NULL, NULL);
    // Add icon
    int width, height, channels; // Doesn't need to be initialized
-   unsigned char* pixels = stbi_load("logo_TS.png", &width, &height, &channels, 4);
+   unsigned char* pixels = stbi_load("Graphics/logo_TS.png", &width, &height, &channels, 4);
    GLFWimage logo;
    logo.width  = width;
    logo.height = height;
@@ -158,7 +158,7 @@ void Network::addVehicle() {
                                    do {destination = rand() % constants::nbIntersections;
                                    } while (destination == idStart);
                                    return Intersections[destination];};
-   if (Vehicles.size() < constants::nbCarMax)
+   if (Vehicles.size() < constants::nbVehicleMax)
 #pragma omp parallel for
       for (Road* r : Roads) {
          if (r->containVehicle()) {
