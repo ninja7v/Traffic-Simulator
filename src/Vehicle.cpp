@@ -110,12 +110,12 @@ Road* Vehicle::nextRoad() {
 }
 
 float Vehicle::distance(Vehicle* v) {
-   return std::max(pow(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2), 0.5) - (this->getHeight() + v->getHeight()) / 200, 0.0);
+   return std::max(pow(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2), 0.5) - (this->getHeight() + v->getHeight()) / 15, 0.0);
 }
 
 float Vehicle::distance(Intersection* i) {
    // this->getHeight() gives an abort, so we don't take it into the computation
-   return std::max(pow(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2), 0.5) - constants::diameterIntersection /200, 0.0);
+   return std::max(pow(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2), 0.5) - constants::diameterIntersection / 15, 0.0);
 }
 
 int Vehicle::getID() {

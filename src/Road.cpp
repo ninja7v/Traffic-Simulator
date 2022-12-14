@@ -57,7 +57,6 @@ void Road::moveVehicle() {
       if (atIntersection) {
          if (v->nextRoad() == nullptr) {
             this->removeVehicle();
-            //Network::removeVehicle(v);
             v->setStatus(true);
             delete v;
             global::numberOfVehicles -= 1;
@@ -71,9 +70,8 @@ void Road::moveVehicle() {
             }
          }
       }
-      else {
+      else
          v->moveToIntersection(i2, idRoad);
-      }
       // For the folowing cars
       // We ignore the case atIntersection = true, were the first car is gone
       if (Vehicles.size() > 1) {

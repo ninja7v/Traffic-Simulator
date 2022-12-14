@@ -1,14 +1,18 @@
 // Libraries
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h> // To use stbi_load(), placed in GLFW even though it doesn't belong there
+#include <stb/stb_image.h> // To use stbi_load()
 //#include <GL/glut.h>       // To display
 #include <GLFW/glfw3.h>    // To display
 #include <time.h>          // To use clock()
+//#include <thread>          // To use threads // Not used yet, but to display a waiting image in the future
+#include <unordered_map>   // To use unordered_map
+//#include <vector>          // To vectors // Already included
+//#include <array>           // To arrays // Already included
+#include <delaunator.hpp>  // To compute the Delaunay triangulation
 #if DEBUG
 #include <iostream>        // To use input/output
 #endif
 // Header files
-#include "omp.h"           // To parallelize
 #include "../headers/Global.h"
 #include "../headers/Car.h"
 #include "../headers/Bike.h"
@@ -17,32 +21,70 @@
 
 Network::Network() {
    // Intersections
-   std::array<float, 2> position = {0, 0};
+   //std::unordered_map<std::array<float, 2>, Intersection*> card;
+   std::vector<double> positions; // x0, y0, x1, y1, ...
+   std::array<float, 2> position;
+   int k;
+   float x, y;
+   auto distance = [&](std::array<float, 2> p) {
+      return (float)pow(pow(x - p[0], 2) + pow(y - p[1], 2), 0.5);
+   };
    srand(time(nullptr));
-#pragma omp parallel for
-   for (int k = 0; k < constants::nbIntersections; k++) {
+   for (k = 0; k < constants::nbIntersections; k++) {
       bool validPosition = false;
       while (!validPosition) {
-         position[0] = rand() % constants::sizeX;
-         position[1] = rand() % constants::sizeY;
-         if (!Intersections.empty()) {
-            for (Intersection* i : Intersections) {
-               if (!(i->getPosition() == position)) {
-                  validPosition = true;
-               }
-            }
-         }
-         else {
-            validPosition = true;
-         }
+         validPosition = true;
+         x = rand() % constants::sizeX;
+         y = rand() % constants::sizeY;
+         if (!Intersections.empty())
+            for (Intersection* i : Intersections)
+               if (distance(i->getPosition()) < constants::minGap)
+                  validPosition = false;
       }
+      positions.push_back(x);
+      positions.push_back(y);
+      position[0] = positions[2 * k];
+      position[1] = positions[2 * k + 1];
       Intersections.push_back(new Intersection(k, position));
+      //card.emplace(position, Intersections.back());
    }
 #if DEBUG
    std::cout << "x   Intersection initialized" << std::endl;
 #endif
    // Roads
-   // TO DO: Initilize roads to make a random planar strongly connected directed graph
+   /*delaunator::Delaunator d(positions); // Informations here: https://github.com/delfrrr/delaunator-cpp
+   std::array<float, 2> begin;
+   std::array<float, 2> end;
+   int id = 0;
+   for (std::size_t i = 0; i < d.triangles.size(); i += 3) {
+      begin[0] = d.coords[2 * d.triangles[i    ]    ];
+      begin[1] = d.coords[2 * d.triangles[i    ] + 1];
+      end[0]   = d.coords[2 * d.triangles[i + 1]    ];
+      end[1]   = d.coords[2 * d.triangles[i + 1] + 1];
+      Road* r0(new Road(id, card[begin], card[end]));
+      Roads.push_back(r0);
+      map.setConnection(card[begin]->getID(), card[end]->getID(), r0);
+      card[end]->addInputRoad(r0->getID());
+      id++;
+      begin[0] = d.coords[2 * d.triangles[i + 1]    ];
+      begin[1] = d.coords[2 * d.triangles[i + 1] + 1];
+      end[0]   = d.coords[2 * d.triangles[i + 2]    ];
+      end[1]   = d.coords[2 * d.triangles[i + 2] + 1];
+      Road* r1(new Road(id, card[begin], card[end]));
+      Roads.push_back(r1);
+      map.setConnection(card[begin]->getID(), card[end]->getID(), r1);
+      card[end]->addInputRoad(r1->getID());
+      id++;
+      begin[0] = d.coords[2 * d.triangles[i + 2]    ];
+      begin[1] = d.coords[2 * d.triangles[i + 2] + 1];
+      end[0]   = d.coords[2 * d.triangles[i    ]    ];
+      end[1]   = d.coords[2 * d.triangles[i    ] + 1];
+      Road* r2(new Road(id, card[begin], card[end]));
+      Roads.push_back(r2);
+      map.setConnection(card[begin]->getID(), card[end]->getID(), r2);
+      card[end]->addInputRoad(r2->getID());
+      id++;
+   }*/
    int id = 0;
    for (Intersection* const& i : Intersections) {
       int nbConnections = rand() % 3 + 1;
@@ -105,22 +147,20 @@ void Network::displayNetwork() {
    global::t0 = clock();
    while (!glfwWindowShouldClose(window)) {
       glClear(GL_COLOR_BUFFER_BIT);
+      // Set background color
+      glClearColor(0.1f, 0.5f, 0.1f, 0); // Green
       // Roads
-#pragma omp parallel for
-      for (Road* const& r : Roads) {
+      for (Road* const& r : Roads)
          r->displayRoad();
-      }
       // Vehicle
       this->addVehicle();
       this->updateVehiclesPosition();
       std::list<std::list<Vehicle*>::iterator> toDelete;
-#pragma omp parallel for
       for (auto v = Vehicles.begin(); v != Vehicles.end(); v++)
          if ((*v)->getStatus())
             toDelete.push_back(v);
          else
             (*v)->displayVehicle();
-#pragma omp parallel for
       for (auto it : toDelete) {
          Vehicles.erase(it);
 #if DEBUG
@@ -128,17 +168,13 @@ void Network::displayNetwork() {
 #endif
       }
       // Intersections
-#pragma omp parallel for
       for (Intersection* i : Intersections) {
          i->displayIntersection();
       }
       // Traffic lights
-#pragma omp parallel for
       for (Road* const& r : Roads) {
          r->displayLight();
       }
-      // Set background color
-      glClearColor(0.1f, 0.5f, 0.1f, 0); // Green
       // Swap front and back buffers
       glfwSwapBuffers(window);
       // Poll for and process events
@@ -159,32 +195,28 @@ void Network::addVehicle() {
                                    } while (destination == idStart);
                                    return Intersections[destination];};
    if (Vehicles.size() < constants::nbVehicleMax)
-#pragma omp parallel for
       for (Road* r : Roads) {
          if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
               !r->containVehicle()) &&
                rand() % 100 < constants::flow) {
             Intersection* destination = target(r->getEnd()->getID());
+            Vehicle* v;
             switch (rand() % 3) {
                case 0:{
-                  Car* c = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
-                  Vehicles.push_back(c);
-                  r->addVehicle(c);
+                  v = new Car(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
                   break;
                }
                case 1:{
-                  Bike* b = new Bike(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
-                  Vehicles.push_back(b);
-                  r->addVehicle(b);
+                  v = new Bike(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
                   break;
                }
                case 2:{
-                  Truck* t = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
-                  Vehicles.push_back(t);
-                  r->addVehicle(t);
+                  v = new Truck(r->getStart(), r->getEnd(), r->getID(), destination, map.track(r->getEnd(), destination));
                   break;
                }
             }
+            Vehicles.push_back(v);
+            r->addVehicle(v);
             global::numberOfVehicles += 1;
 #if DEBUG
             //std::cout << "+   o-o   Vehicle added " << std::endl;
@@ -194,15 +226,12 @@ void Network::addVehicle() {
 }
 
 void Network::updateVehiclesPosition() {
-#pragma omp parallel for
-   for (Road* r : Roads) {
+   for (Road* r : Roads)
       r->moveVehicle();
-   }
 }
 
 // Unused
 //void Network::resetVehicles() {
-//#pragma omp parallel for
 //   for (Vehicle* v : Vehicles) {
 //      delete v;
 //   }

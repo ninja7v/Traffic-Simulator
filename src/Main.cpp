@@ -4,7 +4,8 @@
 
 // Header files
 #include "../headers/Network.h"
-
+#include "omp.h"           // To parallelize
+#include <iostream>        // To use input/output
 using namespace std;
 
 int main(void) {

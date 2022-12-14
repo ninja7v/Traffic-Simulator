@@ -13,10 +13,6 @@ namespace {
 Map::Map() {
 }
 
-//Road* Map::connection(Intersection* i1, Intersection* i2) {
-//   return connections[i1->getID()][i2->getID()];
-//}
-
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
    float distance[constants::nbIntersections];
