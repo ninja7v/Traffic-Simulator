@@ -35,5 +35,6 @@ private:
    void addVehicle();
 /** @brief Move the Vehicle for the next frame. */
    void updateVehiclesPosition();
-   //void resetVehicles(); // Unused
+///** @brief Remove all Vehicle. */
+//   void resetVehicles(); // Unused
 };

@@ -15,22 +15,24 @@ public:
   * @param pos Position coordinates
   * @returns Car acceleration */
    Intersection(int id, std::array<float, 2> pos);
-/** @brief Constructor.
+/** @brief Destructor.
+   //~Intersection();
+/** @brief Get trafic light color.
   * @param id Road ID
-  * @returns Green / Red */
-   bool isRed(int id);
+  * @returns true:Red / false:Green */
+   const bool isRed(int id);
 /** @brief Display the intersection as black point.*/
    void displayIntersection();
 /** @brief Add an input road in the input vector.
   * @param id Road ID */
-   void addInputRoad(int id);
+   void addInputRoad(const int id);
    //int                  getRoadIDGreen(); // for the opimizer
 /** @brief Getter.
   * @returns Intersection ID */
-   int                  getID();
+   const int                  getID();
 /** @brief Getter.
   * @returns Position on the grid */
-   std::array<float, 2> getPosition();
+   const std::array<float, 2> getPosition();
 
 protected:
 

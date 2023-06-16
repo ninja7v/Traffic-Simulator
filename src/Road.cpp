@@ -9,10 +9,10 @@
 #include "../headers/Road.h"
 #include "../headers/constants.h"
 
-Road::Road(int n, Intersection* begin, Intersection* end)
-   : idRoad(n), i1(begin), i2(end),
+Road::Road(int id, Intersection* begin, Intersection* end)
+   : idRoad(id), i1(begin), i2(end),
      length(pow(pow(begin->getPosition()[0] - end->getPosition()[0], 2) +
-                  pow(begin->getPosition()[1] - end->getPosition()[1], 2), 0.5)),
+                pow(begin->getPosition()[1] - end->getPosition()[1], 2), 0.5)),
      direction{ (end->getPosition()[0] - begin->getPosition()[0]) / length,
                 (end->getPosition()[1] - begin->getPosition()[1]) / length },
      roadCoordinates{ direction[1] * constants::widthRoad / 2 + i1->getPosition()[0] * constants::ratioX + constants::margin,
@@ -31,13 +31,16 @@ Road::Road(int n, Intersection* begin, Intersection* end)
                       -direction[0] * constants::widthRoad / 2 + ((float)i2->getPosition()[1] - direction[1] / 6) * constants::ratioY + constants::margin }{
 }
 
+Road::~Road(){}
+
 bool Road::containVehicle() {
    return (Vehicles.empty()) ? false : true;
 }
 
-int Road::CountVehicles() {
-   return Vehicles.size();
-}
+// For the Optimizer
+//int Road::countVehicles() {
+//   return Vehicles.size();
+//}
 
 void Road::addVehicle(Vehicle* v) {
    Vehicles.push_back(v);
@@ -138,11 +141,11 @@ void Road::displayLight() {
    glDisable(GL_POINT_SMOOTH);
 }
 
-int Road::getID() {
+const int Road::getID() {
    return idRoad;
 }
 
-float Road::getLength() {
+const float Road::getLength() {
    return length;
 }
 
@@ -158,6 +161,6 @@ std::list<Vehicle*> Road::getVehicles() {
    return Vehicles;
 }
 
-std::array<float, 2> Road::getDirection() {
+const std::array<float, 2> Road::getDirection() {
    return direction;
 }

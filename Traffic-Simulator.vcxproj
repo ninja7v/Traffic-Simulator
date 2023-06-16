@@ -138,6 +138,7 @@
     <ClCompile Include="src\Road.cpp" />
     <ClCompile Include="src\Vehicle.cpp" />
     <ClCompile Include="src\Truck.cpp" />
+    <ClCompile Include="Tests\Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\stb-master\stb-master\stb_image.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="headers\Road.h" />
     <ClInclude Include="headers\Vehicle.h" />
     <ClInclude Include="headers\Truck.h" />
+    <ClInclude Include="Tests\Test.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

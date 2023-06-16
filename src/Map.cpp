@@ -51,11 +51,11 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    return path;
 };
 
-Road* Map::getConnection(int a, int b) {
+const Road* Map::getConnection(const int a, const int b) {
    return connections[a][b];
 }
 
-void Map::setConnection(int a, int b, Road* r) {
+void Map::setConnection(const int a, const int b, Road* r) {
    connections[a][b] = r;
    cost       [a][b] = r->getLength();
 }

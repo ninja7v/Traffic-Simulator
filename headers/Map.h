@@ -24,12 +24,12 @@ public:
   * @param a Start
   * @param b Arrival
   * @returns Road */
-   Road* getConnection(int a, int b);
+   const Road* getConnection(const int a, const int b);
 /** @brief Setter to build the road between 2 intersections.
   * @param a Start
   * @param b Arrival
   * @param r New Road */
-   void  setConnection(int a, int b, Road* r);
+   void setConnection(const int a, const int b, Road* r);
 
 protected:
 

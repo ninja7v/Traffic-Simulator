@@ -20,6 +20,7 @@ and uses from std:
 - [Algorithm](https://cplusplus.com/reference/algorithm/)
 - [Time](https://cplusplus.com/reference/ctime/time/)
 - [Iostream](https://cplusplus.com/reference/iostream/) (in debug mode)
+- [Cassert](https://cplusplus.com/reference/cassert/) (in debug mode for unit tests)
 
 The easyest way to execute the program is with Visual Studio: open the .sln file and hit F5!
 

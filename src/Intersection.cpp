@@ -14,7 +14,9 @@ Intersection::Intersection(int n = 0, std::array<float, 2> pos = { 0, 0 })
                  position[1] * constants::ratioY + constants::margin } {
 }
 
-bool Intersection::isRed(int id) {
+//Intersection::~Intersection(){}
+
+const bool Intersection::isRed(int id) {
    const int currentPeriod = ((clock() - global::t0) / constants::period);
    return (input[currentPeriod % input.size()] == id) ? false : true;
 }
@@ -29,14 +31,14 @@ void Intersection::displayIntersection() {
    glDisable(GL_POINT_SMOOTH);
 }
 
-void Intersection::addInputRoad(int id) {
+void Intersection::addInputRoad(const int id) {
    input.push_back(id);
 }
 
-std::array<float, 2> Intersection::getPosition() {
-   return position;
+const int Intersection::getID() {
+   return idIntersection;
 }
 
-int Intersection::getID() {
-   return idIntersection;
+const std::array<float, 2> Intersection::getPosition() {
+   return position;
 }

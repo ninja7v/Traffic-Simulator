@@ -88,7 +88,7 @@ Network::Network() {
    int id = 0;
    for (Intersection* const& i : Intersections) {
       int nbConnections = rand() % 3 + 1;
-      int idIntersection;
+      int idIntersection = -1;
       bool validIntersection = false;
       for (int k = 0; k < nbConnections; k++) {
          validIntersection = false;
@@ -122,7 +122,7 @@ void Network::displayNetwork() {
    // Create windows
    GLFWwindow* window;
    glfwInit();
-   window = glfwCreateWindow(constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT, "Traffic Simulator", NULL, NULL);
+   window = glfwCreateWindow(constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT, "Traffic Simulator", nullptr, nullptr);
    // Add icon
    int width, height, channels; // Doesn't need to be initialized
    unsigned char* pixels = stbi_load("Graphics/logo_TS.png", &width, &height, &channels, 4);
@@ -135,12 +135,12 @@ void Network::displayNetwork() {
    glfwMakeContextCurrent(window);
    glViewport(0.0f, 0.0f, constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT); // specifies the part of the window to which OpenGL will draw (in pixels), convert from normalised to pixels
    glMatrixMode(GL_PROJECTION); // projection matrix defines the properties of the camera that views the objects in the world coordinate frame. Here you typically set the zoom factor, aspect ratio and the near and far clipping planes
-   glLoadIdentity(); // replace the current matrix with the identity matrix and starts us a fresh because matrix transforms such as glOrpho and glRotate cumulate, basically puts us at (0, 0, 0)
+   glLoadIdentity();            // replace the current matrix with the identity matrix and starts us a fresh because matrix transforms such as glOrpho and glRotate cumulate, basically puts us at (0, 0, 0)
    glOrtho(0, constants::SCREEN_WIDTH, 0, constants::SCREEN_HEIGHT, 0, 1); // essentially set coordinate system
-   glMatrixMode(GL_MODELVIEW); // (default matrix mode) modelview matrix defines how your objects are transformed (meaning translation, rotation and scaling) in your world
-   glLoadIdentity(); // same as above comment
+   glMatrixMode(GL_MODELVIEW);  // (default matrix mode) modelview matrix defines how your objects are transformed (meaning translation, rotation and scaling) in your world
+   glLoadIdentity();            // same as above comment
 #if DEBUG
-   std::cout << "|_|   Windows created" << std::endl;
+   std::cout << "[]   Windows created" << std::endl;
    //int T1 = global::t0; // For the frame timer
 #endif
    // Initialize time

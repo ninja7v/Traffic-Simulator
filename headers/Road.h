@@ -15,18 +15,21 @@ class Road {
 public:
    Road() = delete;
 /** @brief Constructor.
-  * @param n Road ID
+  * @param id Road ID
   * @param begin Start
   * @param end Arrival
   * @returns Road */
-   Road(int n, Intersection* begin, Intersection* end);
+   Road(int id, Intersection* begin, Intersection* end);
+/** @brief Destructor. */
+   ~Road();
 /** @brief Check if the Road contain vehicles.
   * @returns Road */
    bool containVehicle();
-/** @brief Count the number of vehicle.
-  * @returns Number of vehicles */
-   int CountVehicles();
-/** @brief Add vehicle to the Road. */
+///** @brief Count the number of vehicle.
+//  * @returns Number of vehicles */
+//   int countVehicles(); // For the Optimizer
+/** @brief Add vehicle to the Road.
+  * @param v Vehicle to add */
    void addVehicle(Vehicle* v);
 /** @brief Remove the first vehicle of the Road. */
    void removeVehicle();
@@ -38,22 +41,22 @@ public:
    void displayLight();
 /** @brief Getter.
   * @return Road ID*/
-   int                  getID();
+   const int                  getID();
 /** @brief Getter.
   * @return Road lenght */
-   float                getLength();
+   const float                getLength();
 /** @brief Getter.
   * @return Road ID */
-   Intersection*        getStart();
+   Intersection*              getStart();
 /** @brief Getter.
   * @return Start Intersection */
-   Intersection*        getEnd();
+   Intersection*              getEnd();
 /** @brief Getter.
   * @return End Intersection */
-   std::list<Vehicle*>  getVehicles();
+   std::list<Vehicle*>        getVehicles();
 /** @brief Getter.
   * @return Orientation of the Road */
-   std::array<float, 2> getDirection();
+   const std::array<float, 2> getDirection();
 
 protected:
 

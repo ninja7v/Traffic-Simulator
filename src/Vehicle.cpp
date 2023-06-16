@@ -16,7 +16,9 @@ Vehicle::Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* targe
    speed = 0.0f; // Unit is pixel per seconds
 }
 
-float Vehicle::breakingSpeed(float d) {
+Vehicle::~Vehicle(){}
+
+float Vehicle::breakingSpeed(const float d) {
    // Choose breaking speed function
    // - Constant (order 1 -> not smoth)
    //return constants::speedMax;
@@ -43,7 +45,7 @@ void Vehicle::moveToVehicle(Vehicle* v) {
    //tc = clock();
 }
 
-void Vehicle::moveToIntersection(Intersection* i, int idRoad) {
+void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
    // Distance with the intersection ahead
    const float d = distance(i);
    // Update speed
@@ -81,16 +83,16 @@ void Vehicle::updateItinerary() {
 void Vehicle::displayVehicle() {
    const float W = getWidth();
    const float H = getHeight();
-   float center[2] = { direction[1] * constants::widthRoad / 2 + position[0] * constants::ratioX + constants::margin,
-                      -direction[0] * constants::widthRoad / 2 + position[1] * constants::ratioY + constants::margin };
-   float frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
-                          center[1] + direction[0] * W - direction[1] * H},
-                         {center[0] - direction[0] * H + direction[1] * W,
-                          center[1] - direction[0] * W - direction[1] * H},
-                         {center[0] + direction[0] * H + direction[1] * W,
-                          center[1] - direction[0] * W + direction[1] * H},
-                         {center[0] + direction[0] * H - direction[1] * W,
-                          center[1] + direction[0] * W + direction[1] * H}, };
+   const float center[2] = { direction[1] * constants::widthRoad / 2 + position[0] * constants::ratioX + constants::margin,
+                            -direction[0] * constants::widthRoad / 2 + position[1] * constants::ratioY + constants::margin };
+   const float frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
+                                center[1] + direction[0] * W - direction[1] * H},
+                               {center[0] - direction[0] * H + direction[1] * W,
+                                center[1] - direction[0] * W - direction[1] * H},
+                               {center[0] + direction[0] * H + direction[1] * W,
+                                center[1] - direction[0] * W + direction[1] * H},
+                               {center[0] + direction[0] * H - direction[1] * W,
+                                center[1] + direction[0] * W + direction[1] * H}, };
    const float* color = getColor();
    glColor3f(color[0], color[1], color[2]);
    glBegin(GL_QUADS);
@@ -109,24 +111,24 @@ Road* Vehicle::nextRoad() {
    return (itinerary.empty()) ? nullptr : itinerary.front();
 }
 
-float Vehicle::distance(Vehicle* v) {
+const float Vehicle::distance(Vehicle* v) {
    return std::max(pow(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2), 0.5) - (this->getHeight() + v->getHeight()) / 15, 0.0);
 }
 
-float Vehicle::distance(Intersection* i) {
+const float Vehicle::distance(Intersection* i) {
    // this->getHeight() gives an abort, so we don't take it into the computation
    return std::max(pow(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2), 0.5) - constants::diameterIntersection / 15, 0.0);
 }
 
-int Vehicle::getID() {
+const int Vehicle::getID() {
    return idVehicle;
 }
 
-bool Vehicle::getStatus() {
+const bool Vehicle::getStatus() {
    return isArrived;
 }
 
-float Vehicle::getSpeed() {
+const float Vehicle::getSpeed() {
    return speed;
 }
 
@@ -138,16 +140,8 @@ std::list<Road*> Vehicle::getItinerary() {
    return itinerary;
 }
 
-std::array<float, 2> Vehicle::getPosition() {
+const std::array<float, 2> Vehicle::getPosition() {
    return position;
-}
-
-void Vehicle::setStatus(bool arrived) {
-   isArrived = arrived;
-}
-
-void Vehicle::setPosition(std::array<float, 2> pos) {
-   position = pos;
 }
 
 void Vehicle::setDirection(Intersection* i) {
@@ -165,4 +159,12 @@ void Vehicle::setDirection(Intersection* i) {
 #endif
       exit(-1);
    }
+}
+
+void Vehicle::setPosition(const std::array<float, 2> pos) {
+   position = pos;
+}
+
+void Vehicle::setStatus(const bool arrived) {
+   isArrived = arrived;
 }
