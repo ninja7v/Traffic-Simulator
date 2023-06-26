@@ -19,7 +19,7 @@ Vehicle::Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* targe
 Vehicle::~Vehicle(){}
 
 float Vehicle::breakingSpeed(const float d) {
-   // Choose breaking speed function
+   // Breaking speed function choice:
    // - Constant (order 1 -> not smoth)
    //return constants::speedMax;
    // - Sigmoid (warning: f(0) != 0)
@@ -58,7 +58,7 @@ void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
       speed = (speed < getSpeedMax()) ? speed + getAcceleration() : getSpeedMax();
    // To add: case where next road is full
    // Move
-   const float s = speed * 17; // 17 = average time frame in ms (clock() - tc);
+   const float s = speed * 17; // 17 = average frame time in ms (clock() - tc);
    try {
       position[0] += direction[0] * s;
       position[1] += direction[1] * s;
@@ -112,12 +112,12 @@ Road* Vehicle::nextRoad() {
 }
 
 const float Vehicle::distance(Vehicle* v) {
-   return std::max(pow(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2), 0.5) - (this->getHeight() + v->getHeight()) / 15, 0.0);
+   return std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 15, 0.0);
 }
 
 const float Vehicle::distance(Intersection* i) {
    // this->getHeight() gives an abort, so we don't take it into the computation
-   return std::max(pow(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2), 0.5) - constants::diameterIntersection / 15, 0.0);
+   return std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - constants::diameterIntersection / 15, 0.0);
 }
 
 const int Vehicle::getID() {
@@ -140,7 +140,7 @@ std::list<Road*> Vehicle::getItinerary() {
    return itinerary;
 }
 
-const std::array<float, 2> Vehicle::getPosition() {
+const std::vector<float> Vehicle::getPosition() {
    return position;
 }
 
@@ -161,7 +161,7 @@ void Vehicle::setDirection(Intersection* i) {
    }
 }
 
-void Vehicle::setPosition(const std::array<float, 2> pos) {
+void Vehicle::setPosition(const std::vector<float> pos) {
    position = pos;
 }
 

@@ -65,7 +65,7 @@ public:
    std::list<Road*>           getItinerary();
 /** @brief Getter.
   * @return Vehicle position */
-   const std::array<float, 2> getPosition();
+   const std::vector<float>   getPosition();
 /** @brief Getter.
   * @return Vehicle speed max */
    const virtual float  getSpeedMax()     = 0;
@@ -84,7 +84,7 @@ public:
 /** @brief Setter. */
    void setDirection(Intersection* i);
 /** @brief Setter. */
-   void setPosition(const std::array<float, 2>);
+   void setPosition(const std::vector<float>);
 /** @brief Setter. */
    void setStatus(const bool arrived);
 
@@ -99,7 +99,7 @@ protected:
 /** Vehicle destination. */
    Intersection* destination;
 /** Vehicle position. */
-   std::array<float, 2> position;
+   std::vector<float> position;
 /** Vehicle direction. */
    std::array<float, 2> direction;
 /** Vehicle itinerary. */
