@@ -43,8 +43,8 @@ This gives a nice visuals by avoiding overlay and crossy roads, but also ensure 
 More specifically, we use the [Bowyer-Watson algorithm](https://en.wikipedia.org/wiki/Bowyer%E2%80%93Watson_algorithm) from the [delaunator-cpp](https://github.com/delfrrr/delaunator-cpp) library.
 ### 🚗🚛🏍️Vehicles
 There are 3 types of vehicles:
-- cars 🚗
-- trucks 🚛
+- Cars 🚗
+- Trucks 🚛
 - Bikes 🏍️
 
 Each of them have a maximum speed and an acceleration parameter.

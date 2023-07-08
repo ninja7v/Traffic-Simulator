@@ -41,7 +41,6 @@ void testsMap() {
 // Unit tests for Intersection class
 void testsIntersection() {
    // To be checked:
-   //Intersection() = delete;
    //Intersection(int id, std::array<float, 2> pos);
    //const bool isRed(int id);
    //void displayIntersection();
@@ -91,8 +90,8 @@ void testsVehicle() {
    const std::list<Road*> expect_itinerary = track;
    const std::list<Road*> actual_itinerary = car.getItinerary();
    assert(expect_itinerary == actual_itinerary);
-   const std::array<float, 2> expect_position = i1->getPosition();
-   const std::array<float, 2> actual_position = car.getPosition();
+   const std::vector<float> expect_position = i1->getPosition();
+   const std::vector<float> actual_position = car.getPosition();
    assert(expect_position == actual_position);
 
    // To be checked:
@@ -207,5 +206,7 @@ void runTests() {
    testsBike();
    testsCar();
    testsTruck();
+   //system("color 0A");
    std::cout << "All tests passed!" << std::endl;
+   //system("color 07");
 }

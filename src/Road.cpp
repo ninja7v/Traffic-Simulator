@@ -11,8 +11,8 @@
 
 Road::Road(int id, Intersection* begin, Intersection* end)
    : idRoad(id), i1(begin), i2(end),
-     length(pow(pow(begin->getPosition()[0] - end->getPosition()[0], 2) +
-                pow(begin->getPosition()[1] - end->getPosition()[1], 2), 0.5)),
+     length(sqrt(pow(begin->getPosition()[0] - end->getPosition()[0], 2) +
+                 pow(begin->getPosition()[1] - end->getPosition()[1], 2))),
      direction{ (end->getPosition()[0] - begin->getPosition()[0]) / length,
                 (end->getPosition()[1] - begin->getPosition()[1]) / length },
      roadCoordinates{ direction[1] * constants::widthRoad / 2 + i1->getPosition()[0] * constants::ratioX + constants::margin,

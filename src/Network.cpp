@@ -19,18 +19,33 @@
 #include "../headers/Truck.h"
 #include "../headers/Network.h"
 
+struct VectorHash {
+   size_t operator()(const std::vector<float>& vec) const {
+      size_t seed = 0;
+      for (const auto& i : vec) {
+         seed ^= std::hash<float>{}(i)+0 + (seed << 6) + (seed >> 2);//+0x9e3779b9
+      }
+      return seed;
+   }
+};
+
+struct VectorEqual {
+   bool operator()(const std::vector<float>& vec1, const std::vector<float>& vec2) const {
+      return vec1 == vec2;
+   }
+};
+
 Network::Network() {
    // Intersections
-   //std::unordered_map<std::array<float, 2>, Intersection*> card;
+   std::unordered_map<const std::vector<float>, Intersection*, VectorHash, VectorEqual> card; //
    std::vector<double> positions; // x0, y0, x1, y1, ...
-   std::array<float, 2> position;
-   int k;
+   std::vector<float> position (2);
    float x, y;
-   auto distance = [&](std::array<float, 2> p) {
-      return (float)pow(pow(x - p[0], 2) + pow(y - p[1], 2), 0.5);
+   auto distance = [&](std::vector<float> p) {
+      return (float)sqrt(pow(x - p[0], 2) + pow(y - p[1], 2));
    };
    srand(time(nullptr));
-   for (k = 0; k < constants::nbIntersections; k++) {
+   for (int k = 0; k < constants::nbIntersections; k++) {
       bool validPosition = false;
       while (!validPosition) {
          validPosition = true;
@@ -46,70 +61,29 @@ Network::Network() {
       position[0] = positions[2 * k];
       position[1] = positions[2 * k + 1];
       Intersections.push_back(new Intersection(k, position));
-      //card.emplace(position, Intersections.back());
+      card.emplace(position, Intersections.back()); //
    }
 #if DEBUG
    std::cout << "x   Intersection initialized" << std::endl;
 #endif
    // Roads
-   /*delaunator::Delaunator d(positions); // Informations here: https://github.com/delfrrr/delaunator-cpp
-   std::array<float, 2> begin;
-   std::array<float, 2> end;
+   delaunator::Delaunator d(positions); // Informations here: https://github.com/delfrrr/delaunator-cpp
+   std::vector<float> begin {0, 0};
+   std::vector<float> end   {0, 0};
    int id = 0;
-   for (std::size_t i = 0; i < d.triangles.size(); i += 3) {
-      begin[0] = d.coords[2 * d.triangles[i    ]    ];
-      begin[1] = d.coords[2 * d.triangles[i    ] + 1];
-      end[0]   = d.coords[2 * d.triangles[i + 1]    ];
-      end[1]   = d.coords[2 * d.triangles[i + 1] + 1];
-      Road* r0(new Road(id, card[begin], card[end]));
-      Roads.push_back(r0);
-      map.setConnection(card[begin]->getID(), card[end]->getID(), r0);
-      card[end]->addInputRoad(r0->getID());
-      id++;
-      begin[0] = d.coords[2 * d.triangles[i + 1]    ];
-      begin[1] = d.coords[2 * d.triangles[i + 1] + 1];
-      end[0]   = d.coords[2 * d.triangles[i + 2]    ];
-      end[1]   = d.coords[2 * d.triangles[i + 2] + 1];
-      Road* r1(new Road(id, card[begin], card[end]));
-      Roads.push_back(r1);
-      map.setConnection(card[begin]->getID(), card[end]->getID(), r1);
-      card[end]->addInputRoad(r1->getID());
-      id++;
-      begin[0] = d.coords[2 * d.triangles[i + 2]    ];
-      begin[1] = d.coords[2 * d.triangles[i + 2] + 1];
-      end[0]   = d.coords[2 * d.triangles[i    ]    ];
-      end[1]   = d.coords[2 * d.triangles[i    ] + 1];
-      Road* r2(new Road(id, card[begin], card[end]));
-      Roads.push_back(r2);
-      map.setConnection(card[begin]->getID(), card[end]->getID(), r2);
-      card[end]->addInputRoad(r2->getID());
-      id++;
-   }*/
-   int id = 0;
-   for (Intersection* const& i : Intersections) {
-      int nbConnections = rand() % 3 + 1;
-      int idIntersection = -1;
-      bool validIntersection = false;
-      for (int k = 0; k < nbConnections; k++) {
-         validIntersection = false;
-         while (!validIntersection) {
-            idIntersection = rand() % constants::nbIntersections;
-            if (map.getConnection(i->getID(), idIntersection) == nullptr && (idIntersection != i->getID())) {
-               validIntersection = true;
-            }
-         }
-         // One-way road
-         Road* r0(new Road(id, i, Intersections[idIntersection]));
-         Roads.push_back(r0);
-         map.setConnection(i->getID(), idIntersection, r0);
-         Intersections[idIntersection]->addInputRoad(r0->getID());
-         id += 1;
-         // Two-way road
-         Road* r1(new Road(id, Intersections[idIntersection], i));
-         Roads.push_back(r1);
-         map.setConnection(idIntersection, i->getID(), r1);
-         i->addInputRoad(r1->getID());
-         id += 1;
+   for (size_t i = 0; i < d.triangles.size(); i += 3) {
+      // 3 iterations for the 3 sides
+      for (int j = 0; j < 3; j ++) {
+         int l = j == 2 ? 0 : j + 1;
+         begin[0] = d.coords[2 * d.triangles[i + j]    ];
+         begin[1] = d.coords[2 * d.triangles[i + j] + 1];
+         end[0]   = d.coords[2 * d.triangles[i + l]    ];
+         end[1]   = d.coords[2 * d.triangles[i + l] + 1];
+         Road* r(new Road(id, card[begin], card[end]));
+         Roads.push_back(r);
+         map.setConnection(card[begin]->getID(), card[end]->getID(), r);
+         card[end]->addInputRoad(r->getID());
+         id++;
       }
    }
 #if DEBUG
@@ -198,7 +172,7 @@ void Network::addVehicle() {
       for (Road* r : Roads) {
          if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
               !r->containVehicle()) &&
-               rand() % 100 < constants::flow) {
+             rand() % 100 < constants::flow) {
             Intersection* destination = target(r->getEnd()->getID());
             Vehicle* v;
             switch (rand() % 3) {
