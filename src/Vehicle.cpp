@@ -85,6 +85,7 @@ void Vehicle::displayVehicle() {
    const float H = getHeight();
    const float center[2] = { direction[1] * constants::widthRoad / 2 + position[0] * constants::ratioX + constants::margin,
                             -direction[0] * constants::widthRoad / 2 + position[1] * constants::ratioY + constants::margin };
+   // Body
    const float frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
                                 center[1] + direction[0] * W - direction[1] * H},
                                {center[0] - direction[0] * H + direction[1] * W,
@@ -105,6 +106,43 @@ void Vehicle::displayVehicle() {
    glFlush();
    glDrawArrays(GL_QUADS, 0, 1);
    glEnableClientState(GL_VERTEX_ARRAY);
+   // Lights
+   if (is2Wheeler()) {
+      const float front[2] = {center[0] + direction[0] * H,
+                              center[1] + direction[1] * H};
+      const float rear[2]  = {center[0] - direction[0] * H ,
+                              center[1] - direction[1] * H};
+      glPointSize(constants::diameterHeadlight);
+      glEnable(GL_POINT_SMOOTH);
+      glBegin(GL_POINTS);
+      glColor3f(1.0f, 0.8f, 0.6f); // Yellow
+      glVertex2f(front[0], front[1]);
+      glColor3f(1.0f, 0.0f, 0.0f); // Red
+      glVertex2f(rear[0], rear[1]);
+      glEnd();
+      glDisable(GL_POINT_SMOOTH);
+   }
+   else {
+      const float front[2][2] = { {center[0] + direction[0] * H + direction[1] * W,
+                                   center[1] - direction[0] * W + direction[1] * H},
+                                  {center[0] + direction[0] * H - direction[1] * W,
+                                   center[1] + direction[0] * W + direction[1] * H}, };
+      const float rear[2][2]  = { {center[0] - direction[0] * H - direction[1] * W,
+                                   center[1] + direction[0] * W - direction[1] * H},
+                                  {center[0] - direction[0] * H + direction[1] * W,
+                                   center[1] - direction[0] * W - direction[1] * H}, };
+      glPointSize(constants::diameterHeadlight);
+      glEnable(GL_POINT_SMOOTH);
+      glBegin(GL_POINTS);
+      glColor3f(1.0f, 0.8f, 0.6f); // Yellow
+      glVertex2f(front[0][0], front[0][1]);
+      glVertex2f(front[1][0], front[1][1]);
+      glColor3f(1.0f, 0.0f, 0.0f); // Red
+      glVertex2f(rear[0][0], rear[0][1]);
+      glVertex2f(rear[1][0], rear[1][1]);
+      glEnd();
+      glDisable(GL_POINT_SMOOTH);
+   }
 }
 
 Road* Vehicle::nextRoad() {
@@ -120,7 +158,7 @@ const float Vehicle::distance(Intersection* i) {
    return std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - constants::diameterIntersection / 15, 0.0);
 }
 
-const int Vehicle::getID() {
+const int Vehicle::getID() const {
    return idVehicle;
 }
 

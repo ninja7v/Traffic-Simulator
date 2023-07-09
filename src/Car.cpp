@@ -8,6 +8,7 @@ const float Car::acceleration = constants::accelerationCar;
 const float Car::width        = constants::widthCar;
 const float Car::height       = constants::heightCar;
 const float Car::color[3] = { 0, 0.4, 0.9 }; // Blue
+const bool  Car::type = false;
 
 const float Car::getSpeedMax() const {
    return speedMax;
@@ -27,4 +28,8 @@ const float Car::getHeight() const {
 
 const float* Car::getColor() const {
    return color;
+}
+
+const bool   Car::is2Wheeler() const {
+   return type;
 }
