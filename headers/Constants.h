@@ -54,6 +54,8 @@ namespace constants {
 /** Truck height in pixel. It must be a positive number. */
    constexpr float heightTruck{ 20 * zoom };
 /** Security gab between a vehicle and an obstacle. It must be a positive number. */
+   constexpr float diameterHeadlight{ 2 * zoom };
+/** Security gab between a vehicle and an obstacle. It must be a positive number. */
    constexpr float distanceSecurity{ 0.5 * zoom };
 /**@}*/
 /** @defgroup Intersection parameters */

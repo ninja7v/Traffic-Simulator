@@ -8,6 +8,7 @@ const float Bike::acceleration = constants::accelerationBike;
 const float Bike::width        = constants::widthBike;
 const float Bike::height       = constants::heightBike;
 const float Bike::color[3] = { 0.0, 0.9, 0.9 }; // Cyan
+const bool  Bike::type = true;
 
 const float Bike::getSpeedMax() const {
    return speedMax;
@@ -27,4 +28,8 @@ const float Bike::getHeight() const {
 
 const float* Bike::getColor() const {
    return color;
+}
+
+const bool   Bike::is2Wheeler() const {
+   return type;
 }

@@ -25,9 +25,13 @@ public:
 /** @brief Getter.
     @returns Bike color*/
    const float* getColor() const;
+/** @brief Getter.
+    @returns Bike type*/
+   const bool   is2Wheeler() const;
 protected:
 
 private:
 /** Parameters common to all bikes. */
    static const float speedMax, acceleration, width, height, color[3];
+   static const bool type;
 };

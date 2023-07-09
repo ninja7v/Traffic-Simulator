@@ -81,6 +81,9 @@ public:
 /** @brief Getter.
   * @return Vehicle color */
    virtual const float* getColor() const = 0;
+/** @brief Getter.
+  * @return Vehicle type */
+   virtual const bool   is2Wheeler() const = 0;
 /** @brief Setter. */
    void setDirection(Intersection* i);
 /** @brief Setter. */
