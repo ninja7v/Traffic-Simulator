@@ -9,22 +9,22 @@ const float Truck::width        = constants::widthTruck;
 const float Truck::height       = constants::heightTruck;
 const float Truck::color[3] = {0.0, 0.0, 0.9}; // Dark blue
 
-const float Truck::getSpeedMax() {
+const float Truck::getSpeedMax() const {
    return speedMax;
 }
 
-const float Truck::getAcceleration() {
+const float Truck::getAcceleration() const {
    return acceleration;
 }
 
-const float Truck::getWidth() {
+const float Truck::getWidth() const {
    return width;
 }
 
-const float Truck::getHeight() {
+const float Truck::getHeight() const {
    return height;
 }
 
-const float* Truck::getColor() {
+const float* Truck::getColor() const {
    return color;
 }

@@ -9,22 +9,22 @@ const float Car::width        = constants::widthCar;
 const float Car::height       = constants::heightCar;
 const float Car::color[3] = { 0, 0.4, 0.9 }; // Blue
 
-const float Car::getSpeedMax() {
+const float Car::getSpeedMax() const {
    return speedMax;
 }
 
-const float Car::getAcceleration() {
+const float Car::getAcceleration() const {
    return acceleration;
 }
 
-const float Car::getWidth() {
+const float Car::getWidth() const {
    return width;
 }
 
-const float Car::getHeight() {
+const float Car::getHeight() const {
    return height;
 }
 
-const float* Car::getColor() {
+const float* Car::getColor() const {
    return color;
 }

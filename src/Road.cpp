@@ -141,26 +141,26 @@ void Road::displayLight() {
    glDisable(GL_POINT_SMOOTH);
 }
 
-const int Road::getID() {
+int Road::getID() const {
    return idRoad;
 }
 
-const float Road::getLength() {
+float Road::getLength() const {
    return length;
 }
 
-Intersection* Road::getStart() {
+Intersection* Road::getStart() const {
    return i1;
 }
 
-Intersection* Road::getEnd() {
+Intersection* Road::getEnd() const {
    return i2;
 }
 
-std::list<Vehicle*> Road::getVehicles() {
+std::list<Vehicle*> Road::getVehicles() const {
    return Vehicles;
 }
 
-const std::array<float, 2> Road::getDirection() {
+std::array<float, 2> Road::getDirection() const {
    return direction;
 }

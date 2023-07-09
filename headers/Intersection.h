@@ -29,7 +29,7 @@ public:
    //int                  getRoadIDGreen(); // for the opimizer
 /** @brief Getter.
   * @returns Intersection ID */
-   const int                  getID();
+   const int                getID() const;
 /** @brief Getter.
   * @returns Position on the grid */
    const std::vector<float> getPosition();
