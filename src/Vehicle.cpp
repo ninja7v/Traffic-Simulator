@@ -124,23 +124,23 @@ const int Vehicle::getID() {
    return idVehicle;
 }
 
-const bool Vehicle::getStatus() {
+bool Vehicle::getStatus() const {
    return isArrived;
 }
 
-const float Vehicle::getSpeed() {
+float Vehicle::getSpeed() const {
    return speed;
 }
 
-Intersection* Vehicle::getDestination() {
+Intersection* Vehicle::getDestination() const {
    return destination;
 }
 
-std::list<Road*> Vehicle::getItinerary() {
+std::list<Road*> Vehicle::getItinerary() const {
    return itinerary;
 }
 
-const std::vector<float> Vehicle::getPosition() {
+std::vector<float> Vehicle::getPosition() const {
    return position;
 }
 

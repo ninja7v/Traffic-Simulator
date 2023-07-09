@@ -50,37 +50,37 @@ public:
    const float distance(Intersection* i);
 /** @brief Getter.
   * @return Vehicle ID */
-   const int                  getID();
+   const int            getID() const;
 /** @brief Getter.
   * @return Arrived at destination? */
-   const bool                 getStatus();
+   bool                 getStatus() const;
 /** @brief Getter.
   * @return Vehicle Speed */
-   const float                getSpeed();
+   float                getSpeed() const;
 /** @brief Getter.
   * @return Vehicle destination */
-   Intersection*              getDestination();
+   Intersection*        getDestination() const;
 /** @brief Getter.
   * @return Vehicle itinerary */
-   std::list<Road*>           getItinerary();
+   std::list<Road*>     getItinerary() const;
 /** @brief Getter.
   * @return Vehicle position */
-   const std::vector<float>   getPosition();
+   std::vector<float>   getPosition() const;
 /** @brief Getter.
   * @return Vehicle speed max */
-   const virtual float  getSpeedMax()     = 0;
+   virtual const float  getSpeedMax() const = 0;
 /** @brief Getter.
   * @return Vehicle acceleration */
-   const virtual float  getAcceleration() = 0;
+   virtual const float  getAcceleration() const = 0;
 /** @brief Getter.
   * @return Vehicle width */
-   const virtual float  getWidth()        = 0;
+   virtual const float  getWidth() const = 0;
 /** @brief Getter.
   * @return Vehicle height */
-   const virtual float  getHeight()       = 0;
+   virtual const float  getHeight() const = 0;
 /** @brief Getter.
   * @return Vehicle color */
-   const virtual float* getColor()        = 0;
+   virtual const float* getColor() const = 0;
 /** @brief Setter. */
    void setDirection(Intersection* i);
 /** @brief Setter. */

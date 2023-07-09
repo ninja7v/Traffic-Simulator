@@ -35,7 +35,7 @@ void Intersection::addInputRoad(const int id) {
    input.push_back(id);
 }
 
-const int Intersection::getID() {
+const int Intersection::getID() const {
    return idIntersection;
 }
 

@@ -41,22 +41,22 @@ public:
    void displayLight();
 /** @brief Getter.
   * @return Road ID*/
-   const int                  getID();
+   int                  getID() const;
 /** @brief Getter.
   * @return Road lenght */
-   const float                getLength();
+   float                getLength() const;
 /** @brief Getter.
   * @return Road ID */
-   Intersection*              getStart();
+   Intersection*        getStart() const;
 /** @brief Getter.
   * @return Start Intersection */
-   Intersection*              getEnd();
+   Intersection*        getEnd() const;
 /** @brief Getter.
   * @return End Intersection */
-   std::list<Vehicle*>        getVehicles();
+   std::list<Vehicle*>  getVehicles() const;
 /** @brief Getter.
   * @return Orientation of the Road */
-   const std::array<float, 2> getDirection();
+   std::array<float, 2> getDirection() const;
 
 protected:
 

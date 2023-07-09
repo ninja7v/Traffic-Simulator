@@ -12,19 +12,19 @@ public:
    using Vehicle::Vehicle;
 /** @brief Getter.
     @returns Car maximum speed*/
-   const float  getSpeedMax();
+   const float getSpeedMax() const;
 /** @brief Getter.
     @returns Car acceleration*/
-   const float  getAcceleration();
+   const float getAcceleration() const;
 /** @brief Getter.
     @returns Car width*/
-   const float  getWidth();
+   const float getWidth() const;
 /** @brief Getter.
     @returns Car height*/
-   const float  getHeight();
+   const float getHeight() const;
 /** @brief Getter.
     @returns Car color*/
-   const float* getColor();
+   const float* getColor() const;
 protected:
 
 private:

@@ -24,7 +24,7 @@ public:
   * @param a Start
   * @param b Arrival
   * @returns Road */
-   const Road* getConnection(const int a, const int b);
+   Road* getConnection(const int a, const int b) const;
 /** @brief Setter to build the road between 2 intersections.
   * @param a Start
   * @param b Arrival
