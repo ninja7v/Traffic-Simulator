@@ -6,6 +6,10 @@
 // Header files
 #include "../headers/Map.h"
 
+namespace {
+   const int INFINTY = 9999; // INFINITY not supported by floats
+}
+
 Map::Map() {
 }
 
@@ -24,7 +28,7 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    visited[begin->getID()] = 1;
    // Find shortest path
    for (j = 1; j < constants::nbIntersections; j ++) {
-      mindistance = int(INFINITY);
+      mindistance = INFINTY;
       for (i = 0; i < constants::nbIntersections; i++)
          if (distance[i] <= mindistance && !visited[i]) {
             mindistance = distance[i];
