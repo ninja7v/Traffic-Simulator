@@ -11,13 +11,15 @@ namespace {
 }
 
 Map::Map() {
+   //cost = (constants::nbIntersections, std::vector<float>(constants::nbIntersections, 9999.0f));
 }
 
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
    float distance[constants::nbIntersections];
    int pred[constants::nbIntersections];
-   int visited[constants::nbIntersections], mindistance, nextnode, i, j;
+   int visited[constants::nbIntersections];
+   int mindistance, nextnode, i, j;
    // Parameters initialization from start
    for (i = 0; i < constants::nbIntersections; i++) {
       distance[i] = cost[begin->getID()][i];

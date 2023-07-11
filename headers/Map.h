@@ -38,5 +38,5 @@ private:
 /** Adjacency matrix for the roads. It is filled in the Network contructor. */
    Road* connections[constants::nbIntersections][constants::nbIntersections];
 /** Adjacency matrix for the distances. It is filled in the Network contructor. */
-   float cost[constants::nbIntersections][constants::nbIntersections]{ 9999 };
+   std::vector< std::vector <float>> cost = { constants::nbIntersections, std::vector<float>(constants::nbIntersections, 9999.0f) };
 };
