@@ -11,7 +11,6 @@ namespace {
 }
 
 Map::Map() {
-   //cost = (constants::nbIntersections, std::vector<float>(constants::nbIntersections, 9999.0f));
 }
 
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
