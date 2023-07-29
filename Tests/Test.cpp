@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+//#include <windows.h>
 #include <float.h>
 #include "../Tests/Test.h"
 #include "../headers/Bike.h"
@@ -8,51 +9,82 @@
 #include "../headers/Constants.h"
 //#include "../headers/Intersection.h" //already included in road
 #include "../headers/Road.h"
+#include "../headers/Map.h"
+#include "../headers/Network.h"
 
 // Unit tests for Road class
 void testsRoad() {
+   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
+   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Road r(1, i1, i2);
+   const bool expect_contain_vehicle = false;
+   const bool actual_contain_vehicle = r.containVehicle();
+   assert(expect_contain_vehicle == actual_contain_vehicle);
+   // When the countVehicles() function is active:
+   //const int expect_count_vehicles = 0;
+   //const int actual_count_vehicles = r.countVehicles();
+   //assert(expect_contain_vehicle == actual_contain_vehicle);
+   const bool expect_ID = 1;
+   const bool actual_ID = r.getID();
+   assert(expect_ID == actual_ID);
+   const float expect_lenght = 10.0;
+   const float actual_lenght = r.getLength();
+   assert(expect_contain_vehicle == actual_contain_vehicle);
+   const Intersection* expect_start_intersection = i1;
+   const Intersection* actual_start_intersection = r.getStart();
+   assert(expect_start_intersection == actual_start_intersection);
+   const Intersection* expect_end_intersection = i2;
+   const Intersection* actual_end_intersection = r.getEnd();
+   assert(expect_end_intersection == actual_end_intersection);
+   const std::array<float, 2> expect_direction = { 0.0, 1.0 };
+   const std::array<float, 2> actual_direction = r.getDirection();
+   assert(expect_direction == actual_direction);
    // To be checked:
-   //Road(int id, Intersection * begin, Intersection * end);
-   //~Road();
-   //bool containVehicle();
-   //int countVehicles();
    //void addVehicle(Vehicle * v);
    //void removeVehicle();
    //void moveVehicle();
    //void displayRoad();
    //void displayLight();
-   //const int                  getID();
-   //const float                getLength();
-   //Intersection*              getStart();
-   //Intersection*              getEnd();
-   //std::list<Vehicle*>        getVehicles();
-   //const std::array<float, 2> getDirection();
+   //std::list<Vehicle*> getVehicles();
 }
 
 // Unit tests for Map class
 void testsMap() {
-   // To be checked:
-   //Map();
-   //std::list<Road*> track(Intersection * begin, Intersection * end);
-   //const Road* getConnection(const int a, const int b);
-   //void setConnection(const int a, const int b, Road * r);
+   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
+   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Road* r = new Road(1, i1, i2);
+   Map m;
+   m.setConnection(1, 2, r);
+   const Road* expect_connection = r;
+   const Road* actual_connection = m.getConnection(1, 2);
+   assert(expect_connection == actual_connection);
+   const std::list<Road*> expect_track = { r };
+   const std::list<Road*> actual_track = m.track(i1, i2);
+   assert(expect_track == actual_track);
 }
 
 // Unit tests for Intersection class
 void testsIntersection() {
+   Intersection i(1, { 0.0f, 0.0f });
+   int IDRoad = 1;
+   i.addInputRoad(IDRoad);
+   const bool expect_red = false;
+   const bool actual_red = i.isRed(IDRoad);
+   assert(expect_red == actual_red);
+   const float expect_ID = 1;
+   const float actual_ID = i.getID();
+   assert(expect_ID == actual_ID);
+   const std::vector<float> expect_position = { 0.0f, 0.0f };
+   const std::vector<float> actual_position = i.getPosition();
+   assert(expect_position == actual_position);
    // To be checked:
-   //Intersection(int id, std::array<float, 2> pos);
-   //const bool isRed(int id);
    //void displayIntersection();
-   //void addInputRoad(const int id);
-   //const int                  getID();
-   //const std::array<float, 2> getPosition();
 }
 
 // Unit tests for Road class
 void testsNetwork() {
+   Network n;
    // To be checked:
-   //Network();
    //void displayNetwork();
 }
 
@@ -93,7 +125,6 @@ void testsVehicle() {
    const std::vector<float> expect_position = i1->getPosition();
    const std::vector<float> actual_position = car.getPosition();
    assert(expect_position == actual_position);
-
    // To be checked:
    //void moveToVehicle(Vehicle * v);
    //void moveToIntersection(Intersection * i, int idRoad);
@@ -206,7 +237,8 @@ void runTests() {
    testsBike();
    testsCar();
    testsTruck();
-   //system("color 0A");
+   //HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2); // Green
    std::cout << "All tests passed!" << std::endl;
-   //system("color 07");
+   //system("color 07"); // White
 }
