@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cassert>
-#include <windows.h>
 #include <float.h>
 #include "../Tests/Test.h"
 #include "../headers/Bike.h"
@@ -237,8 +236,5 @@ void runTests() {
    testsBike();
    testsCar();
    testsTruck();
-   //HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2); // Green
    std::cout << "All tests passed!" << std::endl;
-   //system("color 07"); // White
 }
