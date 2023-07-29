@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-//#include <windows.h>
+#include <windows.h>
 #include <float.h>
 #include "../Tests/Test.h"
 #include "../headers/Bike.h"
