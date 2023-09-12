@@ -14,7 +14,7 @@ public:
   * @param id Road ID
   * @param pos Position coordinates
   * @returns Car acceleration */
-   Intersection(int id, std::vector<float> pos);
+   Intersection(int id, std::vector<double> pos);
 /** @brief Destructor.
    //~Intersection();
 /** @brief Get trafic light color.
@@ -32,7 +32,7 @@ public:
    const int                getID() const;
 /** @brief Getter.
   * @returns Position on the grid */
-   const std::vector<float> getPosition();
+   const std::vector<double> getPosition();
 
    bool operator == (const Intersection i);
 
@@ -42,9 +42,9 @@ private:
 /** Intersection identifier. */
    const int idIntersection;
 /** Position on the grid. */
-   const std::vector<float> position;
+   const std::vector<double> position;
 /** Position coordinates. */
-   const std::array<float, 2> coordinates;
+   const std::array<double, 2> coordinates;
 /** Input / output road identifiers. */
    std::vector<int> input, output;
    //static float a, b; // for the opimizer

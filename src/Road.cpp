@@ -27,8 +27,8 @@ Road::Road(int id, Intersection* begin, Intersection* end)
                -direction[0] * constants::widthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
                 direction[1] * constants::widthRoad + i2->getPosition()[0] * constants::ratioX + constants::margin,
                -direction[0] * constants::widthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0 },
-     lightCoordinates{ direction[1] * constants::widthRoad / 2 + ((float)i2->getPosition()[0] - direction[0] / 6) * constants::ratioX + constants::margin,
-                      -direction[0] * constants::widthRoad / 2 + ((float)i2->getPosition()[1] - direction[1] / 6) * constants::ratioY + constants::margin }{
+     lightCoordinates{ direction[1] * constants::widthRoad / 2 + (i2->getPosition()[0] - direction[0] / 6) * constants::ratioX + constants::margin,
+                      -direction[0] * constants::widthRoad / 2 + (i2->getPosition()[1] - direction[1] / 6) * constants::ratioY + constants::margin }{
 }
 
 Road::~Road(){}
@@ -42,7 +42,7 @@ bool Road::containVehicle() {
 //   return Vehicles.size();
 //}
 
-void Road::addVehicle(Vehicle* v) {
+void Road::addVehicle(std::shared_ptr<Vehicle> v) {
    Vehicles.push_back(v);
    v->setPosition(i1->getPosition());
    v->setDirection(i2);
@@ -55,13 +55,12 @@ void Road::removeVehicle() {
 void Road::moveVehicle() {
    if (containVehicle()) {
       // For the first car
-      Vehicle* v = Vehicles.front();
+      std::shared_ptr<Vehicle> v = Vehicles.front();
       const bool atIntersection = v->distance(i2) < 0.1f;
       if (atIntersection) {
          if (v->nextRoad() == nullptr) {
             this->removeVehicle();
             v->setStatus(true);
-            delete v;
             global::numberOfVehicles -= 1;
          }
          else {
@@ -78,8 +77,8 @@ void Road::moveVehicle() {
       // For the folowing cars
       // We ignore the case atIntersection = true, were the first car is gone
       if (Vehicles.size() > 1) {
-         std::list<Vehicle*>::iterator v;
-         Vehicle* VehicleNext = *Vehicles.begin();
+         std::list<std::shared_ptr<Vehicle>>::iterator v;
+         std::shared_ptr<Vehicle> VehicleNext = *Vehicles.begin();
          for (v = std::next(Vehicles.begin()); v != Vehicles.end(); ++v){//(Vehicle* v : Vehicles) {
             (*v)->moveToVehicle(VehicleNext);
             VehicleNext = (*v);
@@ -95,14 +94,14 @@ void Road::displayRoad() {
    // Road
    glColor3f(0.3f, 0.3f, 0.3f); // Grey
    glLineWidth(constants::widthRoad);
-   glVertexPointer(3, GL_FLOAT, 0, roadCoordinates);
+   glVertexPointer(3, GL_DOUBLE, 0, roadCoordinates);
    glDrawArrays(GL_LINES, 0, 2);
    // Sides
    glColor3f(1.0f, 1.0f, 1.0f); // White
    glLineWidth(constants::widthRoad /10);
-   glVertexPointer(3, GL_FLOAT, 0, sideLeft);
+   glVertexPointer(3, GL_DOUBLE, 0, sideLeft);
    glDrawArrays(GL_LINES, 0, 2);
-   glVertexPointer(3, GL_FLOAT, 0, sideRight);
+   glVertexPointer(3, GL_DOUBLE, 0, sideRight);
    glDrawArrays(GL_LINES, 0, 2);
    glDisableClientState(GL_VERTEX_ARRAY);
    glDisable(GL_LINE_SMOOTH);
@@ -145,7 +144,7 @@ int Road::getID() const {
    return idRoad;
 }
 
-float Road::getLength() const {
+double Road::getLength() const {
    return length;
 }
 
@@ -157,10 +156,10 @@ Intersection* Road::getEnd() const {
    return i2;
 }
 
-std::list<Vehicle*> Road::getVehicles() const {
+std::list<std::shared_ptr<Vehicle>> Road::getVehicles() const {
    return Vehicles;
 }
 
-std::array<float, 2> Road::getDirection() const {
+std::array<double, 2> Road::getDirection() const {
    return direction;
 }

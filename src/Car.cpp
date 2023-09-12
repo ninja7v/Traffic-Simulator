@@ -3,30 +3,30 @@
 #include "../headers/Constants.h"
 #include "../headers/Car.h"
 
-const float Car::speedMax     = constants::speedMaxCar;
-const float Car::acceleration = constants::accelerationCar;
-const float Car::width        = constants::widthCar;
-const float Car::height       = constants::heightCar;
-const float Car::color[3] = { 0, 0.4, 0.9 }; // Blue
+const double Car::speedMax     = constants::speedMaxCar;
+const double Car::acceleration = constants::accelerationCar;
+const double Car::width        = constants::widthCar;
+const double Car::height       = constants::heightCar;
+const double Car::color[3] = { 0, 0.4, 0.9 }; // Blue
 const bool  Car::type = false;
 
-const float Car::getSpeedMax() const {
+const double Car::getSpeedMax() const {
    return speedMax;
 }
 
-const float Car::getAcceleration() const {
+const double Car::getAcceleration() const {
    return acceleration;
 }
 
-const float Car::getWidth() const {
+const double Car::getWidth() const {
    return width;
 }
 
-const float Car::getHeight() const {
+const double Car::getHeight() const {
    return height;
 }
 
-const float* Car::getColor() const {
+const double* Car::getColor() const {
    return color;
 }
 

@@ -3,30 +3,30 @@
 #include "../headers/Constants.h"
 #include "../headers/Bike.h"
 
-const float Bike::speedMax     = constants::speedMaxBike;
-const float Bike::acceleration = constants::accelerationBike;
-const float Bike::width        = constants::widthBike;
-const float Bike::height       = constants::heightBike;
-const float Bike::color[3] = { 0.0, 0.9, 0.9 }; // Cyan
+const double Bike::speedMax     = constants::speedMaxBike;
+const double Bike::acceleration = constants::accelerationBike;
+const double Bike::width        = constants::widthBike;
+const double Bike::height       = constants::heightBike;
+const double Bike::color[3] = { 0.0, 0.9, 0.9 }; // Cyan
 const bool  Bike::type = true;
 
-const float Bike::getSpeedMax() const {
+const double Bike::getSpeedMax() const {
    return speedMax;
 }
 
-const float Bike::getAcceleration() const {
+const double Bike::getAcceleration() const {
    return acceleration;
 }
 
-const float Bike::getWidth() const {
+const double Bike::getWidth() const {
    return width;
 }
 
-const float Bike::getHeight() const {
+const double Bike::getHeight() const {
    return height;
 }
 
-const float* Bike::getColor() const {
+const double* Bike::getColor() const {
    return color;
 }
 

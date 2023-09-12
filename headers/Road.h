@@ -10,6 +10,7 @@
 #include "Global.h"
 #include "Intersection.h"
 #include "Vehicle.h"
+//#include <memory> // To use smart pointers // already included in Vehicle.h
 
 class Road {
 public:
@@ -30,7 +31,7 @@ public:
 //   int countVehicles(); // For the Optimizer
 /** @brief Add vehicle to the Road.
   * @param v Vehicle to add */
-   void addVehicle(Vehicle* v);
+   void addVehicle(std::shared_ptr<Vehicle> v);
 /** @brief Remove the first vehicle of the Road. */
    void removeVehicle();
 /** @brief Advance the vehicle for the next frame. */
@@ -41,22 +42,22 @@ public:
    void displayLight();
 /** @brief Getter.
   * @return Road ID*/
-   int                  getID() const;
+   int                   getID() const;
 /** @brief Getter.
   * @return Road lenght */
-   float                getLength() const;
+   double                getLength() const;
 /** @brief Getter.
   * @return Road ID */
-   Intersection*        getStart() const;
+   Intersection*         getStart() const;
 /** @brief Getter.
   * @return Start Intersection */
-   Intersection*        getEnd() const;
+   Intersection*         getEnd() const;
 /** @brief Getter.
   * @return End Intersection */
-   std::list<Vehicle*>  getVehicles() const;
+   std::list<std::shared_ptr<Vehicle>> getVehicles() const;
 /** @brief Getter.
   * @return Orientation of the Road */
-   std::array<float, 2> getDirection() const;
+   std::array<double, 2> getDirection() const;
 
 protected:
 
@@ -64,21 +65,21 @@ private:
 /** Road identifier */
    const int idRoad;
 /** Road length */
-   const float length;
+   const double length;
 /** Start Intersection */
    Intersection* i1;
 /** End Intersection */
    Intersection* i2;
 /** Vehicle on the Road */
-   std::list<Vehicle*> Vehicles;
+   std::list<std::shared_ptr<Vehicle>> Vehicles;
 /** Orientation of the Road */
-   std::array<float, 2> direction;
+   std::array<double, 2> direction;
 /** Road coordinates */
-   const float roadCoordinates[6];
+   const double roadCoordinates[6];
 /** Roadside left coordinates */
-   const float sideLeft[6];
+   const double sideLeft[6];
 /** Roadside right coordinates */
-   const float sideRight[6];
+   const double sideRight[6];
 /** Traffic light coordinates */
-   const float lightCoordinates[2];
+   const double lightCoordinates[2];
 };

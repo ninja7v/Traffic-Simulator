@@ -14,14 +14,14 @@ namespace constants {
 /** Number of possible positions on the Y axis for the intersections. It must be a positive number. */
    constexpr int sizeY{ 70 };
 /** Overall speed of the simulation. It must be a positive number. */
-   constexpr float boost{ 5.0f };
+   constexpr double boost{ 5.0f };
 /** Scale of the representation. It must be a positive number. */
-   constexpr float zoom{ 1.0f };
+   constexpr double zoom{ 1.0f };
 /**@}*/
 /** @defgroup Road parameters */
 /**@{*/
 /** Width Road in pixel. It must be a positive number. */
-   constexpr float widthRoad{ 15 * zoom };
+   constexpr double widthRoad{ 15 * zoom };
 /**@}*/
 /** @defgroup Vehicle parameters */
 /**@{*/
@@ -30,33 +30,33 @@ namespace constants {
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
    constexpr int nbVehicleMax{ 50 };
 /** Maximum car speed. It must be a positive number. */
-   constexpr float speedMaxCar  { 0.002f  * boost };
+   constexpr double speedMaxCar  { 0.002f  * boost };
 /** Maximum Bike speed. It must be a positive number. */
-   constexpr float speedMaxBike { 0.004f * boost };
+   constexpr double speedMaxBike { 0.004f * boost };
 /** Maximum Truck speed. It must be a positive number. */
-   constexpr float speedMaxTruck{ 0.003f * boost };
+   constexpr double speedMaxTruck{ 0.003f * boost };
 /** Car acceleration per frame. It must be a positive number. */
-   constexpr float accelerationCar  { 0.00003f * boost };
+   constexpr double accelerationCar  { 0.00003f * boost };
 /** Bike acceleration per frame. It must be a positive number. */
-   constexpr float accelerationBike { 0.00004f * boost };
+   constexpr double accelerationBike { 0.00004f * boost };
 /** Truck acceleration per frame. It must be a positive number. */
-   constexpr float accelerationTruck{ 0.00002f * boost };
+   constexpr double accelerationTruck{ 0.00002f * boost };
 /** Car width in pixel. It must be a positive number. */
-   constexpr float widthCar  { 5 * zoom };
+   constexpr double widthCar  { 5 * zoom };
 /** Bike width in pixel. It must be a positive number. */
-   constexpr float widthBike { 3 * zoom };
+   constexpr double widthBike { 3 * zoom };
 /** Truck width in pixel. It must be a positive number. */
-   constexpr float widthTruck{ 7 * zoom };
+   constexpr double widthTruck{ 7 * zoom };
 /** Car height in pixel. It must be a positive number. */
-   constexpr float heightCar  { 11 * zoom };
+   constexpr double heightCar  { 11 * zoom };
 /** Bike height in pixel. It must be a positive number. */
-   constexpr float heightBike {  7 * zoom };
+   constexpr double heightBike {  7 * zoom };
 /** Truck height in pixel. It must be a positive number. */
-   constexpr float heightTruck{ 20 * zoom };
+   constexpr double heightTruck{ 20 * zoom };
 /** Security gab between a vehicle and an obstacle. It must be a positive number. */
-   constexpr float diameterHeadlight{ 2 * zoom };
+   constexpr double diameterHeadlight{ 2 * zoom };
 /** Security gab between a vehicle and an obstacle. It must be a positive number. */
-   constexpr float distanceSecurity{ 0.5 * zoom };
+   constexpr double distanceSecurity{ 0.5 * zoom };
 /**@}*/
 /** @defgroup Intersection parameters */
 /**@{*/
@@ -67,7 +67,7 @@ namespace constants {
 /** Traffic light period. It must be a positive number. */
    constexpr int period{ (int)(5000 / boost) };
 /** Intersection diameter in pixel. It must be a positive number. */
-   constexpr float diameterIntersection{ 40 * zoom };
+   constexpr double diameterIntersection{ 40 * zoom };
 /**@}*/
 /** @defgroup Window parameters */
 /**@{*/

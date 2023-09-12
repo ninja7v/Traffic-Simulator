@@ -12,26 +12,26 @@ public:
    using Vehicle::Vehicle;
 /** @brief Getter.
     @returns Car maximum speed*/
-   const float getSpeedMax() const;
+   const double  getSpeedMax() const;
 /** @brief Getter.
     @returns Car acceleration*/
-   const float getAcceleration() const;
+   const double  getAcceleration() const;
 /** @brief Getter.
     @returns Car width*/
-   const float getWidth() const;
+   const double  getWidth() const;
 /** @brief Getter.
     @returns Car height*/
-   const float getHeight() const;
+   const double  getHeight() const;
 /** @brief Getter.
     @returns Car color*/
-   const float* getColor() const;
+   const double* getColor() const;
 /** @brief Getter.
     @returns Car type*/
-   const bool   is2Wheeler() const;
+   const bool    is2Wheeler() const;
 protected:
 
 private:
 /** Parameters common to all cars. */
-   static const float speedMax, acceleration, width, height, color[3];
+   static const double speedMax, acceleration, width, height, color[3];
    static const bool type;
 };

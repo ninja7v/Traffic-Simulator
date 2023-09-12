@@ -11,6 +11,7 @@
 //#include "Intersection.h" //already include in Road.h
 #include "Road.h"
 #include "Map.h"
+//#include <memory> // To use smart pointers // already included in Vehicle.h
 
 class Network {
 public:
@@ -30,7 +31,7 @@ private:
 /** Roads. */
    std::vector<Road*> Roads;
 /** Vehicles */
-   std::list<Vehicle*> Vehicles;
+   std::list<std::shared_ptr<Vehicle>> Vehicles;
 /** @brief Add vehicle to the simulation. */
    void addVehicle();
 /** @brief Move the Vehicle for the next frame. */

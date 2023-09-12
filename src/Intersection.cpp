@@ -8,7 +8,7 @@
 #include "../headers/Global.h"
 #include "../headers/Intersection.h"
 
-Intersection::Intersection(int n = 0, std::vector<float> pos = { 0, 0 })
+Intersection::Intersection(int n = 0, std::vector<double> pos = { 0, 0 })
    :idIntersection(n), position(pos),
     coordinates{ position[0] * constants::ratioX + constants::margin,
                  position[1] * constants::ratioY + constants::margin } {
@@ -39,7 +39,7 @@ const int Intersection::getID() const {
    return idIntersection;
 }
 
-const std::vector<float> Intersection::getPosition() {
+const std::vector<double> Intersection::getPosition() {
    return position;
 }
 
