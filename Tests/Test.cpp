@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cassert>
-//#include <double.h>
 #include "../Tests/Test.h"
 #include "../headers/Bike.h"
 #include "../headers/Car.h"

@@ -16,9 +16,7 @@ Vehicle::Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* targe
    speed = 0.0f; // Unit is pixel per seconds
 }
 
-Vehicle::~Vehicle(){
-   //itinerary.clear();
-}
+Vehicle::~Vehicle(){}
 
 double Vehicle::breakingSpeed(const double d) {
    // Breaking speed function choice:
@@ -110,9 +108,6 @@ void Vehicle::displayVehicle() {
       glVertex2f(frame[i][0], frame[i][1]);
    }
    glEnd();
-   //glFlush();
-   //glDrawArrays(GL_QUADS, 0, 1);
-   //glEnableClientState(GL_VERTEX_ARRAY);
    // Lights
    glPointSize(constants::diameterHeadlight);
    glEnable(GL_POINT_SMOOTH);
