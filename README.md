@@ -2,7 +2,7 @@
 
 **GUI for a road traffic simulation coded in C++ by Luc and Claire PREVOST.**
 
-![traffic_simulator](https://user-images.githubusercontent.com/52052772/202865554-04ef6c69-5e1e-49a1-bf79-edb52018b80e.png)
+![image](https://github.com/ninja7v/Traffic-Simulator/assets/52052772/2a316b97-393a-48b3-8164-1ce4bf9515e6)
 
 📃 INSTRUCTIONS
 ===============
