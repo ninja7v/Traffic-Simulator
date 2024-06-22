@@ -7,6 +7,7 @@
 #endif
 // Header files
 #include "../headers/Road.h"
+#include "../headers/Map.h"
 #include "../headers/constants.h"
 
 Road::Road(int id, Intersection* begin, Intersection* end)
@@ -27,8 +28,8 @@ Road::Road(int id, Intersection* begin, Intersection* end)
                -direction[0] * constants::widthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
                 direction[1] * constants::widthRoad + i2->getPosition()[0] * constants::ratioX + constants::margin,
                -direction[0] * constants::widthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0 },
-     lightCoordinates{ direction[1] * constants::widthRoad / 2 + (i2->getPosition()[0] - direction[0] / 6) * constants::ratioX + constants::margin,
-                      -direction[0] * constants::widthRoad / 2 + (i2->getPosition()[1] - direction[1] / 6) * constants::ratioY + constants::margin }{
+     lightCoordinates{ direction[1] * constants::widthRoad / 2 + (i2->getPosition()[0] - direction[0] * 1) * constants::ratioX + constants::margin,
+                      -direction[0] * constants::widthRoad / 2 + (i2->getPosition()[1] - direction[1] * 1) * constants::ratioY + constants::margin } {
 }
 
 Road::~Road(){}
@@ -56,7 +57,7 @@ void Road::moveVehicle() {
    if (containVehicle()) {
       // For the first car
       std::shared_ptr<Vehicle> v = Vehicles.front();
-      const bool atIntersection = v->distance(i2) < 0.1f;
+      const bool atIntersection = v->distance(i2) < constants::distanceSecurity / 5;
       if (atIntersection) {
          if (v->nextRoad() == nullptr) {
             this->removeVehicle();
@@ -64,11 +65,15 @@ void Road::moveVehicle() {
             global::numberOfVehicles -= 1;
          }
          else {
-            bool isEnoughSpace = v->nextRoad()->containVehicle() && v->nextRoad()->getVehicles().back()->distance(i2) > constants::distanceSecurity;
-            if (!v->nextRoad()->containVehicle() || isEnoughSpace) {
+            const bool isEnoughSpace = !v->nextRoad()->containVehicle() ? true :
+               v->nextRoad()->getVehicles().back()->distance(i2) > constants::distanceSecurity + v->getHeight();
+            if (isEnoughSpace) {
                v->nextRoad()->addVehicle(v);
                v->updateItinerary();
                this->removeVehicle();
+            }
+            else {
+               v->setNewItinerary(Map::track(this->getStart(), v->getDestination()));
             }
          }
       }
@@ -98,7 +103,7 @@ void Road::displayRoad() {
    glDrawArrays(GL_LINES, 0, 2);
    // Sides
    glColor3f(1.0f, 1.0f, 1.0f); // White
-   glLineWidth(constants::widthRoad /10);
+   glLineWidth(constants::widthRoad / 10);
    glVertexPointer(3, GL_DOUBLE, 0, sideLeft);
    glDrawArrays(GL_LINES, 0, 2);
    glVertexPointer(3, GL_DOUBLE, 0, sideRight);
@@ -110,22 +115,21 @@ void Road::displayRoad() {
 void Road::displayLight() {
    // Outline
    glColor3f(0.0f, 0.0f, 0.0f); // Black
-   glPointSize(constants::widthRoad);
+   glPointSize(constants::widthRoad*0.7);
    glEnable(GL_POINT_SMOOTH);
    glBegin(GL_POINTS);
    glVertex2f(lightCoordinates[0], lightCoordinates[1]);
    glEnd();
    // Outline without overlay
    //const GLfloat twoPi = 6.283f; // = 2.0f * 3.1415f
-   //const int nStep = 10; // # of triangles used to draw ´the circle
+   //const int nStep = 10; // # of triangles used to draw the circle
    //const GLfloat step = 6.283f / nStep;
    //glLineWidth(constants::widthRoad / 5);
    //glColor3f(0.0f, 0.0f, 0.0f); // Black
    //glBegin(GL_LINE_LOOP);
    //for (int i = 0; i <= nStep; i++)
-   //   glVertex2f(
-   //      lightCoordinates[0] + (diameter * cos(i * step) / 2),
-   //      lightCoordinates[1] + (diameter * sin(i * step) / 2)
+   //   glVertex2f(lightCoordinates[0] + (diameter * cos(i * step) / 2),
+   //              lightCoordinates[1] + (diameter * sin(i * step) / 2)
    //   );
    //glEnd();
    // Inside
@@ -133,7 +137,7 @@ void Road::displayLight() {
       glColor3f(1.0f, 0.0f, 0.0f); // Red
    else
       glColor3f(0.0f, 1.0f, 0.0f); // Green
-   glPointSize(constants::widthRoad * 0.7);
+   glPointSize(constants::widthRoad * 0.5);
    glBegin(GL_POINTS);
    glVertex2f(lightCoordinates[0], lightCoordinates[1]);
    glEnd();

@@ -90,6 +90,8 @@ public:
 /** @brief Setter. */
    void setPosition(const std::vector<double>);
 /** @brief Setter. */
+   void setNewItinerary(std::list<Road*> track);
+/** @brief Setter. */
    void setStatus(const bool arrived);
 
 protected:
@@ -97,7 +99,7 @@ protected:
    const int idVehicle;
    //int tc = 0;
 /** Arrived at destination? */
-   bool isArrived = false;
+   bool isArrived;
 /** Vehicle is braking */
    bool isBraking;
 /** Vehicle speed. */

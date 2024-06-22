@@ -12,8 +12,8 @@
 
 // Unit tests for Road class
 void testsRoad() {
-   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
-   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
+   Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Road r(1, i1, i2);
    const bool expect_contain_vehicle = false;
    const bool actual_contain_vehicle = r.containVehicle();
@@ -48,11 +48,12 @@ void testsRoad() {
 
 // Unit tests for Map class
 void testsMap() {
-   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
-   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
+   Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Road* r = new Road(1, i1, i2);
    Map m;
    m.setConnection(1, 2, r);
+   m.updateConnection(r);
    const Road* expect_connection = r;
    const Road* actual_connection = m.getConnection(1, 2);
    assert(expect_connection == actual_connection);
@@ -63,7 +64,7 @@ void testsMap() {
 
 // Unit tests for Intersection class
 void testsIntersection() {
-   Intersection i(1, { 0.0f, 0.0f });
+   Intersection i(1, { 0.0, 0.0 });
    int IDRoad = 1;
    i.addInputRoad(IDRoad);
    const bool expect_red = false;
@@ -72,7 +73,7 @@ void testsIntersection() {
    const double expect_ID = 1;
    const double actual_ID = i.getID();
    assert(expect_ID == actual_ID);
-   const std::vector<double> expect_position = { 0.0f, 0.0f };
+   const std::vector<double> expect_position = { 0.0, 0.0 };
    const std::vector<double> actual_position = i.getPosition();
    assert(expect_position == actual_position);
    // To be checked:
@@ -89,8 +90,8 @@ void testsNetwork() {
 // Unit tests for Vehicle class
 void testsVehicle() {
    std::cout << "testVehicle" << std::endl;
-   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
-   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
+   Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Intersection* target(i2);
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
@@ -133,8 +134,8 @@ void testsVehicle() {
 
 // Unit tests for Bike class
 void testsBike() {
-   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
-   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
+   Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Intersection* target(i2);
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
@@ -164,8 +165,8 @@ void testsBike() {
 
 // Unit tests for Car class
 void testsCar() {
-   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
-   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
+   Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Intersection* target(i2);
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
@@ -196,8 +197,8 @@ void testsCar() {
 // Unit tests for Truck class
 void testsTruck() {
    std::cout << "testTruck" << std::endl;
-   Intersection* i1 = new Intersection(1, { 0.0f, 0.0f });
-   Intersection* i2 = new Intersection(2, { 0.0f, 10.0f });
+   Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
+   Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Intersection* target(i2);
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);

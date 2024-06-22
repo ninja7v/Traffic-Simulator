@@ -19,7 +19,7 @@ public:
   * Source: https://www.tutorialspoint.com/cplusplus-program-for-dijkstra-s-shortest-path-algorithm
   * Condition: the graph must be strongly connected to ensure the existence of a solution.
   * @returns Road */
-   std::list<Road*> track(Intersection* begin, Intersection* end);
+   static std::list<Road*> track(Intersection* begin, Intersection* end);
 /** @brief Getter to obtain the road between 2 intersections.
   * @param a Start
   * @param b Arrival
@@ -30,13 +30,17 @@ public:
   * @param b Arrival
   * @param r New Road */
    void setConnection(const int a, const int b, Road* r);
+/** @brief Update the live connection cost.
+  * @param r Road */
+   void updateConnection(Road* r);
 
 protected:
 
 private:
-   // Theses array are filled in the network contructor
-/** Adjacency matrix for the roads. It is filled in the Network contructor. */
-   Road* connections[constants::nbIntersections][constants::nbIntersections];
-/** Adjacency matrix for the distances. It is filled in the Network contructor. */
-   std::vector< std::vector <float>> cost = { constants::nbIntersections, std::vector<float>(constants::nbIntersections, 9999.0f) };
+/** Adjacency matrix for the roads. Filled in the Network contructor. */
+   static Road* connections[constants::nbIntersections][constants::nbIntersections];
+   /** Adjacency matrix for the distances. Filled in the Network contructor. */
+   static std::vector<std::vector <double>> cost;
+/** Adjacency matrix for the global cost (distance + traffic). Updated in Network::displayNetwork() */
+   static std::vector<std::vector <double>> live_cost;
 };

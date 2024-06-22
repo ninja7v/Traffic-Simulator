@@ -7,21 +7,26 @@
 #include "../headers/Map.h"
 
 namespace {
-   const int INFINTY = 9999; // INFINITY not supported by floats
+   const double INFINTY = 999999.0;
 }
+
+Road* Map::connections[constants::nbIntersections][constants::nbIntersections];
+std::vector<std::vector <double>> Map::cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INFINTY) };
+std::vector<std::vector <double>> Map::live_cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INFINTY) };
 
 Map::Map() {
 }
 
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
    std::list<Road*> path;
-   float distance[constants::nbIntersections];
+   double distance[constants::nbIntersections];
+   double mindistance;
    int pred[constants::nbIntersections];
    int visited[constants::nbIntersections];
-   int mindistance, nextnode, i, j;
+   int nextnode, i, j;
    // Parameters initialization from start
    for (i = 0; i < constants::nbIntersections; i++) {
-      distance[i] = cost[begin->getID()][i];
+      distance[i] = live_cost[begin->getID()][i];
       pred[i] = begin->getID();
       visited[i] = 0;
    }
@@ -38,8 +43,8 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
       visited[nextnode] = 1;
       for (i = 0; i < constants::nbIntersections; i++)
          if (!visited[i])
-            if (mindistance + cost[nextnode][i] < distance[i]) {
-               distance[i] = mindistance + cost[nextnode][i];
+            if (mindistance + live_cost[nextnode][i] < distance[i]) {
+               distance[i] = mindistance + live_cost[nextnode][i];
                pred[i] = nextnode;
             }
    }
@@ -58,5 +63,11 @@ Road* Map::getConnection(const int a, const int b) const {
 
 void Map::setConnection(const int a, const int b, Road* r) {
    connections[a][b] = r;
-   cost       [a][b] = r->getLength();
+   cost[a][b] = r->getLength();
+}
+
+void Map::updateConnection(Road* r) {
+   const double penalty = !r->containVehicle() ? 0.0 :
+      cost[r->getStart()->getID()][r->getEnd()->getID()] / r->getVehicles().back()->distance(r->getStart()) - 1;
+   live_cost[r->getStart()->getID()][r->getEnd()->getID()] = cost[r->getStart()->getID()][r->getEnd()->getID()] + penalty;
 }

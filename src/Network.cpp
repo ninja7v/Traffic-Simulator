@@ -128,17 +128,20 @@ void Network::displayNetwork() {
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
       for (Road* const& r : Roads)
+      {
          r->displayRoad();
+         map.updateConnection(r);
+      }
       // Vehicle
       this->addVehicle();
       this->updateVehiclesPosition();
       Vehicles.remove_if([](std::shared_ptr<Vehicle> v) {
-         if (v->getStatus()) {
-            return true; // Remove the vehicle
-         }
-         v->displayVehicle();
-         return false; // Keep the vehicle
-         });
+                            if (v->getStatus()) {
+                               return true; // Remove the vehicle
+                            }
+                            v->displayVehicle();
+                            return false; // Keep the vehicle
+                         });
 #if DEBUG
          //std::cout << "-   o-o   Vehicle deleted" << std::endl;
 #endif
@@ -196,9 +199,6 @@ void Network::addVehicle() {
             Vehicles.push_back(v);
             r->addVehicle(v);
             global::numberOfVehicles += 1;
-#if DEBUG
-            //std::cout << "+   o-o   Vehicle added " << std::endl;
-#endif
          }
       }
 }
