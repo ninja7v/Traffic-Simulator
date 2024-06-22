@@ -127,8 +127,7 @@ void Network::displayNetwork() {
    while (!glfwWindowShouldClose(window)) {
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
-      for (Road* const& r : Roads)
-      {
+      for (Road* const& r : Roads) {
          r->displayRoad();
          map.updateConnection(r);
       }
@@ -158,8 +157,8 @@ void Network::displayNetwork() {
       // Poll for and process events
       glfwPollEvents();
 #if DEBUG
-      //std::cout << global::numberOfVehicle << std::endl;
-      //std::cout << "Frame displayed " << clock() - T1  << "ms" << std::endl;
+      //std::cout << global::numberOfVehicles << std::endl;
+      //std::cout << "Frame displayed " << clock() - T1 << "ms" << std::endl; // average frame time: 70ms
       //T1 = clock();
 #endif
    }
@@ -205,13 +204,13 @@ void Network::addVehicle() {
 
 void Network::updateVehiclesPosition() {
    for (Road* r : Roads)
-      r->moveVehicle();
+      r->moveVehicles();
 }
 
 // Unused
 //void Network::resetVehicles() {
 //   for (Vehicle* v : Vehicles) {
-//      delete v;
+//      delete v; v = nullptr;
 //   }
 //   global::numberOfVehicles = 0;
 //};

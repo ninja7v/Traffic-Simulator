@@ -34,8 +34,8 @@ public:
    void addVehicle(std::shared_ptr<Vehicle> v);
 /** @brief Remove the first vehicle of the Road. */
    void removeVehicle();
-/** @brief Advance the vehicle for the next frame. */
-   void moveVehicle();
+/** @brief Advance the vehicles for the next frame. */
+   void moveVehicles();
 /** @brief Display the Road without the Vehicle on it. */
    void displayRoad();
 /** @brief Display the traffic light at the end of the Road. */

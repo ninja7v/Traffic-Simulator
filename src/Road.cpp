@@ -53,7 +53,7 @@ void Road::removeVehicle() {
    Vehicles.pop_front();
 }
 
-void Road::moveVehicle() {
+void Road::moveVehicles() {
    if (containVehicle()) {
       // For the first car
       std::shared_ptr<Vehicle> v = Vehicles.front();

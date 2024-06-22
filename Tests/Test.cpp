@@ -14,36 +14,53 @@
 void testsRoad() {
    Intersection* i1 = new Intersection(1, { 0.0, 0.0 });
    Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
-   Road r(1, i1, i2);
+   Intersection* target(i2);
+   Road* r = new Road(1, i1, i2);
+   std::list<Road*> track(1, r);
+   std::shared_ptr<Vehicle> car = std::make_shared<Car>(i1, i2, 1, target, track);
+
    const bool expect_contain_vehicle = false;
-   const bool actual_contain_vehicle = r.containVehicle();
+   const bool actual_contain_vehicle = r->containVehicle();
    assert(expect_contain_vehicle == actual_contain_vehicle);
    // When the countVehicles() function is active:
    //const int expect_count_vehicles = 0;
    //const int actual_count_vehicles = r.countVehicles();
    //assert(expect_contain_vehicle == actual_contain_vehicle);
    const bool expect_ID = 1;
-   const bool actual_ID = r.getID();
+   const bool actual_ID = r->getID();
    assert(expect_ID == actual_ID);
    const double expect_lenght = 10.0;
-   const double actual_lenght = r.getLength();
+   const double actual_lenght = r->getLength();
    assert(expect_contain_vehicle == actual_contain_vehicle);
    const Intersection* expect_start_intersection = i1;
-   const Intersection* actual_start_intersection = r.getStart();
+   const Intersection* actual_start_intersection = r->getStart();
    assert(expect_start_intersection == actual_start_intersection);
    const Intersection* expect_end_intersection = i2;
-   const Intersection* actual_end_intersection = r.getEnd();
+   const Intersection* actual_end_intersection = r->getEnd();
    assert(expect_end_intersection == actual_end_intersection);
    const std::array<double, 2> expect_direction = { 0.0, 1.0 };
-   const std::array<double, 2> actual_direction = r.getDirection();
+   const std::array<double, 2> actual_direction = r->getDirection();
    assert(expect_direction == actual_direction);
+   r->addVehicle(car);
+   const bool expect_vehicle_added = true;
+   const bool actual_vehicle_added = r->containVehicle();
+   assert(expect_vehicle_added == actual_vehicle_added);
+   std::list<std::shared_ptr<Vehicle>> expect_list_vehicle = r->getVehicles();
+   std::list<std::shared_ptr<Vehicle>> actual_list_vehicle { car };
+   assert(expect_list_vehicle == actual_list_vehicle);
+   r->removeVehicle();
+   const bool expect_vehicle_removed = false;
+   const bool actual_vehicle_removed = r->containVehicle();
+   assert(expect_vehicle_removed == actual_vehicle_removed);
    // To be checked:
-   //void addVehicle(Vehicle * v);
-   //void removeVehicle();
-   //void moveVehicle();
+   //void moveVehicles();
    //void displayRoad();
    //void displayLight();
-   //std::list<Vehicle*> getVehicles();
+
+   delete i1; i1 = nullptr;
+   delete i2; i2 = nullptr;
+   target = nullptr;
+   delete r; r = nullptr;
 }
 
 // Unit tests for Map class
@@ -52,6 +69,7 @@ void testsMap() {
    Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Road* r = new Road(1, i1, i2);
    Map m;
+
    m.setConnection(1, 2, r);
    m.updateConnection(r);
    const Road* expect_connection = r;
@@ -60,19 +78,24 @@ void testsMap() {
    const std::list<Road*> expect_track = { r };
    const std::list<Road*> actual_track = m.track(i1, i2);
    assert(expect_track == actual_track);
+
+   delete i1; i1 = nullptr;
+   delete i2; i2 = nullptr;
+   delete r; r = nullptr;
 }
 
 // Unit tests for Intersection class
 void testsIntersection() {
    Intersection i(1, { 0.0, 0.0 });
    int IDRoad = 1;
+
    i.addInputRoad(IDRoad);
-   const bool expect_red = false;
-   const bool actual_red = i.isRed(IDRoad);
-   assert(expect_red == actual_red);
    const double expect_ID = 1;
    const double actual_ID = i.getID();
    assert(expect_ID == actual_ID);
+   const bool expect_red = false;
+   const bool actual_red = i.isRed(IDRoad);
+   assert(expect_red == actual_red);
    const std::vector<double> expect_position = { 0.0, 0.0 };
    const std::vector<double> actual_position = i.getPosition();
    assert(expect_position == actual_position);
@@ -96,7 +119,7 @@ void testsVehicle() {
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
    std::shared_ptr<Vehicle> car = std::make_shared<Car>(i1, i2, 1, target, track);
-   car->breakingSpeed(1.0);
+
    const double expect_distance_vehicle = 0.0;
    const double actual_breaking_vehicle = car->distance(car);
    assert(expect_distance_vehicle == actual_breaking_vehicle);
@@ -124,12 +147,26 @@ void testsVehicle() {
    const std::vector<double> expect_position = i1->getPosition();
    const std::vector<double> actual_position = car->getPosition();
    assert(expect_position == actual_position);
+   Road* expected_next_road = r;
+   Road* actual_next_road = car->nextRoad();
+   assert(expected_next_road == actual_next_road);
+   car->setNewItinerary(track);
+   const std::list<Road*> expect_new_itinerary = track;
+   const std::list<Road*> actual_new_itinerary = car->getItinerary();
+   assert(expect_itinerary == actual_itinerary);
+   car->updateItinerary();
+   const std::list<Road*> expect_updated_itinerary {};
+   const std::list<Road*> actual_updated_itinerary = car->getItinerary();
+   assert(expect_itinerary == actual_itinerary);
    // To be checked:
    //void moveToVehicle(Vehicle * v);
    //void moveToIntersection(Intersection * i, int idRoad);
-   //void updateItinerary();
    //void displayVehicle();
-   //Road* nextRoad();
+
+   delete i1; i1 = nullptr;
+   delete i2; i2 = nullptr;
+   target = nullptr;
+   delete r; r = nullptr;
 }
 
 // Unit tests for Bike class
@@ -159,8 +196,10 @@ void testsBike() {
       assert(expect_color[i] == actual_color[i]);
    }
 
-   delete target;
-   delete r;
+   delete i1; i1 = nullptr;
+   delete i2; i2 = nullptr;
+   target = nullptr;
+   delete r; r = nullptr;
 }
 
 // Unit tests for Car class
@@ -190,8 +229,10 @@ void testsCar() {
       assert(expect_color[i] == actual_color[i]);
    }
 
-   delete target;
-   delete r;
+   delete i1; i1 = nullptr;
+   delete i2; i2 = nullptr;
+   target = nullptr;
+   delete r; r = nullptr;
 }
 
 // Unit tests for Truck class
@@ -222,8 +263,10 @@ void testsTruck() {
       assert(expect_color[i] == actual_color[i]);
    }
 
-   delete target;
-   delete r;
+   delete i1; i1 = nullptr;
+   delete i2; i2 = nullptr;
+   target = nullptr;
+   delete r; r = nullptr;
 }
 
 // Run all the tests

@@ -14,7 +14,7 @@ namespace constants {
 /** Number of possible positions on the Y axis for the intersections. It must be a positive number. */
    constexpr int sizeY{ 70 };
 /** Overall speed of the simulation. It must be a positive number. */
-   constexpr double boost{ 5.0 };
+   constexpr double boost{ 1.0 };
 /** Scale of the representation. It must be a positive number. */
    constexpr double zoom{ 1.0 };
 /**@}*/
@@ -30,17 +30,17 @@ namespace constants {
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
    constexpr int nbVehicleMax{ 70 };
 /** Maximum car speed. It must be a positive number. */
-   constexpr double speedMaxCar  { 0.002  * boost };
+   constexpr double speedMaxCar  { 0.3  * boost };
 /** Maximum Bike speed. It must be a positive number. */
-   constexpr double speedMaxBike { 0.004 * boost };
+   constexpr double speedMaxBike { 0.4 * boost };
 /** Maximum Truck speed. It must be a positive number. */
-   constexpr double speedMaxTruck{ 0.003 * boost };
+   constexpr double speedMaxTruck{ 0.2 * boost };
 /** Car acceleration per frame. It must be a positive number. */
-   constexpr double accelerationCar  { 0.00003 * boost };
+   constexpr double accelerationCar  { 0.003 * boost };
 /** Bike acceleration per frame. It must be a positive number. */
-   constexpr double accelerationBike { 0.00004 * boost };
+   constexpr double accelerationBike { 0.004 * boost };
 /** Truck acceleration per frame. It must be a positive number. */
-   constexpr double accelerationTruck{ 0.00002 * boost };
+   constexpr double accelerationTruck{ 0.002 * boost };
 /** Car width in pixel. It must be a positive number. */
    constexpr double widthCar  { 2 * zoom };
 /** Bike width in pixel. It must be a positive number. */
@@ -65,7 +65,7 @@ namespace constants {
 /** Distance between intersections. It must be a positive number. */
    constexpr int minGap{ static_cast<int>(10 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
 /** Traffic light period. It must be a positive number. */
-   constexpr int period{ static_cast<int>(5000 / boost) };
+   constexpr int period{ static_cast<int>(1000 / boost) };
 /** Intersection diameter in pixel. It must be a positive number. */
    constexpr double diameterIntersection{ 20 * zoom };
 /**@}*/

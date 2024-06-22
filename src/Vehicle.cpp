@@ -42,12 +42,11 @@ void Vehicle::moveToVehicle(std::shared_ptr<Vehicle> v) {
    else
       speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
    // Move
-   const double s = speed * 17; // 17 = average time frame in ms (clock() - tc);
+   const double s = speed;
    position[0] += direction[0] * s;
    position[1] += direction[1] * s;
    // Braking ?
    isBraking = previousSpeed > speed ? true : false;
-   //tc = clock();
 }
 
 void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
@@ -57,14 +56,14 @@ void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
    // Update speed
    if (i->isRed(idRoad))
       if (d < constants::distanceSecurity)
-         speed = 0; // Pound!
+         speed = 0.0; // Pound!
       else
          speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
    else
       speed = (speed < getSpeedMax()) ? speed + getAcceleration() : getSpeedMax();
    // To add: case where next road is full
    // Move
-   const double s = speed * 17; // 17 = average frame time in ms (clock() - tc);
+   const double s = speed;
    try {
       position[0] += direction[0] * s;
       position[1] += direction[1] * s;
@@ -79,7 +78,6 @@ void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
    }
    // Braking ?
    isBraking = previousSpeed > speed ? true : false;
-   //tc = clock();
 }
 
 void Vehicle::updateItinerary() {
