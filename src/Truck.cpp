@@ -8,7 +8,7 @@ const double Truck::acceleration = constants::accelerationTruck;
 const double Truck::width        = constants::widthTruck;
 const double Truck::height       = constants::heightTruck;
 const double Truck::color[3] = {0.0, 0.0, 0.9}; // Dark blue
-const bool  Truck::type = false;
+const bool Truck::type = false;
 
 const double Truck::getSpeedMax() const {
    return speedMax;

@@ -11,7 +11,8 @@
 
 Vehicle::Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* target, std::list<Road*> track)
    : idVehicle(id), destination(target), itinerary(track) {
-   position = i1->getPosition();
+   if (i1)
+      position = i1->getPosition();
    setDirection(i2);
    isArrived = false;
    isBraking = false;
@@ -33,51 +34,57 @@ double Vehicle::breakingSpeed(const double d) {
 }
 
 void Vehicle::moveToVehicle(std::shared_ptr<Vehicle> v) {
-   const double previousSpeed = speed;
-   // Distance with the intersection ahead
-   const double d = distance(v);
-   // Update speed
-   if (d < constants::distanceSecurity)
-      speed = 0.0; // Pound!
-   else
-      speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
-   // Move
-   const double s = speed;
-   position[0] += direction[0] * s;
-   position[1] += direction[1] * s;
-   // Braking ?
-   isBraking = previousSpeed > speed ? true : false;
-}
-
-void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
-   const double previousSpeed = speed;
-   // Distance with the intersection ahead
-   const double d = distance(i);
-   // Update speed
-   if (i->isRed(idRoad))
+   if (v)
+   {
+      const double previousSpeed = speed;
+      // Distance with the intersection ahead
+      const double d = distance(v);
+      // Update speed
       if (d < constants::distanceSecurity)
          speed = 0.0; // Pound!
       else
          speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
-   else
-      speed = (speed < getSpeedMax()) ? speed + getAcceleration() : getSpeedMax();
-   // To add: case where next road is full
-   // Move
-   const double s = speed;
-   try {
+      // Move
+      const double s = speed;
       position[0] += direction[0] * s;
       position[1] += direction[1] * s;
-      if (distance(i) > d)
-         throw position;
+      // Braking ?
+      isBraking = previousSpeed > speed ? true : false;
    }
-   catch (std::array<double, 2> pos) {
+}
+
+void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
+   if (i)
+   {
+      const double previousSpeed = speed;
+      // Distance with the intersection ahead
+      const double d = distance(i);
+      // Update speed
+      if (i->isRed(idRoad))
+         if (d < constants::distanceSecurity)
+            speed = 0.0; // Pound!
+         else
+            speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2;
+      else
+         speed = (speed < getSpeedMax()) ? speed + getAcceleration() : getSpeedMax();
+      // To add: case where next road is full
+      // Move
+      const double s = speed;
+      try {
+         position[0] += direction[0] * s;
+         position[1] += direction[1] * s;
+         if (distance(i) > d)
+            throw position;
+      }
+      catch (std::array<double, 2> pos) {
 #if DEBUG
-      std::cout << "The vehicle is escaping!" << std::endl;
+         std::cout << "The vehicle is escaping!" << std::endl;
 #endif
-      exit(-1);
+         exit(-1);
+      }
+      // Braking ?
+      isBraking = previousSpeed > speed ? true : false;
    }
-   // Braking ?
-   isBraking = previousSpeed > speed ? true : false;
 }
 
 void Vehicle::updateItinerary() {
@@ -101,7 +108,8 @@ void Vehicle::displayVehicle() {
                                 {center[0] + direction[0] * H - direction[1] * W,
                                  center[1] + direction[0] * W + direction[1] * H}, };
    const double* color = getColor();
-   glColor3f(color[0], color[1], color[2]);
+   if (color)
+      glColor3f(color[0], color[1], color[2]);
    glBegin(GL_QUADS);
    glEnableClientState(GL_VERTEX_ARRAY);
    for (int i = 0; i < 4; ++i) {
@@ -152,11 +160,13 @@ Road* Vehicle::nextRoad() {
 }
 
 const double Vehicle::distance(std::shared_ptr<Vehicle> v) {
-   return std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 7, 0.0);
+   return v ? std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 7, 0.0) :
+              0.0;
 }
 
 const double Vehicle::distance(Intersection* i) {
-   return std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - (this->getHeight() + constants::diameterIntersection) / 12, 0.0);
+   return i ? std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - (this->getHeight() + constants::diameterIntersection) / 12, 0.0) :
+              0.0;
 }
 
 const int Vehicle::getID() const {
@@ -184,19 +194,22 @@ std::vector<double> Vehicle::getPosition() const {
 }
 
 void Vehicle::setDirection(Intersection* i) {
-   // We don't take the direction from road to avoid circular dependencies
-   try{
-      double d = sqrt(pow((i->getPosition()[0] - position[0]), 2) + pow((i->getPosition()[1] - position[1]), 2));
-      if (d == 0)
-         throw  std::runtime_error("Division by zero");
-      direction = { (i->getPosition()[0] - position[0]) / d,
-                    (i->getPosition()[1] - position[1]) / d };
-   }
-   catch (const std::runtime_error& e) {
+   if (i)
+   {
+      // We don't take the direction from road to avoid circular dependencies
+      try{
+         double d = sqrt(pow((i->getPosition()[0] - position[0]), 2) + pow((i->getPosition()[1] - position[1]), 2));
+         if (d == 0)
+            throw  std::runtime_error("Division by zero");
+         direction = { (i->getPosition()[0] - position[0]) / d,
+                       (i->getPosition()[1] - position[1]) / d };
+      }
+      catch (const std::runtime_error& e) {
 #if DEBUG
-      std::cerr << e.what() << std::endl;
+         std::cerr << e.what() << std::endl;
 #endif
-      exit(-1);
+         exit(-1);
+      }
    }
 }
 

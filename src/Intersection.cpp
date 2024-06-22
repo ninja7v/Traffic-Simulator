@@ -9,9 +9,9 @@
 #include "../headers/Intersection.h"
 
 Intersection::Intersection(int n = 0, std::vector<double> pos = { 0, 0 })
-   :idIntersection(n), position(pos),
-    coordinates{ position[0] * constants::ratioX + constants::margin,
-                 position[1] * constants::ratioY + constants::margin } {
+   : idIntersection(n), position(pos),
+     coordinates{ position[0] * constants::ratioX + constants::margin,
+                  position[1] * constants::ratioY + constants::margin } {
 }
 
 //Intersection::~Intersection(){}

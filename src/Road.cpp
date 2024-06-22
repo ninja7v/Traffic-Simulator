@@ -44,9 +44,12 @@ bool Road::containVehicle() {
 //}
 
 void Road::addVehicle(std::shared_ptr<Vehicle> v) {
-   Vehicles.push_back(v);
-   v->setPosition(i1->getPosition());
-   v->setDirection(i2);
+   if (v)
+   {
+      Vehicles.push_back(v);
+      v->setPosition(i1->getPosition());
+      v->setDirection(i2);
+   }
 }
 
 void Road::removeVehicle() {
@@ -57,36 +60,42 @@ void Road::moveVehicles() {
    if (containVehicle()) {
       // For the first car
       std::shared_ptr<Vehicle> v = Vehicles.front();
-      const bool atIntersection = v->distance(i2) < constants::distanceSecurity / 5;
-      if (atIntersection) {
-         if (v->nextRoad() == nullptr) {
-            this->removeVehicle();
-            v->setStatus(true);
-            global::numberOfVehicles -= 1;
-         }
-         else {
-            const bool isEnoughSpace = !v->nextRoad()->containVehicle() ? true :
-               v->nextRoad()->getVehicles().back()->distance(i2) > constants::distanceSecurity + v->getHeight();
-            if (isEnoughSpace) {
-               v->nextRoad()->addVehicle(v);
-               v->updateItinerary();
+      if (v)
+      {
+         const bool atIntersection = v->distance(i2) < constants::distanceSecurity / 5;
+         if (atIntersection) {
+            if (v->nextRoad() == nullptr) {
                this->removeVehicle();
+               v->setStatus(true);
+               global::numberOfVehicles -= 1;
             }
             else {
-               v->setNewItinerary(Map::track(this->getStart(), v->getDestination()));
+               const bool isEnoughSpace = !v->nextRoad()->containVehicle() ? true :
+                  v->nextRoad()->getVehicles().back()->distance(i2) > constants::distanceSecurity + v->getHeight();
+               if (isEnoughSpace) {
+                  v->nextRoad()->addVehicle(v);
+                  v->updateItinerary();
+                  this->removeVehicle();
+               }
+               else {
+                  v->setNewItinerary(Map::track(this->getStart(), v->getDestination()));
+               }
             }
          }
+         else
+            v->moveToIntersection(i2, idRoad);
       }
-      else
-         v->moveToIntersection(i2, idRoad);
       // For the folowing cars
       // We ignore the case atIntersection = true, were the first car is gone
       if (Vehicles.size() > 1) {
          std::list<std::shared_ptr<Vehicle>>::iterator v;
          std::shared_ptr<Vehicle> VehicleNext = *Vehicles.begin();
-         for (v = std::next(Vehicles.begin()); v != Vehicles.end(); ++v){//(Vehicle* v : Vehicles) {
-            (*v)->moveToVehicle(VehicleNext);
-            VehicleNext = (*v);
+         for (v = std::next(Vehicles.begin()); v != Vehicles.end(); ++v){
+            if (*v)
+            {
+               (*v)->moveToVehicle(VehicleNext);
+               VehicleNext = (*v);
+            }
          }
       }
    }

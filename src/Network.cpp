@@ -42,7 +42,7 @@ Network::Network() {
    };
    auto isPositionValid = [&](const std::vector<double>& p) {
       for (const auto& i : Intersections) {
-         if (distance(p, i->getPosition()) < constants::minGap) {
+         if (i && distance(p, i->getPosition()) < constants::minGap) {
             return false;
          }
       }
@@ -76,10 +76,13 @@ Network::Network() {
          std::vector<double> end{d.coords[2 * d.triangles[i + l]],
                                  d.coords[2 * d.triangles[i + l] + 1]};
          Road* r(new Road(id, card[begin], card[end]));
-         Roads.push_back(r);
-         map.setConnection(card[begin]->getID(), card[end]->getID(), r);
-         card[end]->addInputRoad(r->getID());
-         id++;
+         if (r)
+         {
+            Roads.push_back(r);
+            map.setConnection(card[begin]->getID(), card[end]->getID(), r);
+            card[end]->addInputRoad(r->getID());
+            id++;
+         }
       }
    }
 #if DEBUG
@@ -128,8 +131,11 @@ void Network::displayNetwork() {
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
       for (Road* const& r : Roads) {
-         r->displayRoad();
-         map.updateConnection(r);
+         if (r)
+         {
+            r->displayRoad();
+            map.updateConnection(r);
+         }
       }
       // Vehicle
       this->addVehicle();
@@ -146,11 +152,13 @@ void Network::displayNetwork() {
 #endif
       // Intersections
       for (Intersection* i : Intersections) {
-         i->displayIntersection();
+         if (i)
+            i->displayIntersection();
       }
       // Traffic lights
       for (Road* const& r : Roads) {
-         r->displayLight();
+         if (r)
+            r->displayLight();
       }
       // Swap front and back buffers
       glfwSwapBuffers(window);
@@ -173,7 +181,8 @@ void Network::addVehicle() {
                                    return Intersections[destination];};
    if (Vehicles.size() < constants::nbVehicleMax)
       for (Road* r : Roads) {
-         if (((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
+         if (r &&
+             ((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
               !r->containVehicle()) &&
              rand() % 100 < constants::flow) {
             Intersection* destination = target(r->getEnd()->getID());
@@ -204,13 +213,15 @@ void Network::addVehicle() {
 
 void Network::updateVehiclesPosition() {
    for (Road* r : Roads)
-      r->moveVehicles();
+      if (r)
+         r->moveVehicles();
 }
 
 // Unused
 //void Network::resetVehicles() {
 //   for (Vehicle* v : Vehicles) {
-//      delete v; v = nullptr;
+//      if (v)
+//         delete v; v = nullptr;
 //   }
 //   global::numberOfVehicles = 0;
 //};

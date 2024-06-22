@@ -8,7 +8,7 @@ const double Bike::acceleration = constants::accelerationBike;
 const double Bike::width        = constants::widthBike;
 const double Bike::height       = constants::heightBike;
 const double Bike::color[3] = { 0.0, 0.9, 0.9 }; // Cyan
-const bool  Bike::type = true;
+const bool Bike::type = true;
 
 const double Bike::getSpeedMax() const {
    return speedMax;

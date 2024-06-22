@@ -8,7 +8,7 @@ const double Car::acceleration = constants::accelerationCar;
 const double Car::width        = constants::widthCar;
 const double Car::height       = constants::heightCar;
 const double Car::color[3] = { 0, 0.4, 0.9 }; // Blue
-const bool  Car::type = false;
+const bool Car::type = false;
 
 const double Car::getSpeedMax() const {
    return speedMax;

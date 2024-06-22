@@ -18,12 +18,16 @@ Map::Map() {
 }
 
 std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
+   if (!begin || !end)
+      return std::list<Road*>();
+
    std::list<Road*> path;
    double distance[constants::nbIntersections];
    double mindistance;
    int pred[constants::nbIntersections];
    int visited[constants::nbIntersections];
    int nextnode, i, j;
+
    // Parameters initialization from start
    for (i = 0; i < constants::nbIntersections; i++) {
       distance[i] = live_cost[begin->getID()][i];
@@ -58,16 +62,22 @@ std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
 };
 
 Road* Map::getConnection(const int a, const int b) const {
-   return connections[a][b];
+   return ((a >= 0) && (b >= 0) && (a < constants::nbIntersections) && (b < constants::nbIntersections)) ? connections[a][b] : nullptr;
 }
 
 void Map::setConnection(const int a, const int b, Road* r) {
-   connections[a][b] = r;
-   cost[a][b] = r->getLength();
+   if (r && (a >= 0) && (b >= 0) && (a < constants::nbIntersections) && (b < constants::nbIntersections))
+   {
+      connections[a][b] = r;
+      cost[a][b] = r->getLength();
+   }
 }
 
 void Map::updateConnection(Road* r) {
-   const double penalty = !r->containVehicle() ? 0.0 :
-      cost[r->getStart()->getID()][r->getEnd()->getID()] / r->getVehicles().back()->distance(r->getStart()) - 1;
-   live_cost[r->getStart()->getID()][r->getEnd()->getID()] = cost[r->getStart()->getID()][r->getEnd()->getID()] + penalty;
+   if (r)
+   {
+      const double penalty = !r->containVehicle() ? 0.0 :
+         cost[r->getStart()->getID()][r->getEnd()->getID()] / r->getVehicles().back()->distance(r->getStart()) - 1;
+      live_cost[r->getStart()->getID()][r->getEnd()->getID()] = cost[r->getStart()->getID()][r->getEnd()->getID()] + penalty;
+   }
 }

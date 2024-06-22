@@ -18,6 +18,11 @@ void testsRoad() {
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
    std::shared_ptr<Vehicle> car = std::make_shared<Car>(i1, i2, 1, target, track);
+   assert(i1);
+   assert(i2);
+   assert(target);
+   assert(r);
+   assert(car);
 
    const bool expect_contain_vehicle = false;
    const bool actual_contain_vehicle = r->containVehicle();
@@ -69,6 +74,9 @@ void testsMap() {
    Intersection* i2 = new Intersection(2, { 0.0, 10.0 });
    Road* r = new Road(1, i1, i2);
    Map m;
+   assert(i1);
+   assert(i2);
+   assert(r);
 
    m.setConnection(1, 2, r);
    m.updateConnection(r);
@@ -119,6 +127,8 @@ void testsVehicle() {
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
    std::shared_ptr<Vehicle> car = std::make_shared<Car>(i1, i2, 1, target, track);
+   assert(r);
+   assert(car);
 
    const double expect_distance_vehicle = 0.0;
    const double actual_breaking_vehicle = car->distance(car);
@@ -177,6 +187,10 @@ void testsBike() {
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
    Bike bike(i1, i2, 1, target, track);
+   assert(i1);
+   assert(i2);
+   assert(target);
+   assert(r);
 
    const double expect_speedMax = constants::speedMaxBike;
    const double actual_speedMax = bike.getSpeedMax();
@@ -210,6 +224,10 @@ void testsCar() {
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
    Car car(i1, i2, 1, target, track);
+   assert(i1);
+   assert(i2);
+   assert(target);
+   assert(r);
 
    const double expect_speedMax = constants::speedMaxCar;
    const double actual_speedMax = car.getSpeedMax();
@@ -244,6 +262,10 @@ void testsTruck() {
    Road* r = new Road(1, i1, i2);
    std::list<Road*> track(1, r);
    Truck truck(i1, i2, 1, target, track);
+   assert(i1);
+   assert(i2);
+   assert(target);
+   assert(r);
 
    const double expect_speedMax = constants::speedMaxTruck;
    const double actual_speedMax = truck.getSpeedMax();
