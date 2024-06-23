@@ -10,6 +10,7 @@
 Traffic Simulator requires the folowing dependencies:
 - [GLFW](https://www.glfw.org/download)
 - [GLUT](https://www.opengl.org/resources/libraries/glut/glut_downloads.php)
+- [delaunator-cpp](https://github.com/abellgithub/delaunator-cpp)
 - [stb](https://github.com/nothings/stb)
 
 and uses from std:
