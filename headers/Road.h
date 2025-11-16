@@ -7,7 +7,6 @@
 //#include <array> // To use arrays // alreads included in vehicle.h
 //#include <list>  // To use lists // alreads included in vehicle.h
 // Header files
-#include "Global.h"
 #include "Intersection.h"
 #include "Vehicle.h"
 //#include <memory> // To use smart pointers // already included in Vehicle.h

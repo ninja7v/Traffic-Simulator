@@ -36,7 +36,7 @@ struct VectorEqual {
 };
 
 Network::Network() {
-   srand(time(nullptr));
+   srand(static_cast<unsigned int>(time(nullptr)));
    auto distance = [&](std::vector<double> p1, std::vector<double> p2) {
       return (double)sqrt(pow(p2[0] - p1[0], 2) + pow(p2[1] - p1[1], 2));
    };
@@ -114,7 +114,7 @@ void Network::displayNetwork() {
    }
    // Make the window's context current
    glfwMakeContextCurrent(window);
-   glViewport(0.0f, 0.0f, constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT); // specifies the part of the window to which OpenGL will draw (in pixels)
+   glViewport(0, 0, constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT); // specifies the part of the window to which OpenGL will draw (in pixels)
    glMatrixMode(GL_PROJECTION); // Projection matrix defines the properties of the camera that views the objects in the world coordinate frame
    glLoadIdentity();            // Replace the current matrix with the identity matrix and starts us a fresh one
    glOrtho(0, constants::SCREEN_WIDTH, 0, constants::SCREEN_HEIGHT, 0, 1); // Set coordinate system

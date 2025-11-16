@@ -6,6 +6,7 @@
 #include <iostream>     // To use input/output
 #endif
 // Header files
+#include "../headers/Global.h"
 #include "../headers/Road.h"
 #include "../headers/Map.h"
 #include "../headers/constants.h"
@@ -16,26 +17,26 @@ Road::Road(int id, Intersection* begin, Intersection* end)
                  pow(begin->getPosition()[1] - end->getPosition()[1], 2))),
      direction{ (end->getPosition()[0] - begin->getPosition()[0]) / length,
                 (end->getPosition()[1] - begin->getPosition()[1]) / length },
-     roadCoordinates{ direction[1] * constants::widthRoad / 2 + i1->getPosition()[0] * constants::ratioX + constants::margin,
-                     -direction[0] * constants::widthRoad / 2 + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
-                      direction[1] * constants::widthRoad / 2 + i2->getPosition()[0] * constants::ratioX + constants::margin,
-                     -direction[0] * constants::widthRoad / 2 + i2->getPosition()[1] * constants::ratioY + constants::margin, 0 },
+     roadCoordinates{ direction[1] * constants::widthRoad / 2.0 + i1->getPosition()[0] * constants::ratioX + constants::margin,
+                     -direction[0] * constants::widthRoad / 2.0 + i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
+                      direction[1] * constants::widthRoad / 2.0 + i2->getPosition()[0] * constants::ratioX + constants::margin,
+                     -direction[0] * constants::widthRoad / 2.0 + i2->getPosition()[1] * constants::ratioY + constants::margin, 0.0 },
      sideLeft{ i1->getPosition()[0] * constants::ratioX + constants::margin,
-               i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
+               i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
                i2->getPosition()[0] * constants::ratioX + constants::margin,
-               i2->getPosition()[1] * constants::ratioY + constants::margin, 0 },
+               i2->getPosition()[1] * constants::ratioY + constants::margin, 0.0 },
      sideRight{ direction[1] * constants::widthRoad + i1->getPosition()[0] * constants::ratioX + constants::margin,
-               -direction[0] * constants::widthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0,
+               -direction[0] * constants::widthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
                 direction[1] * constants::widthRoad + i2->getPosition()[0] * constants::ratioX + constants::margin,
-               -direction[0] * constants::widthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0 },
-     lightCoordinates{ direction[1] * constants::widthRoad / 2 + (i2->getPosition()[0] - direction[0] * 1) * constants::ratioX + constants::margin,
-                      -direction[0] * constants::widthRoad / 2 + (i2->getPosition()[1] - direction[1] * 1) * constants::ratioY + constants::margin } {
+               -direction[0] * constants::widthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0.0 },
+     lightCoordinates{ direction[1] * constants::widthRoad / 2.0 + (i2->getPosition()[0] - direction[0] * 1.0) * constants::ratioX + constants::margin,
+                      -direction[0] * constants::widthRoad / 2.0 + (i2->getPosition()[1] - direction[1] * 1.0) * constants::ratioY + constants::margin } {
 }
 
 Road::~Road(){}
 
 bool Road::containVehicle() {
-   return (Vehicles.empty()) ? false : true;
+   return !Vehicles.empty();
 }
 
 // For the Optimizer
@@ -62,7 +63,7 @@ void Road::moveVehicles() {
       std::shared_ptr<Vehicle> v = Vehicles.front();
       if (v)
       {
-         const bool atIntersection = v->distance(i2) < constants::distanceSecurity / 5;
+         const bool atIntersection = v->distance(i2) < constants::distanceSecurity / 5.0;
          if (atIntersection) {
             if (v->nextRoad() == nullptr) {
                this->removeVehicle();
@@ -112,7 +113,7 @@ void Road::displayRoad() {
    glDrawArrays(GL_LINES, 0, 2);
    // Sides
    glColor3f(1.0f, 1.0f, 1.0f); // White
-   glLineWidth(constants::widthRoad / 10);
+   glLineWidth(constants::widthRoad / 10.0f);
    glVertexPointer(3, GL_DOUBLE, 0, sideLeft);
    glDrawArrays(GL_LINES, 0, 2);
    glVertexPointer(3, GL_DOUBLE, 0, sideRight);
@@ -124,10 +125,10 @@ void Road::displayRoad() {
 void Road::displayLight() {
    // Outline
    glColor3f(0.0f, 0.0f, 0.0f); // Black
-   glPointSize(constants::widthRoad*0.7);
+   glPointSize(static_cast<float>(constants::widthRoad) * 0.7f);
    glEnable(GL_POINT_SMOOTH);
    glBegin(GL_POINTS);
-   glVertex2f(lightCoordinates[0], lightCoordinates[1]);
+   glVertex2f(static_cast<float>(lightCoordinates[0]), static_cast<float>(lightCoordinates[1]));
    glEnd();
    // Outline without overlay
    //const GLfloat twoPi = 6.283f; // = 2.0f * 3.1415f
@@ -146,9 +147,9 @@ void Road::displayLight() {
       glColor3f(1.0f, 0.0f, 0.0f); // Red
    else
       glColor3f(0.0f, 1.0f, 0.0f); // Green
-   glPointSize(constants::widthRoad * 0.5);
+   glPointSize(static_cast<float>(constants::widthRoad) * 0.5f);
    glBegin(GL_POINTS);
-   glVertex2f(lightCoordinates[0], lightCoordinates[1]);
+   glVertex2f(static_cast<float>(lightCoordinates[0]), static_cast<float>(lightCoordinates[1]));
    glEnd();
    glDisable(GL_POINT_SMOOTH);
 }
