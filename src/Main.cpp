@@ -4,9 +4,10 @@
 
 // Header files
 #include "../headers/Network.h"
+# if DEBUG
 #include "../Tests/Test.h"
-#include "omp.h"           // To parallelize
-#include <iostream>        // To use input/output
+#endif
+
 using namespace std;
 
 int main(void) {

@@ -3,7 +3,6 @@
 //#include <array>     // To use arrays // already included in Intersection.h
 #include <list>      // To use lists
 // Header files
-#include "Global.h"
 #include "Intersection.h"
 #include <memory> // To use smart pointers
 
@@ -20,7 +19,7 @@ public:
   * @param target Destination
   * @param track Itinerary
   * @returns Vehicle*/
-   Vehicle(Intersection* i1, Intersection* i2, int id, Intersection* target, std::list<Road*> track);
+   Vehicle(Intersection* i1, Intersection* i2, const int id, Intersection* target, const std::list<Road*> track);
 /** @brief Destructor. */
    ~Vehicle();
 /** @brief Theoritical speed function.
@@ -29,7 +28,7 @@ public:
    double breakingSpeed(const double dist);
 /** @brief Adjust the speed to approach the theoritical speed function.
   * @param v Vehicle in front */
-   void moveToVehicle(std::shared_ptr<Vehicle> v);
+   void moveToVehicle(const std::shared_ptr<Vehicle> v);
 /** @brief Adjust the speed to approach the theoritical speed function.
   * @param i Intersection in front
   * @param idRoad Road ID of the Road the Vehicle is*/
@@ -44,7 +43,7 @@ public:
 /** @brief Calculate the distance with the front Vehicle.
   * @param v Vehicle in front
   * @return Distance */
-   const double distance(std::shared_ptr<Vehicle> v);
+   const double distance(const std::shared_ptr<Vehicle> v);
 /** @brief Calculate the distance with the front Intersection.
   * @param i Intersection in front
   * @return Distance */
