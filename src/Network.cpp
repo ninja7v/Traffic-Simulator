@@ -141,12 +141,29 @@ void Network::displayNetwork() {
       this->addVehicle();
       this->updateVehiclesPosition();
       Vehicles.remove_if([](std::shared_ptr<Vehicle> v) {
-                            if (v->getStatus()) {
-                               return true; // Remove the vehicle
-                            }
-                            v->displayVehicle();
-                            return false; // Keep the vehicle
-                         });
+          if (v->getStatus()) {
+              return true; // Remove the vehicle
+          }
+
+          v->displayVehicle();
+
+#if DEBUG
+          try {
+              double t_min = v->fastestTimeToPosition();
+              double t_real = v->getTimeOnCurrentRoad();
+              std::cout << "Vehicle " << v->getID()
+                  << " | t_min = " << t_min
+                  << " | t_real = " << t_real
+                  << std::endl;
+          }
+          catch (...) {
+              std::cout << "Error computing fastestTimeToPosition()" << std::endl;
+          }
+#endif
+
+          return false; // Keep the vehicle
+          });
+
 #if DEBUG
          //std::cout << "-   o-o   Vehicle deleted" << std::endl;
 #endif
@@ -212,9 +229,19 @@ void Network::addVehicle() {
 }
 
 void Network::updateVehiclesPosition() {
-   for (Road* r : Roads)
-      if (r)
-         r->moveVehicles();
+    double delta_t = 1.0;
+
+    for (Road* r : Roads) {
+        if (r) {
+            for (auto v : r->getVehicles()) { 
+                if (v) {
+                    v->updateTime(delta_t);
+                }
+            }
+
+            r->moveVehicles();
+        }
+    }
 }
 
 // Unused

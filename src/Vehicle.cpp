@@ -3,19 +3,24 @@
 //#include <list>      // To use lists // already included in vehicle.h
 #include <GL/glut.h> // To display
 #include <iostream>  // To debug
+#include <cmath> 
 //#include <algorithm>  // To use max // already included in Constants.h
 // Header files
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"
 
 Vehicle::Vehicle(Intersection* i1, Intersection* i2, const int id, Intersection* target, const std::list<Road*> track)
-   : idVehicle(id), destination(target), itinerary(track) {
-   if (i1)
-      position = i1->getPosition();
-   setDirection(i2);
-   isArrived = false;
-   isBraking = false;
-   speed = 0.0; // Unit is pixel per seconds
+    : idVehicle(id), destination(target), itinerary(track) {
+    if (i1) {
+        position = i1->getPosition();
+        start_position_on_road = position;
+    }
+    setDirection(i2);
+    isArrived = false;
+    isBraking = false;
+    speed = 0.0; // Unit is pixel per seconds
+    time_on_current_road = 0.0;
+    entry_time = 0.0;
 }
 
 Vehicle::~Vehicle(){}
@@ -217,4 +222,55 @@ void Vehicle::setNewItinerary(std::list<Road*> track) {
 
 void Vehicle::setStatus(const bool arrived) {
    isArrived = arrived;
+}
+
+void Vehicle::enterNewRoad(double current_sim_time) {
+    time_on_current_road = 0.0;
+    entry_time = current_sim_time;
+    start_position_on_road = position;
+}
+
+void Vehicle::updateTime(double delta_time) {
+    time_on_current_road += delta_time;
+}
+
+double Vehicle::getTimeOnCurrentRoad() const {
+    return time_on_current_road;
+}
+
+double Vehicle::getDistanceFromRoadStart() const {
+	// vector from start position on road to current position
+    double dx = position[0] - start_position_on_road[0];
+    double dy = position[1] - start_position_on_road[1];
+
+	// projection of this vector onto the direction vector
+    double proj = dx * direction[0] + dy * direction[1];
+
+	// ensure non-negative distance
+    return (proj > 0.0) ? proj : 0.0;
+}
+
+
+/*
+ * calculates the theoretical minimum time a vehicle would need
+ * to reach its current position if the road were empty and the vehicle
+ * behaved in the most optimal way possible.
+ */
+double Vehicle::fastestTimeToPosition() const {
+    double dist_from_start = getDistanceFromRoadStart();
+
+    // time to reach max speed
+    double accel_time = getSpeedMax() / getAcceleration();
+    // distance covered during acceleration
+    double accel_dist = 0.5 * getAcceleration() * accel_time * accel_time;
+
+    if (dist_from_start <= accel_dist) {
+        // v_max is not reached
+        return std::sqrt(2.0 * dist_from_start / getAcceleration());
+    }
+    else {
+        // the vehicle has time to reach v_max and cruise
+        double cruise_dist = dist_from_start - accel_dist;
+        return accel_time + (cruise_dist / getSpeedMax());
+    }
 }

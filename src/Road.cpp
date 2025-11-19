@@ -50,6 +50,7 @@ void Road::addVehicle(std::shared_ptr<Vehicle> v) {
       Vehicles.push_back(v);
       v->setPosition(i1->getPosition());
       v->setDirection(i2);
+      v->enterNewRoad(0.0);
    }
 }
 

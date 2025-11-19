@@ -5,6 +5,7 @@
 // Header files
 #include "Intersection.h"
 #include <memory> // To use smart pointers
+#include <chrono> // For timing, but since sim is discrete, use sim time step
 
 class Road;
 /**
@@ -92,6 +93,13 @@ public:
    void setNewItinerary(std::list<Road*> track);
 /** @brief Setter. */
    void setStatus(const bool arrived);
+/** Add to constructor or when setting new road / itinerary */
+   void enterNewRoad(double current_sim_time);
+/** Call this in updateVehiclesPosition() or move function*/
+   void updateTime(double delta_time) ;
+   double getTimeOnCurrentRoad() const;
+   virtual double fastestTimeToPosition() const;
+   double getDistanceFromRoadStart() const;
 
 protected:
 /** Vehicle ID. */
@@ -109,8 +117,15 @@ protected:
    std::vector<double> position;
 /** Vehicle direction. */
    std::array<double, 2> direction;
+/** position at the entrance of the current road */
+   std::vector<double> start_position_on_road;
 /** Vehicle itinerary. */
    std::list<Road*> itinerary;
+/** Time spent on current road (in seconds or sim units) */
+   double time_on_current_road = 0.0;
+/** Sim time when entered current road */
+   double entry_time;
+
 private:
 
 };
