@@ -14,15 +14,15 @@ public:
   * @param id Road ID
   * @param pos Position coordinates
   * @returns Car acceleration */
-   Intersection(int id, std::vector<double> pos);
+   Intersection(const int id, const std::vector<double> pos);
 /** @brief Destructor.
    //~Intersection();
 /** @brief Get trafic light color.
   * @param id Road ID
   * @returns true:Red / false:Green */
-   const bool isRed(int id);
+   const bool isRed(const int id) const;
 /** @brief Display the intersection as black point.*/
-   void displayIntersection();
+   void displayIntersection() const;
 /** @brief Add an input road in the input vector.
   * @param id Road ID */
    void addInputRoad(const int id);
@@ -32,7 +32,7 @@ public:
    const int                getID() const;
 /** @brief Getter.
   * @returns Position on the grid */
-   const std::vector<double> getPosition();
+   const std::vector<double> getPosition() const;
 
    bool operator == (const Intersection i);
 

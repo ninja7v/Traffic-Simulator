@@ -19,20 +19,20 @@ public:
   * @param target Destination
   * @param track Itinerary
   * @returns Vehicle*/
-   Vehicle(Intersection* i1, Intersection* i2, const int id, Intersection* target, const std::list<Road*> track);
+   Vehicle(const Intersection* i1, const Intersection* i2, const int id, Intersection* target, const std::list<Road*> track);
 /** @brief Destructor. */
    ~Vehicle();
 /** @brief Theoritical speed function.
   * @param dist Distance with the front obstacle
   * @return Speed */
-   double breakingSpeed(const double dist);
+   double breakingSpeed(const double dist) const;
 /** @brief Adjust the speed to approach the theoritical speed function.
   * @param v Vehicle in front */
    void moveToVehicle(const std::shared_ptr<Vehicle> v);
 /** @brief Adjust the speed to approach the theoritical speed function.
   * @param i Intersection in front
   * @param idRoad Road ID of the Road the Vehicle is*/
-   void moveToIntersection(Intersection* i, const int idRoad);
+   void moveToIntersection(const Intersection* i, const int idRoad);
 /** @brief Update Vehicle itilerary when arriving at the end of the Road. */
    void updateItinerary();
 /** @brief Display the Vehicle. */
@@ -43,11 +43,11 @@ public:
 /** @brief Calculate the distance with the front Vehicle.
   * @param v Vehicle in front
   * @return Distance */
-   const double distance(const std::shared_ptr<Vehicle> v);
+   const double distance(const std::shared_ptr<Vehicle> v) const;
 /** @brief Calculate the distance with the front Intersection.
   * @param i Intersection in front
   * @return Distance */
-   const double distance(Intersection* i);
+   const double distance(const Intersection* i) const;
 /** @brief Getter.
   * @return Vehicle ID */
    const int             getID() const;
@@ -85,11 +85,11 @@ public:
   * @return Vehicle type */
    virtual const bool    is2Wheeler() const = 0;
 /** @brief Setter. */
-   void setDirection(Intersection* i);
+   void setDirection(const Intersection* i);
 /** @brief Setter. */
    void setPosition(const std::vector<double>);
 /** @brief Setter. */
-   void setNewItinerary(std::list<Road*> track);
+   void setNewItinerary(const std::list<Road*> track);
 /** @brief Setter. */
    void setStatus(const bool arrived);
 

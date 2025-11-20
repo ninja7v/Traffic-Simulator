@@ -8,7 +8,7 @@
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"
 
-Vehicle::Vehicle(Intersection* i1, Intersection* i2, const int id, Intersection* target, const std::list<Road*> track)
+Vehicle::Vehicle(const Intersection* i1, const Intersection* i2, const int id, Intersection* target, const std::list<Road*> track)
    : idVehicle(id), destination(target), itinerary(track) {
    if (i1)
       position = i1->getPosition();
@@ -20,7 +20,7 @@ Vehicle::Vehicle(Intersection* i1, Intersection* i2, const int id, Intersection*
 
 Vehicle::~Vehicle(){}
 
-double Vehicle::breakingSpeed(const double d) {
+double Vehicle::breakingSpeed(const double d) const {
    //// Breaking speed function choice:
    // - Constant (order 1 -> not smoth)
    //return constants::speedMax;
@@ -51,7 +51,7 @@ void Vehicle::moveToVehicle(const std::shared_ptr<Vehicle> v) {
    }
 }
 
-void Vehicle::moveToIntersection(Intersection* i, const int idRoad) {
+void Vehicle::moveToIntersection(const Intersection* i, const int idRoad) {
    if (i)
    {
       const double previousSpeed = speed;
@@ -92,8 +92,8 @@ void Vehicle::updateItinerary() {
 void Vehicle::displayVehicle() {
    const double W = getWidth();
    const double H = getHeight();
-   const double center[2] = { direction[1] * constants::widthRoad / 2 + position[0] * constants::ratioX + constants::margin,
-                             -direction[0] * constants::widthRoad / 2 + position[1] * constants::ratioY + constants::margin };
+   const double center[2] = { direction[1] * constants::widthRoad / 2.0 + position[0] * constants::ratioX + constants::margin,
+                             -direction[0] * constants::widthRoad / 2.0 + position[1] * constants::ratioY + constants::margin };
    // Body
    const double frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
                                  center[1] + direction[0] * W - direction[1] * H},
@@ -155,12 +155,12 @@ Road* Vehicle::nextRoad() {
    return (itinerary.empty()) ? nullptr : itinerary.front();
 }
 
-const double Vehicle::distance(const std::shared_ptr<Vehicle> v) {
+const double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
    return v ? std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 7.0, 0.0) :
               0.0;
 }
 
-const double Vehicle::distance(Intersection* i) {
+const double Vehicle::distance(const Intersection* i) const {
    return i ? std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - (this->getHeight() + constants::diameterIntersection) / 12.0, 0.0) :
               0.0;
 }
@@ -189,12 +189,12 @@ std::vector<double> Vehicle::getPosition() const {
    return position;
 }
 
-void Vehicle::setDirection(Intersection* i) {
+void Vehicle::setDirection(const Intersection* i) {
    if (i)
    {
       // We don't take the direction from road to avoid circular dependencies
       try{
-         double d = sqrt(pow((i->getPosition()[0] - position[0]), 2) + pow((i->getPosition()[1] - position[1]), 2));
+         const double d = sqrt(pow((i->getPosition()[0] - position[0]), 2) + pow((i->getPosition()[1] - position[1]), 2));
          if (d == 0.0)
             throw  std::runtime_error("Division by zero");
          direction = { (i->getPosition()[0] - position[0]) / d,
@@ -211,7 +211,7 @@ void Vehicle::setPosition(const std::vector<double> pos) {
    position = pos;
 }
 
-void Vehicle::setNewItinerary(std::list<Road*> track) {
+void Vehicle::setNewItinerary(const std::list<Road*> track) {
    itinerary = track;
 }
 

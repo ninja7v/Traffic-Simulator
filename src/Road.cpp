@@ -2,16 +2,13 @@
 //#include <list>         // To use lists // already included in vehicle.h
 //#include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
-#if DEBUG
-#include <iostream>     // To use input/output
-#endif
 // Header files
 #include "../headers/Global.h"
 #include "../headers/Road.h"
 #include "../headers/Map.h"
 #include "../headers/constants.h"
 
-Road::Road(int id, Intersection* begin, Intersection* end)
+Road::Road(const int id, Intersection* begin, Intersection* end)
    : idRoad(id), i1(begin), i2(end),
      length(sqrt(pow(begin->getPosition()[0] - end->getPosition()[0], 2) +
                  pow(begin->getPosition()[1] - end->getPosition()[1], 2))),
@@ -35,7 +32,7 @@ Road::Road(int id, Intersection* begin, Intersection* end)
 
 Road::~Road(){}
 
-bool Road::containVehicle() {
+bool Road::containVehicle() const {
    return !Vehicles.empty();
 }
 
@@ -71,7 +68,7 @@ void Road::moveVehicles() {
                global::numberOfVehicles -= 1;
             }
             else {
-               const bool isEnoughSpace = !v->nextRoad()->containVehicle() ? true :
+               const bool isEnoughSpace = !v->nextRoad()->containVehicle() ||
                   v->nextRoad()->getVehicles().back()->distance(i2) > constants::distanceSecurity + v->getHeight();
                if (isEnoughSpace) {
                   v->nextRoad()->addVehicle(v);
@@ -102,7 +99,7 @@ void Road::moveVehicles() {
    }
 }
 
-void Road::displayRoad() {
+void Road::displayRoad() const {
    glEnable(GL_LINE_SMOOTH);
    glEnableClientState(GL_VERTEX_ARRAY);
    glScalef(1.f, 1.f, 0);
@@ -122,7 +119,7 @@ void Road::displayRoad() {
    glDisable(GL_LINE_SMOOTH);
 }
 
-void Road::displayLight() {
+void Road::displayLight() const {
    // Outline
    glColor3f(0.0f, 0.0f, 0.0f); // Black
    glPointSize(static_cast<float>(constants::widthRoad) * 0.7f);

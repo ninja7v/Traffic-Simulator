@@ -19,12 +19,12 @@ public:
   * @param begin Start
   * @param end Arrival
   * @returns Road */
-   Road(int id, Intersection* begin, Intersection* end);
+   Road(const int id, Intersection* begin, Intersection* end);
 /** @brief Destructor. */
    ~Road();
 /** @brief Check if the Road contain vehicles.
   * @returns Road */
-   bool containVehicle();
+   bool containVehicle() const;
 ///** @brief Count the number of vehicle.
 //  * @returns Number of vehicles */
 //   int countVehicles(); // For the Optimizer
@@ -36,9 +36,9 @@ public:
 /** @brief Advance the vehicles for the next frame. */
    void moveVehicles();
 /** @brief Display the Road without the Vehicle on it. */
-   void displayRoad();
+   void displayRoad() const;
 /** @brief Display the traffic light at the end of the Road. */
-   void displayLight();
+   void displayLight() const;
 /** @brief Getter.
   * @return Road ID*/
    int                   getID() const;
