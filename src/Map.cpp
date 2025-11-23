@@ -1,8 +1,5 @@
 // Libraries
 //#include <list> // To use lists // alreads included in vehicle.h
-#if DEBUG
-#include <iostream>     // To use input/output
-#endif
 // Header files
 #include "../headers/Map.h"
 
@@ -17,7 +14,7 @@ std::vector<std::vector <double>> Map::live_cost = { constants::nbIntersections,
 Map::Map() {
 }
 
-std::list<Road*> Map::track(Intersection* begin, Intersection* end) {
+std::list<Road*> Map::track(const Intersection* begin, const Intersection* end) {
    if (!begin || !end)
       return std::list<Road*>();
 
@@ -73,7 +70,7 @@ void Map::setConnection(const int a, const int b, Road* r) {
    }
 }
 
-void Map::updateConnection(Road* r) {
+void Map::updateConnection(const Road* r) {
    if (r)
    {
       const double penalty = !r->containVehicle() ? 0.0 :

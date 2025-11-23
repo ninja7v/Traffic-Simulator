@@ -6,7 +6,7 @@
 #include "../headers/Global.h"
 #include "../headers/Intersection.h"
 
-Intersection::Intersection(int n = 0, std::vector<double> pos = { 0.0, 0.0 })
+Intersection::Intersection(const int n = 0, const std::vector<double> pos = { 0.0, 0.0 })
    : idIntersection(n), position(pos),
      coordinates{ position[0] * constants::ratioX + constants::margin,
                   position[1] * constants::ratioY + constants::margin } {
@@ -14,12 +14,12 @@ Intersection::Intersection(int n = 0, std::vector<double> pos = { 0.0, 0.0 })
 
 //Intersection::~Intersection(){}
 
-const bool Intersection::isRed(int id) {
+const bool Intersection::isRed(const int id) const {
    const int currentPeriod = ((clock() - global::t0) / constants::period);
    return input[currentPeriod % input.size()] != id;
 }
 
-void Intersection::displayIntersection() {
+void Intersection::displayIntersection() const {
    glPointSize(constants::diameterIntersection);
    glColor3f(0.0f, 0.0f, 0.0f); // Black
    glEnable(GL_POINT_SMOOTH);
@@ -37,7 +37,7 @@ const int Intersection::getID() const {
    return idIntersection;
 }
 
-const std::vector<double> Intersection::getPosition() {
+const std::vector<double> Intersection::getPosition() const {
    return position;
 }
 
