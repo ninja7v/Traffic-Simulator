@@ -206,8 +206,8 @@ void testsBike() {
    const double expect_height = constants::heightBike;
    const double actual_height = bike.getHeight();
    assert(expect_height == actual_height);
-   const std::array<double, 3> expect_color{ 0.0, 0.9, 0.9 };
-   const std::array<double, 3> actual_color = bike.getColor();
+   const std::array<float, 3> expect_color{ 0.0f, 0.9f, 0.9f };
+   const std::array<float, 3> actual_color = bike.getColor();
    for (int i = 0; i < 3; i++) {
       assert(expect_color[i] == actual_color[i]);
    }
@@ -243,8 +243,8 @@ void testsCar() {
    const double expect_height = constants::heightCar;
    const double actual_height = car.getHeight();
    assert(expect_height == actual_height);
-   const std::array<double, 3> expect_color{ 0.0, 0.4, 0.9 };
-   const std::array<double, 3> actual_color = car.getColor();
+   const std::array<float, 3> expect_color{ 0.0f, 0.4f, 0.9f };
+   const std::array<float, 3> actual_color = car.getColor();
    for (int i = 0; i < 3; i++) {
       assert(expect_color[i] == actual_color[i]);
    }
@@ -281,8 +281,8 @@ void testsTruck() {
    const double expect_height = constants::heightTruck;
    const double actual_height = truck.getHeight();
    assert(expect_height == actual_height);
-   const std::array<double, 3> expect_color{ 0.0, 0.0, 0.9 };
-   const std::array<double, 3> actual_color = truck.getColor();
+   const std::array<float, 3> expect_color{ 0.0f, 0.0f, 0.9f };
+   const std::array<float, 3> actual_color = truck.getColor();
    for (int i = 0; i < 3; i++) {
       assert(expect_color[i] == actual_color[i]);
    }

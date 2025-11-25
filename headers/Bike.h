@@ -24,7 +24,7 @@ public:
    double getHeight() const;
 /** @brief Getter.
     @returns Bike color*/
-   std::array<double, 3> getColor() const;
+   std::array<float, 3> getColor() const;
 /** @brief Getter.
     @returns Bike type*/
    bool is2Wheeler() const;
@@ -33,6 +33,6 @@ protected:
 private:
 /** Parameters common to all bikes. */
    static const double speedMax, acceleration, width, height;
-   static const std::array<double, 3> color;
+   static const std::array<float, 3> color;
    static const bool type;
 };
