@@ -94,18 +94,19 @@ void testsMap() {
 
 // Unit tests for Intersection class
 void testsIntersection() {
-   Intersection i(1, { 0.0, 0.0 });
-   int IDRoad = 1;
+   Intersection i1(1, { 0.0, 0.0 });
+   Intersection i2(2, { 0.0, 0.0 });
+   Road* r = new Road(1, &i1, &i2);;
 
-   i.addInputRoad(IDRoad);
+   i1.addInputRoad(r);
    const double expect_ID = 1;
-   const double actual_ID = i.getID();
+   const double actual_ID = i1.getID();
    assert(expect_ID == actual_ID);
    const bool expect_red = false;
-   const bool actual_red = i.isRed(IDRoad);
+   const bool actual_red = i1.isRed(actual_ID);
    assert(expect_red == actual_red);
    const std::vector<double> expect_position = { 0.0, 0.0 };
-   const std::vector<double> actual_position = i.getPosition();
+   const std::vector<double> actual_position = i1.getPosition();
    assert(expect_position == actual_position);
    // To be checked:
    //void displayIntersection();

@@ -4,7 +4,7 @@
 
 namespace global {
    /**  Global time initialized at the very beginning of the simulation. */
-   extern int t0;
+   extern clock_t t0;
    /** Global number of vehicle. */
    extern int numberOfVehicles;
 }

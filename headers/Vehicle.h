@@ -1,10 +1,14 @@
+/**
+ * @brief Define vehicles.
+ */
+
 #pragma once
 // Libraries
 //#include <array>     // To use arrays // already included in Intersection.h
 #include <list>      // To use lists
-// Header files
+#include <memory>    // To use smart pointers
+// Headers
 #include "Intersection.h"
-#include <memory> // To use smart pointers
 
 class Road;
 /**
@@ -83,7 +87,10 @@ public:
    virtual const double* getColor() const = 0;
 /** @brief Getter.
   * @return Vehicle type */
-   virtual const bool    is2Wheeler() const = 0;
+ virtual bool is2Wheeler() const = 0;
+/** @brief Getter.
+  * @return Time when vehicle entered current road */
+   clock_t getEnterRoadTime() const;
 /** @brief Setter. */
    void setDirection(const Intersection* i);
 /** @brief Setter. */
@@ -92,6 +99,8 @@ public:
    void setNewItinerary(const std::list<Road*> track);
 /** @brief Setter. */
    void setStatus(const bool arrived);
+/** @brief Setter. */
+   void setEnterRoadTime(clock_t t);
 
 protected:
 /** Vehicle ID. */
@@ -111,6 +120,8 @@ protected:
    std::array<double, 2> direction;
 /** Vehicle itinerary. */
    std::list<Road*> itinerary;
-private:
+/** Time when vehicle entered current road. */
+   clock_t enterRoadTime;
+
 
 };

@@ -6,6 +6,10 @@
 // Libraries
 #include <array>  // To use arrays
 #include <vector> // To use vectors
+// Headers
+#include "IntersectionOperator.h"
+
+class Road;
 
 class Intersection {
 public:
@@ -24,17 +28,20 @@ public:
 /** @brief Display the intersection as black point.*/
    void displayIntersection() const;
 /** @brief Add an input road in the input vector.
-  * @param id Road ID */
-   void addInputRoad(const int id);
+  * @param r Road pointer */
+   void addInputRoad(Road* r);
    //int                  getRoadIDGreen(); // for the opimizer
 /** @brief Getter.
   * @returns Intersection ID */
-   const int                getID() const;
+   const int getID() const;
 /** @brief Getter.
   * @returns Position on the grid */
    const std::vector<double> getPosition() const;
 
    bool operator == (const Intersection i);
+
+   /** @brief Update the intersection lights using RL. */
+   void update();
 
 protected:
 
@@ -47,5 +54,17 @@ private:
    const std::array<double, 2> coordinates;
 /** Input / output road identifiers. */
    std::vector<int> input, output;
-   //static float a, b; // for the opimizer
+   std::vector<Road*> inputRoads;
+
+   // RL components
+/** operator to decide traffic light actions */
+   IntersectionOperator* op;
+/** Index of the current green road in 'input' vector */
+   int currentGreenRoadIndex; // Index in 'input' vector
+/** Last state observed */
+   std::vector<int> lastState;
+/** Last action taken */
+   int lastAction;
+/** Time of the last traffic light switch */
+   clock_t lastSwitchTime;
 };
