@@ -5,7 +5,7 @@
 #include <iostream>  // To debug
 #include <ctime>     // To use clock_t
 //#include <algorithm>  // To use max // already included in Constants.h
-// Header files
+// Headers
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"
 
@@ -149,17 +149,17 @@ Road* Vehicle::nextRoad() {
    return (itinerary.empty()) ? nullptr : itinerary.front();
 }
 
-const double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
+double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
    return v ? std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 7.0, 0.0) :
               0.0;
 }
 
-const double Vehicle::distance(const Intersection* i) const {
+double Vehicle::distance(const Intersection* i) const {
    return i ? std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - (this->getHeight() + constants::diameterIntersection) / 12.0, 0.0) :
               0.0;
 }
 
-const int Vehicle::getID() const {
+int Vehicle::getID() const {
    return idVehicle;
 }
 
