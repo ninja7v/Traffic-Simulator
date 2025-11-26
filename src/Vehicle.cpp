@@ -98,7 +98,7 @@ void Vehicle::displayVehicle() {
                                  center[1] - direction[0] * W + direction[1] * H},
                                 {center[0] + direction[0] * H - direction[1] * W,
                                  center[1] + direction[0] * W + direction[1] * H}, };
-   const std::array<double, 3> color = getColor();
+   const std::array<float, 3> color = getColor();
    glColor3f(static_cast<float>(color[0]), static_cast<float>(color[1]), static_cast<float>(color[2]));
    glBegin(GL_QUADS);
    glEnableClientState(GL_VERTEX_ARRAY);
