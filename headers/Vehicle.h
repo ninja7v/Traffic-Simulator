@@ -1,8 +1,12 @@
+/**
+ * @brief Define vehicles.
+ */
+
 #pragma once
 // Libraries
 //#include <array>     // To use arrays // already included in Intersection.h
 #include <list>      // To use lists
-// Header files
+// Headers
 #include "Intersection.h"
 #include <memory> // To use smart pointers
 
@@ -43,47 +47,47 @@ public:
 /** @brief Calculate the distance with the front Vehicle.
   * @param v Vehicle in front
   * @return Distance */
-   const double distance(const std::shared_ptr<Vehicle> v) const;
+   double distance(const std::shared_ptr<Vehicle> v) const;
 /** @brief Calculate the distance with the front Intersection.
   * @param i Intersection in front
   * @return Distance */
-   const double distance(const Intersection* i) const;
+   double distance(const Intersection* i) const;
 /** @brief Getter.
   * @return Vehicle ID */
-   const int             getID() const;
+   int getID() const;
 /** @brief Getter.
   * @return Arrived at destination? */
-   bool                  getStatus() const;
+   bool getStatus() const;
 /** @brief Getter.
   * @return Vehicle Speed */
-   double                getSpeed() const;
+   double getSpeed() const;
 /** @brief Getter.
   * @return Vehicle destination */
-   Intersection*         getDestination() const;
+   Intersection* getDestination() const;
 /** @brief Getter.
   * @return Vehicle itinerary */
-   std::list<Road*>      getItinerary() const;
+   std::list<Road*> getItinerary() const;
 /** @brief Getter.
   * @return Vehicle position */
-   std::vector<double>   getPosition() const;
+   std::vector<double> getPosition() const;
 /** @brief Getter.
   * @return Vehicle speed max */
-   virtual const double  getSpeedMax() const = 0;
+   virtual double getSpeedMax() const = 0;
 /** @brief Getter.
   * @return Vehicle acceleration */
-   virtual const double  getAcceleration() const = 0;
+   virtual double getAcceleration() const = 0;
 /** @brief Getter.
   * @return Vehicle width */
-   virtual const double  getWidth() const = 0;
+   virtual double getWidth() const = 0;
 /** @brief Getter.
   * @return Vehicle height */
-   virtual const double  getHeight() const = 0;
+   virtual double getHeight() const = 0;
 /** @brief Getter.
   * @return Vehicle color */
-   virtual const double* getColor() const = 0;
+   virtual std::array<float, 3> getColor() const = 0;
 /** @brief Getter.
   * @return Vehicle type */
-   virtual const bool    is2Wheeler() const = 0;
+   virtual bool is2Wheeler() const = 0;
 /** @brief Setter. */
    void setDirection(const Intersection* i);
 /** @brief Setter. */

@@ -4,7 +4,7 @@
 #include <GL/glut.h> // To display
 #include <iostream>  // To debug
 //#include <algorithm>  // To use max // already included in Constants.h
-// Header files
+// Headers
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"
 
@@ -68,16 +68,10 @@ void Vehicle::moveToIntersection(const Intersection* i, const int idRoad) {
       // To add: case where next road is full
       // Move
       const double s = speed;
-      try {
          position[0] += direction[0] * s;
          position[1] += direction[1] * s;
          if (distance(i) > d)
-            throw position;
-      }
-      catch (std::array<double, 2> pos) {
-         std::cout << "The vehicle is escaping!" << std::endl;
-         exit(-1);
-      }
+         std::cerr << "The vehicle is escaping!" << std::endl;
       // Braking ?
       isBraking = previousSpeed > speed;
    }
@@ -103,9 +97,8 @@ void Vehicle::displayVehicle() {
                                  center[1] - direction[0] * W + direction[1] * H},
                                 {center[0] + direction[0] * H - direction[1] * W,
                                  center[1] + direction[0] * W + direction[1] * H}, };
-   const double* color = getColor();
-   if (color)
-      glColor3f(static_cast<float>(color[0]), static_cast<float>(color[1]), static_cast<float>(color[2]));
+   const std::array<float, 3> color = getColor();
+   glColor3f(color[0], color[1], color[2]);
    glBegin(GL_QUADS);
    glEnableClientState(GL_VERTEX_ARRAY);
    for (int i = 0; i < 4; ++i) {
@@ -155,17 +148,17 @@ Road* Vehicle::nextRoad() {
    return (itinerary.empty()) ? nullptr : itinerary.front();
 }
 
-const double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
+double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
    return v ? std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 7.0, 0.0) :
               0.0;
 }
 
-const double Vehicle::distance(const Intersection* i) const {
+double Vehicle::distance(const Intersection* i) const {
    return i ? std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - (this->getHeight() + constants::diameterIntersection) / 12.0, 0.0) :
               0.0;
 }
 
-const int Vehicle::getID() const {
+int Vehicle::getID() const {
    return idVehicle;
 }
 
