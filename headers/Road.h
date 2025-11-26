@@ -25,9 +25,6 @@ public:
 /** @brief Check if the Road contain vehicles.
   * @returns Road */
    bool containVehicle() const;
-///** @brief Count the number of vehicle.
-//  * @returns Number of vehicles */
-//   int countVehicles(); // For the Optimizer
 /** @brief Add vehicle to the Road.
   * @param v Vehicle to add */
    void addVehicle(std::shared_ptr<Vehicle> v);
@@ -57,20 +54,30 @@ public:
 /** @brief Getter.
   * @return Orientation of the Road */
    std::array<double, 2> getDirection() const;
+/** @brief Get number of vehicle arriving on the road since the beginning of the simulation.
+  * @returns Number of vehicle */
+   int getTotalNumberOfArringVehicles() const;
+/** @brief Get statistics for RL state.
+  * @param averageNewVehicles Average number of new vehicles since the beginning of the simulation to determine usage
+  * @returns tuple(occupancy, first_car_speed, usage) */
+   std::tuple<int, int, int> getVehicleStats(double averageNewVehicles) const;
+
 
 protected:
 
 private:
 /** Road identifier */
    const int idRoad;
-/** Road length */
-   const double length;
 /** Start Intersection */
    Intersection* i1;
 /** End Intersection */
    Intersection* i2;
+/** Road length */
+   const double length;
 /** Vehicle on the Road */
    std::list<std::shared_ptr<Vehicle>> Vehicles;
+/** Number of vehicles that have arrived on this road since the start of the simulation */
+   int totalNumberOfArringVehicles;
 /** Orientation of the Road */
    std::array<double, 2> direction;
 /** Road coordinates */

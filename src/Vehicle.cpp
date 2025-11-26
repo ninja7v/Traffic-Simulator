@@ -3,6 +3,7 @@
 //#include <list>      // To use lists // already included in vehicle.h
 #include <GL/glut.h> // To display
 #include <iostream>  // To debug
+#include <ctime>     // To use clock_t
 //#include <algorithm>  // To use max // already included in Constants.h
 // Headers
 #include "../headers/Constants.h"
@@ -68,10 +69,10 @@ void Vehicle::moveToIntersection(const Intersection* i, const int idRoad) {
       // To add: case where next road is full
       // Move
       const double s = speed;
-         position[0] += direction[0] * s;
-         position[1] += direction[1] * s;
-         if (distance(i) > d)
-         std::cerr << "The vehicle is escaping!" << std::endl;
+      position[0] += direction[0] * s;
+      position[1] += direction[1] * s;
+      if (distance(i) > d)
+      std::cerr << "The vehicle is escaping!" << std::endl;
       // Braking ?
       isBraking = previousSpeed > speed;
    }
@@ -97,8 +98,8 @@ void Vehicle::displayVehicle() {
                                  center[1] - direction[0] * W + direction[1] * H},
                                 {center[0] + direction[0] * H - direction[1] * W,
                                  center[1] + direction[0] * W + direction[1] * H}, };
-   const std::array<float, 3> color = getColor();
-   glColor3f(color[0], color[1], color[2]);
+   const std::array<double, 3> color = getColor();
+   glColor3f(static_cast<float>(color[0]), static_cast<float>(color[1]), static_cast<float>(color[2]));
    glBegin(GL_QUADS);
    glEnableClientState(GL_VERTEX_ARRAY);
    for (int i = 0; i < 4; ++i) {
@@ -176,10 +177,14 @@ Intersection* Vehicle::getDestination() const {
 
 std::list<Road*> Vehicle::getItinerary() const {
    return itinerary;
-}
+   }
 
 std::vector<double> Vehicle::getPosition() const {
    return position;
+}
+
+clock_t Vehicle::getEnterRoadTime() const {
+   return enterRoadTime;
 }
 
 void Vehicle::setDirection(const Intersection* i) {
@@ -210,4 +215,8 @@ void Vehicle::setNewItinerary(const std::list<Road*> track) {
 
 void Vehicle::setStatus(const bool arrived) {
    isArrived = arrived;
+}
+
+void Vehicle::setEnterRoadTime(clock_t t) {
+   enterRoadTime = t;
 }

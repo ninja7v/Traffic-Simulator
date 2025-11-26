@@ -8,7 +8,6 @@
 #include <list>      // To use lists
 // Headers
 #include "Intersection.h"
-#include <memory> // To use smart pointers
 
 class Road;
 /**
@@ -88,6 +87,9 @@ public:
 /** @brief Getter.
   * @return Vehicle type */
    virtual bool is2Wheeler() const = 0;
+/** @brief Getter.
+  * @return Time when vehicle entered current road */
+   clock_t getEnterRoadTime() const;
 /** @brief Setter. */
    void setDirection(const Intersection* i);
 /** @brief Setter. */
@@ -96,6 +98,8 @@ public:
    void setNewItinerary(const std::list<Road*> track);
 /** @brief Setter. */
    void setStatus(const bool arrived);
+/** @brief Setter. */
+   void setEnterRoadTime(clock_t t);
 
 protected:
 /** Vehicle ID. */
@@ -115,6 +119,8 @@ protected:
    std::array<double, 2> direction;
 /** Vehicle itinerary. */
    std::list<Road*> itinerary;
-private:
+/** Time when vehicle entered current road. */
+   clock_t enterRoadTime;
+
 
 };

@@ -12,7 +12,7 @@
 #if DEBUG
 #include <iostream>        // To use input/output
 #endif
-// Header files
+// Headers
 #include "../headers/Global.h"
 #include "../headers/Car.h"
 #include "../headers/Bike.h"
@@ -80,7 +80,7 @@ Network::Network() {
          {
             Roads.push_back(r);
             map.setConnection(card[begin]->getID(), card[end]->getID(), r);
-            card[end]->addInputRoad(r->getID());
+            card[end]->addInputRoad(r);
             id++;
          }
       }
@@ -152,8 +152,10 @@ void Network::displayNetwork() {
 #endif
       // Intersections
       for (Intersection* i : Intersections) {
-         if (i)
+         if (i) {
+            i->update(); // Update RL logic
             i->displayIntersection();
+         }
       }
       // Traffic lights
       for (Road* const& r : Roads) {
