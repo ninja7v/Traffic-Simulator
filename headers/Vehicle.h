@@ -6,6 +6,8 @@
 // Libraries
 //#include <array>     // To use arrays // already included in Intersection.h
 #include <list>      // To use lists
+#include <ctime>     // To use clock_t
+#include <memory>    // To use shared_ptr
 // Headers
 #include "Intersection.h"
 
