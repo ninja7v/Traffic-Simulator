@@ -1,0 +1,131 @@
+#include "../headers/NeuralNetwork.h"
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+
+Layer::Layer(int in, int out) : inputSize(in), outputSize(out) {
+    // Xavier or He initialization methods could be better, but simple random is fine for now
+    double scale = sqrt(2.0 / in);
+    for (int i = 0; i < out; ++i) {
+        std::vector<double> row;
+        for (int j = 0; j < in; ++j) {
+            // Random value between -1 and 1 scaled
+            double r = ((double)rand() / RAND_MAX) * 2.0 - 1.0;
+            row.push_back(r * scale);
+        }
+        weights.push_back(row);
+        biases.push_back(0.0);
+    }
+}
+
+NeuralNetwork::NeuralNetwork() : learningRate(0.01) {}
+
+NeuralNetwork::NeuralNetwork(const std::vector<int>& topology, double lr) : learningRate(lr) {
+    init(topology, lr);
+}
+
+void NeuralNetwork::init(const std::vector<int>& topology, double lr) {
+    learningRate = lr;
+    layers.clear();
+    for (size_t i = 0; i < topology.size() - 1; ++i) {
+        layers.emplace_back(topology[i], topology[i + 1]);
+    }
+}
+
+double NeuralNetwork::sigmoid(double x) {
+    return 1.0 / (1.0 + exp(-x));
+}
+
+double NeuralNetwork::sigmoidDerivative(double x) {
+    double s = sigmoid(x);
+    return s * (1.0 - s);
+}
+
+double NeuralNetwork::relu(double x) {
+    return x > 0 ? x : 0.01 * x; // Leaky ReLU to avoid dead neurons
+}
+
+double NeuralNetwork::reluDerivative(double x) {
+    return x > 0 ? 1.0 : 0.01;
+}
+
+std::vector<double> NeuralNetwork::predict(const std::vector<double>& input) {
+    std::vector<double> currentInput = input;
+
+    for (size_t i = 0; i < layers.size(); ++i) {
+        Layer& layer = layers[i];
+        layer.inputs = currentInput;
+        layer.z_values.clear();
+        layer.activations.clear();
+
+        std::vector<double> nextInput;
+        for (int n = 0; n < layer.outputSize; ++n) {
+            double sum = layer.biases[n];
+            for (int w = 0; w < layer.inputSize; ++w) {
+                sum += layer.weights[n][w] * currentInput[w];
+            }
+            layer.z_values.push_back(sum);
+            
+            // Activation
+            double val;
+            if (i == layers.size() - 1) {
+                // Output layer: Linear
+                val = sum; 
+            } else {
+                // Hidden layers: ReLU
+                val = relu(sum);
+            }
+            layer.activations.push_back(val);
+            nextInput.push_back(val);
+        }
+        currentInput = nextInput;
+    }
+    return currentInput;
+}
+
+void NeuralNetwork::train(const std::vector<double>& input, const std::vector<double>& target) {
+    // Forward pass to populate activations
+    std::vector<double> output = predict(input);
+
+    // Backward pass
+    std::vector<double> errors;
+    
+    // Calculate output error (MSE derivative: output - target)
+    for (size_t i = 0; i < output.size(); ++i) {
+        errors.push_back(output[i] - target[i]);
+    }
+
+    // Backpropagate
+    for (int i = layers.size() - 1; i >= 0; --i) {
+        Layer& layer = layers[i];
+        std::vector<double> nextErrors(layer.inputSize, 0.0);
+
+        for (int n = 0; n < layer.outputSize; ++n) {
+            double error = errors[n];
+            double derivative;
+
+            if (i == layers.size() - 1) {
+                // Linear derivative is 1
+                derivative = 1.0;
+            } else {
+                derivative = reluDerivative(layer.z_values[n]);
+            }
+
+            double delta = error * derivative;
+
+            // Update weights and biases
+            for (int w = 0; w < layer.inputSize; ++w) {
+                // Gradient w.r.t weight is delta * input
+                double inputVal = layer.inputs[w];
+                // Accumulate error for previous layer
+                nextErrors[w] += delta * layer.weights[n][w];
+                
+                // Update weight
+                layer.weights[n][w] -= learningRate * delta * inputVal;
+            }
+            // Update bias
+            layer.biases[n] -= learningRate * delta;
+        }
+        errors = nextErrors;
+    }
+}

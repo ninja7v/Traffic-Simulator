@@ -10,15 +10,23 @@
 #include "../headers/Intersection.h"
 #include "../headers/Road.h"
 
-Intersection::Intersection(const int n = 0, const std::vector<double> pos = { 0.0, 0.0 })
+#include "../headers/QLearningOperator.h"
+#include "../headers/DeepRLOperator.h"
+
+Intersection::Intersection(const int n, const std::vector<double> pos, const std::string& agentType)
    : idIntersection(n),
      position(pos),
      coordinates{ position[0] * constants::ratioX + constants::margin,
                   position[1] * constants::ratioY + constants::margin },
-     op(new IntersectionOperator()),
      currentGreenRoadIndex(0),
      lastAction(0),
      lastSwitchTime(clock()) {
+     
+     if (agentType == "DeepRL") {
+         op = new DeepRLOperator();
+     } else {
+         op = new QLearningOperator();
+     }
 }
 
 //Intersection::~Intersection(){}

@@ -6,6 +6,8 @@
 // Libraries
 #include <array>  // To use arrays
 #include <vector> // To use vectors
+#include <string> // To use strings
+#include <ctime>  // To use clock_t
 // Headers
 #include "IntersectionOperator.h"
 
@@ -17,14 +19,16 @@ public:
 /** @brief Constructor.
   * @param id Road ID
   * @param pos Position coordinates
+  * @param agentType Type of RL agent ("QLearning" or "DeepRL")
   * @returns Car acceleration */
-   Intersection(const int id, const std::vector<double> pos);
-/** @brief Destructor.
+   Intersection(const int id, const std::vector<double> pos, const std::string& agentType = "QLearning");
+/** @brief Destructor. */
    //~Intersection();
 /** @brief Get trafic light color.
   * @param id Road ID
   * @returns true:Red / false:Green */
    const bool isRed(const int id) const;
+
 /** @brief Display the intersection as black point.*/
    void displayIntersection() const;
 /** @brief Add an input road in the input vector.
