@@ -6,6 +6,8 @@
 // Libraries
 #include <array>  // To use arrays
 #include <vector> // To use vectors
+#include <string> // To use strings
+#include <ctime>  // To use clock_t
 // Headers
 #include "IntersectionOperator.h"
 
@@ -19,7 +21,7 @@ public:
   * @param pos Position coordinates
   * @returns Car acceleration */
    Intersection(const int id, const std::vector<double> pos);
-/** @brief Destructor.
+/** @brief Destructor. */
    //~Intersection();
 /** @brief Get trafic light color.
   * @param id Road ID
