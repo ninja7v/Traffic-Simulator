@@ -1,11 +1,8 @@
-#include "../headers/DeepRLOperator.h"
+// Libraries
 #include <iostream>
+// Headers
+#include "../headers/DeepRLOperator.h"
 
-/**
- * DeepRLOperator implements a Deep Q-Network (DQN) agent.
- * It uses a neural network to approximate the Q-value function Q(s, a),
- * which estimates the expected future reward for taking action 'a' in state 's'.
- */
 
 DeepRLOperator::DeepRLOperator() {
     std::random_device rd;
@@ -18,10 +15,10 @@ int DeepRLOperator::decide(const std::vector<int>& state, const std::vector<int>
     // Lazy initialization of the neural network
     // We wait for the first state to know the input size (state dimension)
     if (!isInitialized) {
-        int inputSize = state.size();
-        int outputSize = availableActions.size();
+        const int inputSize = static_cast<int>(state.size());
+        const int outputSize = static_cast<int>(availableActions.size());
         // Topology: Input Layer -> 64 Hidden -> 64 Hidden -> Output Layer
-        policyNetwork.init({inputSize, 64, 64, outputSize}, alpha);
+        policyNetwork = NeuralNetwork({inputSize, 64, 64, outputSize}, alpha);
         isInitialized = true;
     }
 
@@ -53,7 +50,7 @@ int DeepRLOperator::decide(const std::vector<int>& state, const std::vector<int>
     return bestAction;
 }
 
-void DeepRLOperator::learn(const std::vector<int>& state, int action, double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) {
+void DeepRLOperator::learn(const std::vector<int>& state, const int action, const double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) {
     if (!isInitialized) return;
 
     std::vector<double> s(state.begin(), state.end());
@@ -92,14 +89,12 @@ void DeepRLOperator::learn(const std::vector<int>& state, int action, double rew
              }
         }
         if (!foundNext) maxNextQ = 0.0;
-
-        // Bellman Equation: Target = Reward + Gamma * max(Q(next_state))
-        // We want the current Q-value to move towards this target.
-        double target = exp.reward + gamma * maxNextQ;
         
         // Update the Q-value for the specific action taken
         if (exp.action >= 0 && exp.action < targetQ.size()) {
-            targetQ[exp.action] = target;
+            // Bellman Equation: Target = Reward + Gamma * max(Q(next_state))
+            // We want the current Q-value to move towards this target.
+            targetQ[exp.action] = exp.reward + gamma * maxNextQ;
             // Backpropagation: Train the network to predict this new target Q-value
             policyNetwork.train(exp.state, targetQ);
         }

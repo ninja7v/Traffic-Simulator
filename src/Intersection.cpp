@@ -13,7 +13,7 @@
 #include "../headers/QLearningOperator.h"
 #include "../headers/DeepRLOperator.h"
 
-Intersection::Intersection(const int n, const std::vector<double> pos, const std::string& agentType)
+Intersection::Intersection(const int n, const std::vector<double> pos)
    : idIntersection(n),
      position(pos),
      coordinates{ position[0] * constants::ratioX + constants::margin,
@@ -22,10 +22,16 @@ Intersection::Intersection(const int n, const std::vector<double> pos, const std
      lastAction(0),
      lastSwitchTime(clock()) {
      
-     if (agentType == "DeepRL") {
-         op = new DeepRLOperator();
-     } else {
-         op = new QLearningOperator();
+     switch (constants::learningType) {
+        case LearningType::Q_LEARNING:
+            op = new QLearningOperator();
+            break;
+        case LearningType::DQN:
+            op = new DeepRLOperator();
+            break;
+        default:
+            op = nullptr;
+            throw std::runtime_error("Invalid learning type");
      }
 }
 

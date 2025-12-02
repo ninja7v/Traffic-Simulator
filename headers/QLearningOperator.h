@@ -1,18 +1,37 @@
 #pragma once
+// Libraries
+#include <map> // To use std::map
+#include <random> // To use std::mt19937
+// Headers
 #include "IntersectionOperator.h"
-#include <map>
-#include <random>
 
 class QLearningOperator : public IntersectionOperator {
 public:
+/** @brief Default constructor. */
     QLearningOperator();
+/** @brief Decide the next action to take.
+  * @param state Current state of the environment.
+  * @param availableActions List of available actions.
+  * @return int Chosen action. */
     int decide(const std::vector<int>& state, const std::vector<int>& availableActions) override;
-    void learn(const std::vector<int>& state, int action, double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) override;
+/** @brief Learn from the environment.
+  * @param state Current state of the environment.
+  * @param action Chosen action.
+  * @param reward Reward received.
+  * @param nextState Resulting state.
+  * @param availableActions List of available actions. */
+    void learn(const std::vector<int>& state, const int action, const double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) override;
 
 private:
     std::map<std::vector<int>, std::map<int, double>> qTable;
-    double alpha = 0.1;
-    double gamma = 0.9;
-    double epsilon = 0.1;
+    
+    // hyperparameters
+    /** Learning Rate: How fast the network updates its weights */
+    static constexpr inline double alpha = 0.001;
+    /** Discount Factor: Importance of future rewards (0 = short-sighted, 1 = long-sighted) */
+    static constexpr inline double gamma = 0.95;
+    /** Exploration Rate: Probability of choosing a random action */
+    double epsilon = 1.0;
+    /** Random number generator */
     std::mt19937 rng;
 };

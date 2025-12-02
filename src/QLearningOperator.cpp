@@ -1,5 +1,8 @@
+// Libraries
+#include <iostream> // To use std::cout
+#include <random>   // To use std::random_device and std::mt19937
+// Headers
 #include "../headers/QLearningOperator.h"
-#include <iostream>
 
 QLearningOperator::QLearningOperator() {
     std::random_device rd;
@@ -15,7 +18,7 @@ int QLearningOperator::decide(const std::vector<int>& state, const std::vector<i
         return availableActions[actionDist(rng)];
     }
 
-    if (qTable.find(state) == qTable.end()) {
+    if (!qTable.contains(state)) {
         std::uniform_int_distribution<size_t> actionDist(0, availableActions.size() - 1);
         return availableActions[actionDist(rng)];
     }
@@ -37,10 +40,7 @@ int QLearningOperator::decide(const std::vector<int>& state, const std::vector<i
 }
 
 void QLearningOperator::learn(const std::vector<int>& state, int action, double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) {
-    double currentQ = 0.0;
-    if (qTable[state].count(action)) {
-        currentQ = qTable[state][action];
-    }
+    const double currentQ = (qTable[state].count(action)) ? qTable[state][action] : 0.0;
 
     double maxNextQ = 0.0;
     if (!availableActions.empty()) {
@@ -49,10 +49,7 @@ void QLearningOperator::learn(const std::vector<int>& state, int action, double 
              double localMax = -1e9;
              bool found = false;
              for (int nextAction : availableActions) {
-                 double q = 0.0;
-                 if (nextActionQValues.count(nextAction)) {
-                     q = nextActionQValues[nextAction];
-                 }
+                 const double q = (nextActionQValues.count(nextAction)) ? nextActionQValues[nextAction] : 0.0;
                  if (q > localMax) {
                      localMax = q;
                      found = true;
@@ -62,6 +59,6 @@ void QLearningOperator::learn(const std::vector<int>& state, int action, double 
         }
     }
 
-    double newQ = currentQ + alpha * (reward + gamma * maxNextQ - currentQ);
-    qTable[state][action] = newQ;
+    // new Q-value
+    qTable[state][action] = currentQ + alpha * (reward + gamma * maxNextQ - currentQ);
 }

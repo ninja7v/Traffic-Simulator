@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Source files
-file(GLOB SOURCES "src/*.cpp" "Tests/*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 file(GLOB HEADERS "headers/*.h")
 
 # Include directories
@@ -19,7 +19,6 @@ include_directories(
 
 # Executable
 add_executable(TrafficSimulator ${SOURCES} ${HEADERS})
-target_compile_definitions(TrafficSimulator PRIVATE $<$<CONFIG:Debug>:DEBUG>)
 
 # Platform specific settings
 if(WIN32)

@@ -6,6 +6,11 @@
 // Libraries
 #include<algorithm> // To use max()
 
+enum LearningType {
+      Q_LEARNING,
+      DQN
+   };
+
 namespace constants {
 /** @defgroup Network parameters */
 /**@{*/
@@ -84,4 +89,11 @@ namespace constants {
 /** Ratio for the Y axis. */
    constexpr int ratioY{ /*1*/(SCREEN_HEIGHT - 2*margin) / (sizeY - 1) }; // If sizeY>1
 /**@}*/
+/** @defgroup Learning parameters */
+/**@{*/
+/** Learning type. */
+   constexpr LearningType learningType{ LearningType::Q_LEARNING };
+/**@}*/
 }
+
+
