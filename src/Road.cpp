@@ -1,14 +1,14 @@
 // Libraries
-//#include <list>         // To use lists // already included in vehicle.h
-//#include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
 #include <ctime>        // To use clock() and clock_t
 #include <memory>       // To use smart pointers
+#include <cmath>        // To use sqrt
+#include <list>         // To use lists
 // Headers
 #include "../headers/Global.h"
 #include "../headers/Road.h"
 #include "../headers/Map.h"
-#include "../headers/constants.h"
+#include "../headers/Constants.h"
 
 Road::Road(const int id, Intersection* begin, Intersection* end)
    : idRoad(id), i1(begin), i2(end),

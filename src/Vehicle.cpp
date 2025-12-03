@@ -1,12 +1,12 @@
 // Libraries
-//#include <array>     // To use arrays // already included in vehicle.h
-//#include <list>      // To use lists // already included in vehicle.h
+#include <array>     // To use arrays
+#include <list>      // To use lists
 #include <GL/glut.h> // To display
 #include <iostream>  // To debug
 #include <ctime>     // To use clock_t
 #include <vector>    // To use vectors
 #include <memory>    // To use smart pointers
-//#include <algorithm>  // To use max // already included in Constants.h
+#include <algorithm> // To use max
 // Headers
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"

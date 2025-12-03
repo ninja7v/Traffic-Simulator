@@ -8,10 +8,9 @@
 #include <vector> // To use vectors
 #include <memory> // To use smart pointers
 // Header files
-//#include "Intersection.h" //already include in Road.h
+#include "Intersection.h"
 #include "Road.h"
 #include "Map.h"
-//#include <memory> // To use smart pointers // already included in Vehicle.h
 
 class Network {
 public:
@@ -27,9 +26,9 @@ private:
 /** Road Map. */
    Map map;
 /** Intersections. */
-   std::vector<Intersection*> Intersections;
+   std::vector<std::unique_ptr<Intersection>> Intersections;
 /** Roads. */
-   std::vector<Road*> Roads;
+   std::vector<std::unique_ptr<Road>> Roads;
 /** Vehicles */
    std::list<std::shared_ptr<Vehicle>> Vehicles;
 /** @brief Add vehicle to the simulation. */

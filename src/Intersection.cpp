@@ -2,12 +2,12 @@
 #include <GLFW/glfw3.h> // To display
 #include <ctime>        // To use clock() and clock_t
 #include <numeric>      // To use accumulate
+#include <memory>       // To use smart pointers
 // Headers
 #include "../headers/Constants.h"
 #include "../headers/Global.h"
 #include "../headers/Intersection.h"
 #include "../headers/Road.h"
-
 #include "../headers/QLearningOperator.h"
 #include "../headers/DeepRLOperator.h"
 
@@ -22,10 +22,10 @@ Intersection::Intersection(const int n, const std::vector<double> pos)
      
      switch (constants::learningType) {
         case LearningType::Q_LEARNING:
-            op = new QLearningOperator();
+            op = std::make_unique<QLearningOperator>();
             break;
         case LearningType::DQN:
-            op = new DeepRLOperator();
+            op = std::make_unique<DeepRLOperator>();
             break;
         default:
             op = nullptr;
