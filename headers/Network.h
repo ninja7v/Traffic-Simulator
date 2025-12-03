@@ -4,8 +4,9 @@
 
 #pragma once
 // Libraries
-//#include <list>   // To manipulate lists //already included in vehicle.h
-//#include <vector> // To manipulate vectors // already included in Intersection.h
+#include <list>   // To use lists
+#include <vector> // To use vectors
+#include <memory> // To use smart pointers
 // Header files
 //#include "Intersection.h" //already include in Road.h
 #include "Road.h"

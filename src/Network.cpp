@@ -1,13 +1,11 @@
 // Libraries
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h> // To use stbi_load()
-//#include <GL/glut.h>       // To display
 #include <GLFW/glfw3.h>    // To display
-#include <time.h>          // To use clock()
-//#include <thread>          // To use threads // Not used yet, but to display a waiting image in the future
+#include <ctime>           // To use clock()
 #include <unordered_map>   // To use unordered_map
-//#include <vector>          // To vectors // Already included
-//#include <array>           // To arrays // Already included
+#include <vector>          // To vectors
+#include <array>           // To arrays
 #include <delaunator.hpp>  // To compute the Delaunay triangulation
 #if DEBUG
 #include <iostream>        // To use input/output
@@ -38,7 +36,7 @@ struct VectorEqual {
 Network::Network() {
    srand(static_cast<unsigned int>(time(nullptr)));
    auto distance = [&](std::vector<double> p1, std::vector<double> p2) {
-      return (double)sqrt(pow(p2[0] - p1[0], 2) + pow(p2[1] - p1[1], 2));
+      return sqrt(pow(p2[0] - p1[0], 2) + pow(p2[1] - p1[1], 2));
    };
    auto isPositionValid = [&](const std::vector<double>& p) {
       for (const auto& i : Intersections) {

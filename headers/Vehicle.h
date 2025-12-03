@@ -4,10 +4,10 @@
 
 #pragma once
 // Libraries
-//#include <array>     // To use arrays // already included in Intersection.h
-#include <list>      // To use lists
-#include <ctime>     // To use clock_t
-#include <memory>    // To use shared_ptr
+#include <array>  // To use arrays
+#include <list>   // To use lists
+#include <vector> // To use vectors
+#include <memory> // To use smart pointers
 // Headers
 #include "Intersection.h"
 

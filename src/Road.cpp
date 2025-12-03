@@ -3,6 +3,7 @@
 //#include <GL/glut.h>    // To display
 #include <GLFW/glfw3.h> // To display
 #include <ctime>        // To use clock() and clock_t
+#include <memory>       // To use smart pointers
 // Headers
 #include "../headers/Global.h"
 #include "../headers/Road.h"

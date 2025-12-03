@@ -4,12 +4,12 @@
 
 #pragma once
 // Libraries
-//#include <array> // To use arrays // alreads included in vehicle.h
-//#include <list>  // To use lists // alreads included in vehicle.h
+#include <array>  // To use arrays
+#include <list>   // To use lists
+#include <memory> // To use smart pointers
 // Headers
 #include "Intersection.h"
 #include "Vehicle.h"
-//#include <memory> // To use smart pointers // already included in Vehicle.h
 
 class Road {
 public:
@@ -38,18 +38,18 @@ public:
    void displayLight() const;
 /** @brief Getter.
   * @return Road ID*/
-   int                   getID() const;
+   int getID() const;
 /** @brief Getter.
   * @return Road lenght */
-   double                getLength() const;
+   double getLength() const;
 /** @brief Getter.
-  * @return Road ID */
-   Intersection*         getStart() const;
-/** @brief Getter.
-  * @return Start Intersection */
-   Intersection*         getEnd() const;
+ * @return Start Intersection */
+   Intersection* getStart() const;
 /** @brief Getter.
   * @return End Intersection */
+   Intersection* getEnd() const;
+/** @brief Getter.
+  * @return Get vehicles */
    std::list<std::shared_ptr<Vehicle>> getVehicles() const;
 /** @brief Getter.
   * @return Orientation of the Road */
