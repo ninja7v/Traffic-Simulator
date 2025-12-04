@@ -1,12 +1,27 @@
 cmake_minimum_required(VERSION 3.13)
 project(TrafficSimulator)
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Force dynamic runtime for MSVC
+if(MSVC)
+    foreach(flag_var
+            CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+            CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        string(REPLACE "/MTd" "/MDd" ${flag_var} "${${flag_var}}")
+        string(REPLACE "/MT"  "/MD"  ${flag_var} "${${flag_var}}")
+    endforeach()
+endif()
 
 # Source files
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB HEADERS "headers/*.h")
+
+# Exclude main.cpp from library sources
+set(LIB_SOURCES ${SOURCES})
+list(FILTER LIB_SOURCES EXCLUDE REGEX "main.cpp$")
 
 # Include directories
 include_directories(
@@ -17,8 +32,44 @@ include_directories(
     Dependencies/delaunator/include
 )
 
-# Executable
-add_executable(TrafficSimulator ${SOURCES} ${HEADERS})
+# Create a static library from non-main sources
+add_library(TrafficLib STATIC ${LIB_SOURCES} ${HEADERS})
+
+# Main executable
+add_executable(TrafficSimulator src/main.cpp)  # Assumes main.cpp; change if needed
+target_link_libraries(TrafficSimulator PRIVATE TrafficLib)
+
+# Tests
+enable_testing()
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_GetProperties(googletest)
+if(NOT googletest_POPULATED)
+    FetchContent_Populate(googletest)
+    add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+endif()
+
+file(GLOB TEST_SOURCES "tests/*.cpp")
+
+add_executable(unit_tests ${TEST_SOURCES})
+
+target_link_libraries(unit_tests
+    PRIVATE
+    TrafficLib  # Link the project library to tests
+    gtest
+    gtest_main
+)
+
+target_include_directories(unit_tests PRIVATE headers)
+
+add_test(NAME unit_tests COMMAND unit_tests)
 
 # Platform specific settings
 if(WIN32)
@@ -27,19 +78,28 @@ if(WIN32)
     set(GLFW_LIB_DIR "${CMAKE_SOURCE_DIR}/Dependencies/GLFW/lib-vc2022")
     # FreeGLUT
     set(GL_LIB_DIR "${CMAKE_SOURCE_DIR}/Dependencies/GL/lib")
-
     target_link_directories(TrafficSimulator PRIVATE ${GLFW_LIB_DIR} ${GL_LIB_DIR})
+    target_link_directories(TrafficLib PRIVATE ${GLFW_LIB_DIR} ${GL_LIB_DIR})  # Also for lib if needed
+    target_link_directories(unit_tests PRIVATE ${GLFW_LIB_DIR} ${GL_LIB_DIR})  # Also for tests if needed
     
-    target_link_libraries(TrafficSimulator PRIVATE 
-        glfw3 
-        freeglut 
-        opengl32 
-        glu32 
-        user32 
-        gdi32 
+    target_link_libraries(TrafficSimulator PRIVATE
+        glfw3
+        freeglut
+        opengl32
+        glu32
+        user32
+        gdi32
         shell32
     )
-
+    target_link_libraries(TrafficLib PRIVATE
+        glfw3
+        freeglut
+        opengl32
+        glu32
+        user32
+        gdi32
+        shell32
+    )  # If your lib needs these; adjust as necessary
     # Copy DLLs to output directory
     add_custom_command(TARGET TrafficSimulator POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -73,18 +133,33 @@ elseif(UNIX AND NOT APPLE)
         Xi
         dl
     )
+    target_link_libraries(TrafficLib PRIVATE
+        ${OPENGL_LIBRARIES}
+        ${GLUT_LIBRARIES}
+        ${GLFW3_LIBRARIES}
+        pthread
+        X11
+        Xrandr
+        Xi
+        dl
+    )  # If your lib needs these
     
     target_include_directories(TrafficSimulator PRIVATE ${GLFW3_INCLUDE_DIRS})
-
+    target_include_directories(TrafficLib PRIVATE ${GLFW3_INCLUDE_DIRS})
 elseif(APPLE)
     # macOS Dependencies (Basic setup, might need adjustment)
     find_package(OpenGL REQUIRED)
     find_package(GLUT REQUIRED)
     find_package(glfw3 REQUIRED)
-
+    
     target_link_libraries(TrafficSimulator PRIVATE
         ${OPENGL_LIBRARIES}
         ${GLUT_LIBRARIES}
         glfw
     )
+    target_link_libraries(TrafficLib PRIVATE
+        ${OPENGL_LIBRARIES}
+        ${GLUT_LIBRARIES}
+        glfw
+    )  # If your lib needs these
 endif()
