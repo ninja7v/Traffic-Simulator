@@ -1,5 +1,5 @@
 // Libraries
-//#include <list> // To use lists // alreads included in vehicle.h
+#include <list> // To use lists
 // Header files
 #include "../headers/Map.h"
 

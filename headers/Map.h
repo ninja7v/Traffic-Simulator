@@ -4,7 +4,8 @@
 
 #pragma once
 // Libraries
-//#include <list> // To use lists // already included in vehicle.h
+#include <list>   // To use lists
+#include <vector> // To use vectors
 // Header files
 #include "Intersection.h"
 #include "Constants.h"

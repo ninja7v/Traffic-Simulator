@@ -4,6 +4,7 @@
 
 #pragma once
 // Libraries
+#include <array> // To use arrays
 // Headers
 #include "Vehicle.h"
 

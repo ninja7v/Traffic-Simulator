@@ -1,4 +1,5 @@
 // Libraries
+#include <array>           // To arrays
 // Headers
 #include "../headers/Constants.h"
 #include "../headers/Truck.h"

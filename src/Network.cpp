@@ -1,13 +1,11 @@
 // Libraries
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h> // To use stbi_load()
-//#include <GL/glut.h>       // To display
 #include <GLFW/glfw3.h>    // To display
-#include <time.h>          // To use clock()
-//#include <thread>          // To use threads // Not used yet, but to display a waiting image in the future
+#include <ctime>           // To use clock()
 #include <unordered_map>   // To use unordered_map
-//#include <vector>          // To vectors // Already included
-//#include <array>           // To arrays // Already included
+#include <vector>          // To vectors
+#include <array>           // To arrays
 #include <delaunator.hpp>  // To compute the Delaunay triangulation
 #if DEBUG
 #include <iostream>        // To use input/output
@@ -38,7 +36,7 @@ struct VectorEqual {
 Network::Network() {
    srand(static_cast<unsigned int>(time(nullptr)));
    auto distance = [&](std::vector<double> p1, std::vector<double> p2) {
-      return (double)sqrt(pow(p2[0] - p1[0], 2) + pow(p2[1] - p1[1], 2));
+      return sqrt(pow(p2[0] - p1[0], 2) + pow(p2[1] - p1[1], 2));
    };
    auto isPositionValid = [&](const std::vector<double>& p) {
       for (const auto& i : Intersections) {
@@ -58,8 +56,8 @@ Network::Network() {
       } while (!isPositionValid(position));
       positions.push_back(position[0]);
       positions.push_back(position[1]);
-      Intersections.push_back(new Intersection(k, position));
-      card.emplace(position, Intersections.back()); //
+      Intersections.push_back(std::make_unique<Intersection>(k, position));
+      card.emplace(position, Intersections.back().get()); //
    }
 #if DEBUG
    std::cout << "x   Intersection initialized" << std::endl;
@@ -75,12 +73,13 @@ Network::Network() {
                                    d.coords[2 * d.triangles[i + j] + 1]};
          std::vector<double> end{d.coords[2 * d.triangles[i + l]],
                                  d.coords[2 * d.triangles[i + l] + 1]};
-         Road* r(new Road(id, card[begin], card[end]));
+         auto r = std::make_unique<Road>(id, card[begin], card[end]);
          if (r)
          {
-            Roads.push_back(r);
-            map.setConnection(card[begin]->getID(), card[end]->getID(), r);
-            card[end]->addInputRoad(r);
+            Road* r_ptr = r.get();
+            Roads.push_back(std::move(r));
+            map.setConnection(card[begin]->getID(), card[end]->getID(), r_ptr);
+            card[end]->addInputRoad(r_ptr);
             id++;
          }
       }
@@ -130,7 +129,8 @@ void Network::displayNetwork() {
    while (!glfwWindowShouldClose(window)) {
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
-      for (Road* const& r : Roads) {
+      for (const auto& r_ptr : Roads) {
+         Road* r = r_ptr.get();
          if (r)
          {
             r->displayRoad();
@@ -151,14 +151,16 @@ void Network::displayNetwork() {
          //std::cout << "-   o-o   Vehicle deleted" << std::endl;
 #endif
       // Intersections
-      for (Intersection* i : Intersections) {
+      for (const auto& i_ptr : Intersections) {
+         Intersection* i = i_ptr.get();
          if (i) {
             i->update(); // Update RL logic
             i->displayIntersection();
          }
       }
       // Traffic lights
-      for (Road* const& r : Roads) {
+      for (const auto& r_ptr : Roads) {
+         Road* r = r_ptr.get();
          if (r)
             r->displayLight();
       }
@@ -180,9 +182,10 @@ void Network::addVehicle() {
    auto target = [&](int idStart) {int destination;
                                    do {destination = rand() % constants::nbIntersections;
                                    } while (destination == idStart);
-                                   return Intersections[destination];};
+                                   return Intersections[destination].get();};
    if (Vehicles.size() < constants::nbVehicleMax)
-      for (Road* r : Roads) {
+      for (const auto& r_ptr : Roads) {
+         Road* r = r_ptr.get();
          if (r &&
              ((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
               !r->containVehicle()) &&
@@ -214,9 +217,11 @@ void Network::addVehicle() {
 }
 
 void Network::updateVehiclesPosition() {
-   for (Road* r : Roads)
+   for (const auto& r_ptr : Roads) {
+      Road* r = r_ptr.get();
       if (r)
          r->moveVehicles();
+   }
 }
 
 // Unused

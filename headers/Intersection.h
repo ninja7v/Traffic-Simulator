@@ -8,6 +8,7 @@
 #include <vector> // To use vectors
 #include <string> // To use strings
 #include <ctime>  // To use clock_t
+#include <memory> // To use smart pointers
 // Headers
 #include "IntersectionOperator.h"
 
@@ -60,7 +61,7 @@ private:
 
    // RL components
 /** operator to decide traffic light actions */
-   IntersectionOperator* op;
+   std::unique_ptr<IntersectionOperator> op;
 /** Index of the current green road in 'input' vector */
    int currentGreenRoadIndex; // Index in 'input' vector
 /** Last state observed */
