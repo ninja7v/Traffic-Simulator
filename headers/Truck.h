@@ -33,7 +33,7 @@ protected:
 
 private:
 /** Parameters common to all trucks. */
-   static const double speedMax, acceleration, width, height;
+   static const double width, height;
    static const std::array<float, 3> color;
    static const bool type;
 };
