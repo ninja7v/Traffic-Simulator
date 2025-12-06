@@ -59,5 +59,7 @@
         "xtr1common": "cpp",
         "xtree": "cpp",
         "xutility": "cpp"
-    }
+    },
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "files.autoSave": "onWindowChange"
 }
