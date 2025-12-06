@@ -19,47 +19,47 @@ namespace constants {
 /** Number of possible positions on the Y axis for the intersections. It must be a positive number. */
    constexpr int sizeY{ 70 };
 /** Overall speed of the simulation. It must be a positive number. */
-   constexpr double boost{ 1.0 };
+   extern double boost;
 /** Scale of the representation. It must be a positive number. */
    constexpr double zoom{ 1.0 };
 /**@}*/
 /** @defgroup Road parameters */
 /**@{*/
 /** Width Road in pixel. It must be a positive number. */
-   constexpr double widthRoad{ 10 * zoom };
+   constexpr double widthRoad{ 10.0 * zoom };
 /**@}*/
 /** @defgroup Vehicle parameters */
 /**@{*/
 /** Frequency of appearance of vehicles. It must be in [0, 99]. */
-   constexpr int flow{ 10 };
+   extern int flow;
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
-   constexpr int nbVehicleMax{ 70 };
+   extern int nbVehicleMax;
 /** Maximum car speed. It must be a positive number. */
-   constexpr double speedMaxCar  { 0.3  * boost };
+   extern double speedMaxCar;
 /** Maximum Bike speed. It must be a positive number. */
-   constexpr double speedMaxBike { 0.4 * boost };
+   extern double speedMaxBike;
 /** Maximum Truck speed. It must be a positive number. */
-   constexpr double speedMaxTruck{ 0.2 * boost };
+   extern double speedMaxTruck;
 /** Car acceleration per frame. It must be a positive number. */
-   constexpr double accelerationCar  { 0.003 * boost };
+   extern double accelerationCar;
 /** Bike acceleration per frame. It must be a positive number. */
-   constexpr double accelerationBike { 0.004 * boost };
+   extern double accelerationBike;
 /** Truck acceleration per frame. It must be a positive number. */
-   constexpr double accelerationTruck{ 0.002 * boost };
+   extern double accelerationTruck;
 /** Car width in pixel. It must be a positive number. */
-   constexpr double widthCar  { 2 * zoom };
+   constexpr double widthCar  { 2.0 * zoom };
 /** Bike width in pixel. It must be a positive number. */
-   constexpr double widthBike { 1 * zoom };
+   constexpr double widthBike { 1.0 * zoom };
 /** Truck width in pixel. It must be a positive number. */
-   constexpr double widthTruck{ 3 * zoom };
+   constexpr double widthTruck{ 3.0 * zoom };
 /** Car height in pixel. It must be a positive number. */
-   constexpr double heightCar  { 5 * zoom };
+   constexpr double heightCar  { 5.0 * zoom };
 /** Bike height in pixel. It must be a positive number. */
-   constexpr double heightBike {  3 * zoom };
+   constexpr double heightBike {  3.0 * zoom };
 /** Truck height in pixel. It must be a positive number. */
-   constexpr double heightTruck{ 10 * zoom };
+   constexpr double heightTruck{ 10.0 * zoom };
 /** Vehicle light diameter. It must be a positive number. */
-   constexpr double diameterHeadlight{ 1 * zoom };
+   constexpr double diameterHeadlight{ 1.0 * zoom };
 /** Security gab between a vehicle and an obstacle. It must be a positive number. */
    constexpr double distanceSecurity{ 0.5 * zoom };
 /**@}*/
@@ -68,11 +68,9 @@ namespace constants {
 /** Number of Intersection in the network. It must be a positive number. */
    constexpr int nbIntersections{ std::max(sizeX, sizeY) / 10 }; // To have something visible < 15
 /** Distance between intersections. It must be a positive number. */
-   constexpr int minGap{ static_cast<int>(10 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
-/** Traffic light period. It must be a positive number. */
-   constexpr int period{ static_cast<int>(1000 / boost) };
+   constexpr int minGap{ static_cast<int>(10.0 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
 /** Intersection diameter in pixel. It must be a positive number. */
-   constexpr double diameterIntersection{ 20 * zoom };
+   constexpr double diameterIntersection{ 20.0 * zoom };
 /**@}*/
 /** @defgroup Window parameters */
 /**@{*/
@@ -94,6 +92,16 @@ namespace constants {
 /** Learning type. */
    constexpr LearningType learningType{ LearningType::Q_LEARNING };
 /**@}*/
+
+/** function to adjust constants when boost is changed */
+   inline void updateBoostDependentConstants()
+   {
+      flow = static_cast<int>(10.0 * boost);
+      speedMaxCar   = 0.3 * boost;
+      speedMaxBike  = 0.4 * boost;
+      speedMaxTruck = 0.2 * boost;
+      accelerationCar   = 0.003 * boost;
+      accelerationBike  = 0.004 * boost;
+      accelerationTruck = 0.002 * boost;
+   }
 }
-
-

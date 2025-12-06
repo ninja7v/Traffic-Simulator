@@ -3,19 +3,17 @@
 #include "../headers/Constants.h"
 #include "../headers/Bike.h"
 
-const double Bike::speedMax     = constants::speedMaxBike;
-const double Bike::acceleration = constants::accelerationBike;
 const double Bike::width        = constants::widthBike;
 const double Bike::height       = constants::heightBike;
 const std::array<float, 3> Bike::color{ 0.0f, 0.9f, 0.9f }; // Cyan
 const bool Bike::type = true;
 
 double Bike::getSpeedMax() const {
-   return speedMax;
+   return constants::speedMaxBike;
 }
 
 double Bike::getAcceleration() const {
-   return acceleration;
+   return constants::accelerationBike;
 }
 
 double Bike::getWidth() const {
