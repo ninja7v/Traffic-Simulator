@@ -26,14 +26,14 @@ namespace constants {
 /** @defgroup Road parameters */
 /**@{*/
 /** Width Road in pixel. It must be a positive number. */
-   constexpr double widthRoad{ 10 * zoom };
+   constexpr double widthRoad{ 10.0 * zoom };
 /**@}*/
 /** @defgroup Vehicle parameters */
 /**@{*/
 /** Frequency of appearance of vehicles. It must be in [0, 99]. */
-   constexpr int flow{ 10 };
+   constexpr unsigned int flow{ 10u };
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
-   constexpr int nbVehicleMax{ 70 };
+   constexpr unsigned int nbVehicleMax{ 70u };
 /** Maximum car speed. It must be a positive number. */
    constexpr double speedMaxCar  { 0.3  * boost };
 /** Maximum Bike speed. It must be a positive number. */
@@ -47,19 +47,19 @@ namespace constants {
 /** Truck acceleration per frame. It must be a positive number. */
    constexpr double accelerationTruck{ 0.002 * boost };
 /** Car width in pixel. It must be a positive number. */
-   constexpr double widthCar  { 2 * zoom };
+   constexpr double widthCar  { 2.0 * zoom };
 /** Bike width in pixel. It must be a positive number. */
-   constexpr double widthBike { 1 * zoom };
+   constexpr double widthBike { 1.0 * zoom };
 /** Truck width in pixel. It must be a positive number. */
-   constexpr double widthTruck{ 3 * zoom };
+   constexpr double widthTruck{ 3.0 * zoom };
 /** Car height in pixel. It must be a positive number. */
-   constexpr double heightCar  { 5 * zoom };
+   constexpr double heightCar  { 5.0 * zoom };
 /** Bike height in pixel. It must be a positive number. */
-   constexpr double heightBike {  3 * zoom };
+   constexpr double heightBike {  3.0 * zoom };
 /** Truck height in pixel. It must be a positive number. */
-   constexpr double heightTruck{ 10 * zoom };
+   constexpr double heightTruck{ 10.0 * zoom };
 /** Vehicle light diameter. It must be a positive number. */
-   constexpr double diameterHeadlight{ 1 * zoom };
+   constexpr double diameterHeadlight{ 1.0 * zoom };
 /** Security gab between a vehicle and an obstacle. It must be a positive number. */
    constexpr double distanceSecurity{ 0.5 * zoom };
 /**@}*/
@@ -68,18 +68,18 @@ namespace constants {
 /** Number of Intersection in the network. It must be a positive number. */
    constexpr int nbIntersections{ std::max(sizeX, sizeY) / 10 }; // To have something visible < 15
 /** Distance between intersections. It must be a positive number. */
-   constexpr int minGap{ static_cast<int>(10 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
+   constexpr int minGap{ static_cast<int>(10.0 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
 /** Traffic light period. It must be a positive number. */
-   constexpr int period{ static_cast<int>(1000 / boost) };
+   constexpr int period{ static_cast<int>(1000.0 / boost) };
 /** Intersection diameter in pixel. It must be a positive number. */
-   constexpr double diameterIntersection{ 20 * zoom };
+   constexpr double diameterIntersection{ 20.0 * zoom };
 /**@}*/
 /** @defgroup Window parameters */
 /**@{*/
 /** Step for the sizeX and sizeY parameters. It must be a positive number. */
-   constexpr int interval{ static_cast<int>(8 * zoom) };
+   constexpr int interval{ static_cast<int>(8.0 * zoom) };
 /** Distance between the network and the frame of the window. It must be a positive number. */
-   constexpr int margin  { static_cast<int>(50 * zoom) };
+   constexpr int margin  { static_cast<int>(50.0 * zoom) };
 /** Window width. */
    constexpr int SCREEN_WIDTH { sizeX * interval + 2*margin };
 /** Window height. */

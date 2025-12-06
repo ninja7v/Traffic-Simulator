@@ -6,6 +6,7 @@
 #include <unordered_map>   // To use unordered_map
 #include <vector>          // To vectors
 #include <array>           // To arrays
+#include <memory>          // To use smart pointers
 #include <delaunator.hpp>  // To compute the Delaunay triangulation
 #if DEBUG
 #include <iostream>        // To use input/output
@@ -68,7 +69,7 @@ Network::Network() {
    for (size_t i = 0; i < d.triangles.size(); i += 3) {
       // 3 iterations for the 3 sides
       for (int j = 0; j < 3; j ++) {
-         int l = j == 2 ? 0 : j + 1;
+         const int l = j == 2 ? 0 : j + 1;
          std::vector<double> begin{d.coords[2 * d.triangles[i + j]],
                                    d.coords[2 * d.triangles[i + j] + 1]};
          std::vector<double> end{d.coords[2 * d.triangles[i + l]],
@@ -119,7 +120,7 @@ void Network::displayNetwork() {
    glOrtho(0, constants::SCREEN_WIDTH, 0, constants::SCREEN_HEIGHT, 0, 1); // Set coordinate system
    glMatrixMode(GL_MODELVIEW);  // (default matrix mode) modelview matrix defines how objects are transformed (meaning translation, rotation and scaling)
    glLoadIdentity();            // same as above comment
-   glClearColor(0.1f, 0.5f, 0.1f, 0); // Set background color as green
+   glClearColor(0.1f, 0.5f, 0.1f, 0.0f); // Set background color as green
 #if DEBUG
    std::cout << "[]   Windows created" << std::endl;
    //int T1 = global::t0; // For the frame timer
@@ -223,12 +224,3 @@ void Network::updateVehiclesPosition() {
          r->moveVehicles();
    }
 }
-
-// Unused
-//void Network::resetVehicles() {
-//   for (Vehicle* v : Vehicles) {
-//      if (v)
-//         delete v; v = nullptr;
-//   }
-//   global::numberOfVehicles = 0;
-//};
