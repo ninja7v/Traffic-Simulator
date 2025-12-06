@@ -73,3 +73,6 @@ Thumbs.db
 # Doxygen
 html/
 latex/
+
+# ImGui
+imgui.ini
