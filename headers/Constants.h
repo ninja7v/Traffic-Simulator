@@ -19,7 +19,7 @@ namespace constants {
 /** Number of possible positions on the Y axis for the intersections. It must be a positive number. */
    constexpr int sizeY{ 70 };
 /** Overall speed of the simulation. It must be a positive number. */
-   constexpr double boost{ 1.0 };
+   extern double boost;
 /** Scale of the representation. It must be a positive number. */
    constexpr double zoom{ 1.0 };
 /**@}*/
@@ -35,17 +35,17 @@ namespace constants {
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
    constexpr unsigned int nbVehicleMax{ 70u };
 /** Maximum car speed. It must be a positive number. */
-   constexpr double speedMaxCar  { 0.3  * boost };
+   extern double speedMaxCar;
 /** Maximum Bike speed. It must be a positive number. */
-   constexpr double speedMaxBike { 0.4 * boost };
+   extern double speedMaxBike;
 /** Maximum Truck speed. It must be a positive number. */
-   constexpr double speedMaxTruck{ 0.2 * boost };
+   extern double speedMaxTruck;
 /** Car acceleration per frame. It must be a positive number. */
-   constexpr double accelerationCar  { 0.003 * boost };
+   extern double accelerationCar;
 /** Bike acceleration per frame. It must be a positive number. */
-   constexpr double accelerationBike { 0.004 * boost };
+   extern double accelerationBike;
 /** Truck acceleration per frame. It must be a positive number. */
-   constexpr double accelerationTruck{ 0.002 * boost };
+   extern double accelerationTruck;
 /** Car width in pixel. It must be a positive number. */
    constexpr double widthCar  { 2.0 * zoom };
 /** Bike width in pixel. It must be a positive number. */
@@ -94,6 +94,16 @@ namespace constants {
 /** Learning type. */
    constexpr LearningType learningType{ LearningType::Q_LEARNING };
 /**@}*/
+
+/** function to adjust constants when boost is changed */
+   inline void updateBoostDependentConstants()
+   {
+      flow = static_cast<int>(10.0 * boost);
+      speedMaxCar   = 0.3 * boost;
+      speedMaxBike  = 0.4 * boost;
+      speedMaxTruck = 0.2 * boost;
+      accelerationCar   = 0.003 * boost;
+      accelerationBike  = 0.004 * boost;
+      accelerationTruck = 0.002 * boost;
+   }
 }
-
-

@@ -30,10 +30,22 @@ include_directories(
     Dependencies/GL/include
     Dependencies/stb/include
     Dependencies/delaunator/include
+    Dependencies/imgui
+    Dependencies/imgui/backends
+)
+
+# ImGui Sources
+set(IMGUI_SOURCES
+    Dependencies/imgui/imgui.cpp
+    Dependencies/imgui/imgui_draw.cpp
+    Dependencies/imgui/imgui_tables.cpp
+    Dependencies/imgui/imgui_widgets.cpp
+    Dependencies/imgui/backends/imgui_impl_glfw.cpp
+    Dependencies/imgui/backends/imgui_impl_opengl3.cpp
 )
 
 # Create a static library from non-main sources
-add_library(TrafficLib STATIC ${LIB_SOURCES} ${HEADERS})
+add_library(TrafficLib STATIC ${LIB_SOURCES} ${HEADERS} ${IMGUI_SOURCES})
 
 # Main executable
 add_executable(TrafficSimulator src/main.cpp)  # Assumes main.cpp; change if needed

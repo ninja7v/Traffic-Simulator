@@ -1,6 +1,9 @@
 // Libraries
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h> // To use stbi_load()
+#include <imgui.h>         // Core ImGui functionality (panel)
+#include <backends/imgui_impl_glfw.h> // Platform backend: handles GLFW inputs and window events
+#include <backends/imgui_impl_opengl3.h> // Renderer backend: draws ImGui using OpenGL3
 #include <GLFW/glfw3.h>    // To display
 #include <ctime>           // To use clock()
 #include <unordered_map>   // To use unordered_map
@@ -17,6 +20,7 @@
 #include "../headers/Bike.h"
 #include "../headers/Truck.h"
 #include "../headers/Network.h"
+#include "../headers/Constants.h"
 
 struct VectorHash {
    size_t operator()(const std::vector<double>& vec) const {
@@ -127,7 +131,67 @@ void Network::displayNetwork() {
 #endif
    // Initialize time
    global::t0 = clock();
+   double lastTime = glfwGetTime();
+   int nbFrames = 0;
+   int lastFPS = 0;
+
+   // Setup Dear ImGui context
+   IMGUI_CHECKVERSION();
+   ImGui::CreateContext();
+   ImGuiIO& io = ImGui::GetIO(); (void)io;
+   //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+
+   // Setup Dear ImGui style
+   ImGui::StyleColorsDark();
+
+   // Setup Platform/Renderer backends
+   ImGui_ImplGlfw_InitForOpenGL(window, true);
+   ImGui_ImplOpenGL3_Init();
+
    while (!glfwWindowShouldClose(window)) {
+      // FPS Counter
+      const double currentTime = glfwGetTime();
+      nbFrames++;
+      if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
+         lastFPS = nbFrames;
+         nbFrames = 0;
+         lastTime = currentTime;
+      }
+
+      // Start the Dear ImGui frame
+      ImGui_ImplOpenGL3_NewFrame();
+      ImGui_ImplGlfw_NewFrame();
+      ImGui::NewFrame();
+
+      // UI Window
+      {
+         ImGui::Begin("Simulation Control");
+         ImGui::Text("Metrics");
+         const char* method = nullptr;
+         switch (constants::learningType)
+         {
+            case LearningType::Q_LEARNING:  method = "Q-Learning"; break;
+            case LearningType::DQN:         method = "DQN";        break;
+            default:                        method = "None";       break;
+         }
+         ImGui::Text("Using %s method", method);
+         ImGui::Text("%d Intersections ", constants::nbIntersections);
+         ImGui::Text("%d Vehicles", global::numberOfVehicles);
+         ImGui::Text("%d Average time lost", 0.0); // To Do
+         ImGui::Text("%d FPS", lastFPS);
+         
+         ImGui::Separator();
+         ImGui::Text("Parameters");
+         float temp = static_cast<float>(constants::boost);
+         if (ImGui::SliderFloat("Boost", &temp, 0, 100)){
+            constants::boost = static_cast<double>(temp);
+            constants::updateBoostDependentConstants();
+         }
+         ImGui::SliderInt("Max number vehicle", &constants::nbVehicleMax, 0, 100);
+
+         ImGui::End();
+      }
+
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
       for (const auto& r_ptr : Roads) {
@@ -165,6 +229,11 @@ void Network::displayNetwork() {
          if (r)
             r->displayLight();
       }
+
+      // Rendering panel
+      ImGui::Render();
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
       // Swap front and back buffers
       glfwSwapBuffers(window);
       // Poll for and process events
@@ -175,6 +244,12 @@ void Network::displayNetwork() {
       //T1 = clock();
 #endif
    }
+   
+   // Cleanup
+   ImGui_ImplOpenGL3_Shutdown();
+   ImGui_ImplGlfw_Shutdown();
+   ImGui::DestroyContext();
+
    glfwTerminate();
 }
 
@@ -213,6 +288,9 @@ void Network::addVehicle() {
             Vehicles.push_back(v);
             r->addVehicle(v);
             global::numberOfVehicles += 1;
+         }
+         if (Vehicles.size() >= constants::nbVehicleMax) {
+            break;
          }
       }
 }
