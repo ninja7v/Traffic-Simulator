@@ -31,9 +31,9 @@ namespace constants {
 /** @defgroup Vehicle parameters */
 /**@{*/
 /** Frequency of appearance of vehicles. It must be in [0, 99]. */
-   constexpr unsigned int flow{ 10u };
+   extern int flow;
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
-   constexpr unsigned int nbVehicleMax{ 70u };
+   extern int nbVehicleMax;
 /** Maximum car speed. It must be a positive number. */
    extern double speedMaxCar;
 /** Maximum Bike speed. It must be a positive number. */
@@ -69,8 +69,6 @@ namespace constants {
    constexpr int nbIntersections{ std::max(sizeX, sizeY) / 10 }; // To have something visible < 15
 /** Distance between intersections. It must be a positive number. */
    constexpr int minGap{ static_cast<int>(10.0 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
-/** Traffic light period. It must be a positive number. */
-   constexpr int period{ static_cast<int>(1000.0 / boost) };
 /** Intersection diameter in pixel. It must be a positive number. */
    constexpr double diameterIntersection{ 20.0 * zoom };
 /**@}*/
