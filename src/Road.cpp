@@ -62,7 +62,7 @@ void Road::moveVehicles() {
       {
          const bool atIntersection = v->distance(i2) < constants::distanceSecurity / 5.0;
          if (atIntersection) {
-            if (v->nextRoad() == nullptr) {
+            if (!v->nextRoad()) {
                this->removeVehicle();
                v->setStatus(true);
                global::numberOfVehicles -= 1;

@@ -7,6 +7,7 @@
 #include <vector>    // To use vectors
 #include <memory>    // To use smart pointers
 #include <algorithm> // To use max
+#include <cmath>     // To use sqrt, pow, exp
 // Headers
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"
@@ -47,10 +48,18 @@ void Vehicle::moveToVehicle(const std::shared_ptr<Vehicle> v) {
       else
          speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2.0;
       // Move
-      position[0] += direction[0] * speed;
-      position[1] += direction[1] * speed;
+      const std::array<double, 2> move {direction[0] * speed, direction[1] * speed};
+      const double move_dist = std::sqrt(std::pow(move.at(0), 2) + std::pow(move.at(1), 2)) - (getHeight() + v->getHeight()) / 12.0;
+      if (move_dist < d) {
+         position[0] += move.at(0);
+         position[1] += move.at(1);
+      }
+      else { // Snap to vehicle to avoid overshooting
+         position[0] = v->position[0] - direction[0] * (getHeight() + v->getHeight()) / 7.0;
+         position[1] = v->position[1] - direction[1] * (getHeight() + v->getHeight()) / 7.0;
+      }
       // Braking ?
-      isBraking = previousSpeed > speed;
+      isBraking = previousSpeed * 0.95 > speed; // Braking if speed reduced by more than 5%
    }
 }
 
@@ -68,15 +77,22 @@ void Vehicle::moveToIntersection(const Intersection* i, const int idRoad) {
             speed = (speed < breakingSpeed(d)) ? speed + getAcceleration() : (speed + breakingSpeed(d)) / 2.0;
       else
          speed = (speed < getSpeedMax()) ? speed + getAcceleration() : getSpeedMax();
-      // To add: case where next road is full
       // Move
-      const double s = speed;
-      position[0] += direction[0] * s;
-      position[1] += direction[1] * s;
-      if (distance(i) > d)
-      std::cerr << "The vehicle is escaping!" << std::endl;
+      const std::array<double, 2> move {direction[0] * speed, direction[1] * speed};
+      const double move_dist = std::sqrt(std::pow(move.at(0), 2) + std::pow(move.at(1), 2)) - (getHeight() + constants::diameterIntersection) / 12.0;
+      if (move_dist < d) {
+         position[0] += move.at(0);
+         position[1] += move.at(1);
+         if (distance(i) > d) { // double check
+            position[0] = i->getPosition()[0];
+            position[1] = i->getPosition()[1];
+         }
+      } else { // Snap to intersection to avoid overshooting
+         position[0] = i->getPosition()[0];
+         position[1] = i->getPosition()[1];
+      }
       // Braking ?
-      isBraking = previousSpeed > speed;
+      isBraking = previousSpeed * 0.95 > speed; // Braking if speed reduced by more than 5%
    }
 }
 
@@ -101,7 +117,7 @@ void Vehicle::displayVehicle() {
                                 {center[0] + direction[0] * H - direction[1] * W,
                                  center[1] + direction[0] * W + direction[1] * H}, };
    const std::array<float, 3> color = getColor();
-   glColor3f(static_cast<float>(color[0]), static_cast<float>(color[1]), static_cast<float>(color[2]));
+   glColor3f(color[0], color[1], color[2]);
    glBegin(GL_QUADS);
    glEnableClientState(GL_VERTEX_ARRAY);
    for (int i = 0; i < 4; ++i) {
@@ -152,12 +168,12 @@ Road* Vehicle::nextRoad() {
 }
 
 double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
-   return v ? std::max(sqrt(pow(position[0] - v->position[0], 2) + pow(position[1] - v->position[1], 2)) - (this->getHeight() + v->getHeight()) / 7.0, 0.0) :
+   return v ? std::max(std::sqrt(std::pow(position[0] - v->position[0], 2) + std::pow(position[1] - v->position[1], 2)) - (getHeight() + v->getHeight()) / 7.0, 0.0) :
               0.0;
 }
 
 double Vehicle::distance(const Intersection* i) const {
-   return i ? std::max(sqrt(pow(position[0] - i->getPosition()[0], 2) + pow(position[1] - i->getPosition()[1], 2)) - (this->getHeight() + constants::diameterIntersection) / 12.0, 0.0) :
+   return i ? std::max(std::sqrt(std::pow(position[0] - i->getPosition()[0], 2) + std::pow(position[1] - i->getPosition()[1], 2)) - (getHeight() + constants::diameterIntersection) / 12.0, 0.0) :
               0.0;
 }
 
@@ -179,7 +195,7 @@ Intersection* Vehicle::getDestination() const {
 
 std::list<Road*> Vehicle::getItinerary() const {
    return itinerary;
-   }
+}
 
 std::vector<double> Vehicle::getPosition() const {
    return position;
