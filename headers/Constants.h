@@ -31,9 +31,9 @@ namespace constants {
 /** @defgroup Vehicle parameters */
 /**@{*/
 /** Frequency of appearance of vehicles. It must be in [0, 99]. */
-   extern int flow;
+   constexpr unsigned int flow{ 10u };
 /** Maximum number of vehicle simultaneously. It must be a positive number. */
-   extern int nbVehicleMax;
+   constexpr unsigned int nbVehicleMax{ 70u };
 /** Maximum car speed. It must be a positive number. */
    extern double speedMaxCar;
 /** Maximum Bike speed. It must be a positive number. */
@@ -69,15 +69,17 @@ namespace constants {
    constexpr int nbIntersections{ std::max(sizeX, sizeY) / 10 }; // To have something visible < 15
 /** Distance between intersections. It must be a positive number. */
    constexpr int minGap{ static_cast<int>(10.0 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
+/** Traffic light period. It must be a positive number. */
+   constexpr int period{ static_cast<int>(1000.0 / boost) };
 /** Intersection diameter in pixel. It must be a positive number. */
    constexpr double diameterIntersection{ 20.0 * zoom };
 /**@}*/
 /** @defgroup Window parameters */
 /**@{*/
 /** Step for the sizeX and sizeY parameters. It must be a positive number. */
-   constexpr int interval{ static_cast<int>(8 * zoom) };
+   constexpr int interval{ static_cast<int>(8.0 * zoom) };
 /** Distance between the network and the frame of the window. It must be a positive number. */
-   constexpr int margin  { static_cast<int>(50 * zoom) };
+   constexpr int margin  { static_cast<int>(50.0 * zoom) };
 /** Window width. */
    constexpr int SCREEN_WIDTH { sizeX * interval + 2*margin };
 /** Window height. */
