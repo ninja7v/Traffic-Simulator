@@ -41,7 +41,7 @@ set(IMGUI_SOURCES
     Dependencies/imgui/imgui_tables.cpp
     Dependencies/imgui/imgui_widgets.cpp
     Dependencies/imgui/backends/imgui_impl_glfw.cpp
-    Dependencies/imgui/backends/imgui_impl_opengl2.cpp
+    Dependencies/imgui/backends/imgui_impl_opengl3.cpp
 )
 
 # Create a static library from non-main sources

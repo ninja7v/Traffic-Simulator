@@ -3,7 +3,7 @@
 #include <stb/stb_image.h> // To use stbi_load()
 #include <imgui.h>         // Core ImGui functionality (panel)
 #include <backends/imgui_impl_glfw.h> // Platform backend: handles GLFW inputs and window events
-#include <backends/imgui_impl_opengl2.h> // Renderer backend: draws ImGui using OpenGL2
+#include <backends/imgui_impl_opengl3.h> // Renderer backend: draws ImGui using OpenGL3
 #include <GLFW/glfw3.h>    // To display
 #include <ctime>           // To use clock()
 #include <unordered_map>   // To use unordered_map
@@ -145,7 +145,7 @@ void Network::displayNetwork() {
 
    // Setup Platform/Renderer backends
    ImGui_ImplGlfw_InitForOpenGL(window, true);
-   ImGui_ImplOpenGL2_Init();
+   ImGui_ImplOpenGL3_Init();
 
    while (!glfwWindowShouldClose(window)) {
       // FPS Counter
@@ -158,7 +158,7 @@ void Network::displayNetwork() {
       }
 
       // Start the Dear ImGui frame
-      ImGui_ImplOpenGL2_NewFrame();
+      ImGui_ImplOpenGL3_NewFrame();
       ImGui_ImplGlfw_NewFrame();
       ImGui::NewFrame();
 
@@ -231,7 +231,7 @@ void Network::displayNetwork() {
 
       // Rendering panel
       ImGui::Render();
-      ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+      ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
       // Swap front and back buffers
       glfwSwapBuffers(window);
@@ -245,7 +245,7 @@ void Network::displayNetwork() {
    }
    
    // Cleanup
-   ImGui_ImplOpenGL2_Shutdown();
+   ImGui_ImplOpenGL3_Shutdown();
    ImGui_ImplGlfw_Shutdown();
    ImGui::DestroyContext();
 
