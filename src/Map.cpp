@@ -4,10 +4,10 @@
 #include "../headers/Map.h"
 
 namespace {
-   const double INFINTY = 999999.0;
+   const double INFINTY = std::numeric_limits<double>::infinity();
 }
 
-Road* Map::connections[constants::nbIntersections][constants::nbIntersections];
+decltype(Map::connections) Map::connections{};
 std::vector<std::vector <double>> Map::cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INFINTY) };
 std::vector<std::vector <double>> Map::live_cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INFINTY) };
 
