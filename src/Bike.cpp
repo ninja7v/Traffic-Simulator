@@ -5,7 +5,7 @@
 
 const double Bike::width        = constants::widthBike;
 const double Bike::height       = constants::heightBike;
-const std::array<float, 3> Bike::color{ 0.0f, 0.9f, 0.9f }; // Cyan
+const std::array<double, 3> Bike::color{ 0.0, 0.9, 0.9 }; // Cyan
 const bool Bike::type = true;
 
 double Bike::getSpeedMax() const {
@@ -24,7 +24,7 @@ double Bike::getHeight() const {
    return height;
 }
 
-std::array<float, 3> Bike::getColor() const {
+std::array<double, 3> Bike::getColor() const {
    return color;
 }
 

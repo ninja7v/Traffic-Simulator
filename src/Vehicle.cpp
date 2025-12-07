@@ -103,64 +103,48 @@ void Vehicle::updateItinerary() {
 }
 
 void Vehicle::displayVehicle() {
-   const double W = getWidth();
-   const double H = getHeight();
-   const double center[2] = { direction[1] * constants::widthRoad / 2.0 + position[0] * constants::ratioX + constants::margin,
-                             -direction[0] * constants::widthRoad / 2.0 + position[1] * constants::ratioY + constants::margin };
+   const double center[2] = { direction[1] * constants::halfWidthRoad + position[0] * constants::ratioX + constants::margin,
+                             -direction[0] * constants::halfWidthRoad + position[1] * constants::ratioY + constants::margin };
+   const std::array<double, 2> dh = { direction[0] * getHeight(), direction[1] * getHeight() };
+   const std::array<double, 2> dw = { direction[0] * getWidth(), direction[1] * getWidth() };
    // Body
-   const double frame[4][2] = { {center[0] - direction[0] * H - direction[1] * W,
-                                 center[1] + direction[0] * W - direction[1] * H},
-                                {center[0] - direction[0] * H + direction[1] * W,
-                                 center[1] - direction[0] * W - direction[1] * H},
-                                {center[0] + direction[0] * H + direction[1] * W,
-                                 center[1] - direction[0] * W + direction[1] * H},
-                                {center[0] + direction[0] * H - direction[1] * W,
-                                 center[1] + direction[0] * W + direction[1] * H}, };
-   const std::array<float, 3> color = getColor();
-   glColor3f(color[0], color[1], color[2]);
+   const std::array<double, 2> frontLeft  = {center[0] + dh[0] - dw[1], center[1] + dw[0] + dh[1]};
+   const std::array<double, 2> frontRight = {center[0] + dh[0] + dw[1], center[1] - dw[0] + dh[1]};
+   const std::array<double, 2> rearLeft   = {center[0] - dh[0] - dw[1], center[1] + dw[0] - dh[1]};
+   const std::array<double, 2> rearRight  = {center[0] - dh[0] + dw[1], center[1] - dw[0] - dh[1]};
+   const std::array<double, 3> color = getColor();
+   glColor3d(color[0], color[1], color[2]);
    glBegin(GL_QUADS);
-   glEnableClientState(GL_VERTEX_ARRAY);
-   for (int i = 0; i < 4; ++i) {
-      glVertex2f(static_cast<float>(frame[i][0]) , static_cast<float>(frame[i][1]));
-   }
+   glVertex2d(frontLeft[0], frontLeft[1]);
+   glVertex2d(frontRight[0], frontRight[1]);
+   glVertex2d(rearRight[0], rearRight[1]);
+   glVertex2d(rearLeft[0], rearLeft[1]);
    glEnd();
    // Lights
    glPointSize(constants::diameterHeadlight);
-   glEnable(GL_POINT_SMOOTH);
    glBegin(GL_POINTS);
-   glColor3f(1.0f, 1.0f, 0.0f); // Yellow
+   // Front lights
+   glColor3d(1.0, 1.0, 0.0); // Yellow
    if (is2Wheeler()) {
-      const double front[2] = { center[0] + direction[0] * H,
-                                center[1] + direction[1] * H };
-      glVertex2f(static_cast<float>(front[0]), static_cast<float>(front[1]));
+      glVertex2d(center[0] + dh[0], center[1] + dh[1]);
    }
    else {
-      const double front[2][2] = { {center[0] + direction[0] * H + direction[1] * W,
-                                    center[1] - direction[0] * W + direction[1] * H},
-                                   {center[0] + direction[0] * H - direction[1] * W,
-                                    center[1] + direction[0] * W + direction[1] * H}, };
-      glVertex2f(static_cast<float>(front[0][0]), static_cast<float>(front[0][1]));
-      glVertex2f(static_cast<float>(front[1][0]), static_cast<float>(front[1][1]));
+      glVertex2d(frontLeft[0], frontLeft[1]);
+      glVertex2d(frontRight[0], frontRight[1]);
    }
+   // Rear lights
    if (isBraking)
-      glColor3f(1.0f, 0.0f, 0.0f); // Red
+      glColor3d(1.0, 0.0, 0.0); // Red
    else
-      glColor3f(0.5f, 0.0f, 0.0f); // Dark Red
+      glColor3d(0.5, 0.0, 0.0); // Dark Red
    if (is2Wheeler()) {
-      const double rear[2] = {center[0] - direction[0] * H ,
-                              center[1] - direction[1] * H};
-      glVertex2f(static_cast<float>(rear[0]), static_cast<float>(rear[1]));
+      glVertex2d(center[0] - dh[0], center[1] - dw[1]);
    }
    else {
-      const double rear[2][2] = { {center[0] - direction[0] * H - direction[1] * W,
-                                   center[1] + direction[0] * W - direction[1] * H},
-                                  {center[0] - direction[0] * H + direction[1] * W,
-                                   center[1] - direction[0] * W - direction[1] * H}, };
-      glVertex2f(static_cast<float>(rear[0][0]), static_cast<float>(rear[0][1]));
-      glVertex2f(static_cast<float>(rear[1][0]), static_cast<float>(rear[1][1]));
+      glVertex2d(rearLeft[0], rearLeft[1]);
+      glVertex2d(rearRight[0], rearRight[1]);
    }
    glEnd();
-   glDisable(GL_POINT_SMOOTH);
 }
 
 Road* Vehicle::nextRoad() {

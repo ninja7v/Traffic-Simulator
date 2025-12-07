@@ -41,10 +41,10 @@ const bool Intersection::isRed(const int id) const {
 
 void Intersection::displayIntersection() const {
    glPointSize(constants::diameterIntersection);
-   glColor3f(0.0f, 0.0f, 0.0f); // Black
+   glColor3d(0.0, 0.0, 0.0); // Black
    glEnable(GL_POINT_SMOOTH);
    glBegin(GL_POINTS);
-   glVertex2f(static_cast<float>(coordinates[0]), static_cast<float>(coordinates[1]));
+   glVertex2d(coordinates[0], coordinates[1]);
    glEnd();
    glDisable(GL_POINT_SMOOTH);
 }
@@ -76,11 +76,11 @@ void Intersection::update() {
     std::vector<int> state;
     state.push_back(currentGreenRoadIndex);
 
-    int totalNumberOfArrivingVehicle = std::accumulate(
+    const int totalNumberOfArrivingVehicle = std::accumulate(
         inputRoads.begin(), inputRoads.end(), 0,
         [](int sum, const Road* r) { return sum + r->getTotalNumberOfArringVehicles(); }
     );
-    const double averageNewVehicles = (double)totalNumberOfArrivingVehicle / (double)inputRoads.size();
+    const double averageNewVehicles = static_cast<double>(totalNumberOfArrivingVehicle) / static_cast<double>(inputRoads.size());
     for (const Road* r : inputRoads) {
         auto stats = r->getVehicleStats(averageNewVehicles);
         state.push_back(std::get<0>(stats)); // Occupancy
@@ -94,12 +94,10 @@ void Intersection::update() {
     constexpr double penaltyCoeff = 2.0; // Configurable
     for (const Road* r : inputRoads) {
         for (const auto& v : r->getVehicles()) {
-            const double timeOnRoad = (double)(clock() - v->getEnterRoadTime()) / CLOCKS_PER_SEC;
+            const double timeOnRoad = static_cast<double>(clock() - v->getEnterRoadTime()) / CLOCKS_PER_SEC;
             const double dist = v->distance(r->getStart());
             const double ideal = dist / v->getSpeedMax();
-            double diff = timeOnRoad - ideal;
-            if (diff < 0) diff = 0; // Should not happen
-
+            const double diff = std::max(timeOnRoad - ideal, 0.0); // safety
             reward -= pow(diff, penaltyCoeff);
         }
     }
