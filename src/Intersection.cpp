@@ -11,29 +11,16 @@
 #include "../headers/QLearningOperator.h"
 #include "../headers/DeepRLOperator.h"
 
-Intersection::Intersection(const int n, const std::vector<double> pos)
+Intersection::Intersection(const int n, const std::vector<double> pos, std::shared_ptr<IntersectionOperator> op)
    : idIntersection(n),
      position(pos),
      coordinates{ position[0] * constants::ratioX + constants::margin,
                   position[1] * constants::ratioY + constants::margin },
      currentGreenRoadIndex(0),
      lastAction(0),
-     lastSwitchTime(clock()) {
-     
-     switch (constants::learningType) {
-        case LearningType::Q_LEARNING:
-            op = std::make_unique<QLearningOperator>();
-            break;
-        case LearningType::DQN:
-            op = std::make_unique<DeepRLOperator>();
-            break;
-        default:
-            op = nullptr;
-            throw std::runtime_error("Invalid learning type");
-     }
+     lastSwitchTime(clock()),
+     op(op) {
 }
-
-//Intersection::~Intersection(){}
 
 const bool Intersection::isRed(const int id) const {
    return input.at(currentGreenRoadIndex) != id;
@@ -64,6 +51,10 @@ const std::vector<double> Intersection::getPosition() const {
    return position;
 }
 
+const int Intersection::getNumberInputRoads() const {
+   return static_cast<int>(inputRoads.size());
+}
+
 bool Intersection::operator==(const Intersection i) {
    return idIntersection == i.idIntersection;
 }
@@ -73,14 +64,15 @@ void Intersection::update() {
 
     // 1. Construct State
     // State: [currentGreenIndex, road0_occ, road0_speed, road0_usage, ..., roadN_occ, roadN_speed, roadN_usage]
-    std::vector<int> state;
+    // Standardized to stateSize
+    std::vector<int> state(constants::stateSize, 0); // Initialize with 0 (padding)
     state.push_back(currentGreenRoadIndex);
 
-    int totalNumberOfArrivingVehicle = std::accumulate(
+    const int totalNumberOfArrivingVehicle = std::accumulate(
         inputRoads.begin(), inputRoads.end(), 0,
         [](int sum, const Road* r) { return sum + r->getTotalNumberOfArringVehicles(); }
     );
-    const double averageNewVehicles = (double)totalNumberOfArrivingVehicle / (double)inputRoads.size();
+    const double averageNewVehicles = static_cast<double>(totalNumberOfArrivingVehicle) / static_cast<double>(inputRoads.size());
     for (const Road* r : inputRoads) {
         auto stats = r->getVehicleStats(averageNewVehicles);
         state.push_back(std::get<0>(stats)); // Occupancy
@@ -117,7 +109,7 @@ void Intersection::update() {
 
     // 4. Decide
     const clock_t now = clock();
-    const double timeSinceSwitch = (double)(now - lastSwitchTime) / CLOCKS_PER_SEC;
+    const double timeSinceSwitch = static_cast<double>(now - lastSwitchTime) / CLOCKS_PER_SEC;
     if (timeSinceSwitch > 0.5) { // Minimum 0.5 seconds green
         const int action = op->decide(state, availableActions);
         

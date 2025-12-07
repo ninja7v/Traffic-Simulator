@@ -2,6 +2,7 @@
 #include <iostream>
 // Headers
 #include "../headers/DeepRLOperator.h"
+#include "../headers/Constants.h"
 
 
 DeepRLOperator::DeepRLOperator() {
@@ -16,7 +17,7 @@ int DeepRLOperator::decide(const std::vector<int>& state, const std::vector<int>
     // We wait for the first state to know the input size (state dimension)
     if (!isInitialized) {
         const int inputSize = static_cast<int>(state.size());
-        const int outputSize = static_cast<int>(availableActions.size());
+        const int outputSize = constants::maxConnectedInputRoads;
         // Topology: Input Layer -> 64 Hidden -> 64 Hidden -> Output Layer
         policyNetwork = NeuralNetwork({inputSize, 64, 64, outputSize}, alpha);
         isInitialized = true;

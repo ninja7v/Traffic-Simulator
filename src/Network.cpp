@@ -10,6 +10,7 @@
 #include <vector>          // To vectors
 #include <array>           // To arrays
 #include <memory>          // To use smart pointers
+#include <algorithm>       // To use max
 #include <delaunator.hpp>  // To compute the Delaunay triangulation
 #if DEBUG
 #include <iostream>        // To use input/output
@@ -21,6 +22,8 @@
 #include "../headers/Truck.h"
 #include "../headers/Network.h"
 #include "../headers/Constants.h"
+#include "../headers/QLearningOperator.h"
+#include "../headers/DeepRLOperator.h"
 
 struct VectorHash {
    size_t operator()(const std::vector<double>& vec) const {
@@ -40,6 +43,19 @@ struct VectorEqual {
 
 Network::Network() {
    srand(static_cast<unsigned int>(time(nullptr)));
+   // Global Intersection Operator
+   switch (constants::learningType) {
+      case LearningType::Q_LEARNING:
+          globalOperator = std::make_shared<QLearningOperator>();
+          break;
+      case LearningType::DQN:
+          globalOperator = std::make_shared<DeepRLOperator>();
+          break;
+      default:
+          globalOperator = nullptr;
+          throw std::runtime_error("Invalid learning type");
+   }
+   // Construct card as preparation
    auto distance = [&](std::vector<double> p1, std::vector<double> p2) {
       return sqrt(pow(p2[0] - p1[0], 2) + pow(p2[1] - p1[1], 2));
    };
@@ -61,7 +77,7 @@ Network::Network() {
       } while (!isPositionValid(position));
       positions.push_back(position[0]);
       positions.push_back(position[1]);
-      Intersections.push_back(std::make_unique<Intersection>(k, position));
+      Intersections.push_back(std::make_unique<Intersection>(k, position, globalOperator));
       card.emplace(position, Intersections.back().get()); //
    }
 #if DEBUG
@@ -89,6 +105,11 @@ Network::Network() {
          }
       }
    }
+   // Constants
+   for (auto& i : Intersections) {
+      constants::maxConnectedInputRoads = std::max(constants::maxConnectedInputRoads, i->getNumberInputRoads());
+   }
+   constants::stateSize = 1 + 3 * constants::maxConnectedInputRoads;
 #if DEBUG
    std::cout << "=   Roads initialized" << std::endl;
    std::cout << "*   Network initialized" << std::endl;

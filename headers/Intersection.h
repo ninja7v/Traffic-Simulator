@@ -21,9 +21,7 @@ public:
   * @param id Road ID
   * @param pos Position coordinates
   * @returns Car acceleration */
-   Intersection(const int id, const std::vector<double> pos);
-/** @brief Destructor. */
-   //~Intersection();
+   Intersection(const int id, const std::vector<double> pos, std::shared_ptr<IntersectionOperator> op = nullptr);
 /** @brief Get trafic light color.
   * @param id Road ID
   * @returns true:Red / false:Green */
@@ -33,13 +31,15 @@ public:
 /** @brief Add an input road in the input vector.
   * @param r Road pointer */
    void addInputRoad(Road* r);
-   //int                  getRoadIDGreen(); // for the opimizer
 /** @brief Getter.
   * @returns Intersection ID */
    const int getID() const;
 /** @brief Getter.
   * @returns Position on the grid */
    const std::vector<double> getPosition() const;
+/** @brief Getter.
+  * @returns Number of input roads */
+   const int getNumberInputRoads() const;
 
    bool operator == (const Intersection i);
 
@@ -61,7 +61,7 @@ private:
 
    // RL components
 /** operator to decide traffic light actions */
-   std::unique_ptr<IntersectionOperator> op;
+   std::shared_ptr<IntersectionOperator> op;
 /** Index of the current green road in 'input' vector */
    int currentGreenRoadIndex; // Index in 'input' vector
 /** Last state observed */
