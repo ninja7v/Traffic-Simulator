@@ -71,6 +71,8 @@ namespace constants {
    constexpr int minGap{ static_cast<int>(10.0 * zoom) }; // pi*minGap^2*nbIntersections<sizeX*sizeY
 /** Intersection diameter in pixel. It must be a positive number. */
    constexpr double diameterIntersection{ 20.0 * zoom };
+/** Maximum number of connected input roads (for state standardization). */
+   extern int maxConnectedInputRoads;
 /**@}*/
 /** @defgroup Window parameters */
 /**@{*/
@@ -91,6 +93,8 @@ namespace constants {
 /**@{*/
 /** Learning type. */
    constexpr LearningType learningType{ LearningType::Q_LEARNING };
+/** Size of the standardized state vector. */
+   extern int stateSize;
 /**@}*/
 
 /** function to adjust constants when boost is changed */

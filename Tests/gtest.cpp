@@ -12,6 +12,8 @@
 #include "../headers/Road.h"
 #include "../headers/Map.h"
 #include "../headers/Network.h"
+#include "../headers/QLearningOperator.h"
+#include "../headers/DeepRLOperator.h"
 #include "../headers/Intersection.h"
 #include "../headers/Vehicle.h"
 
@@ -66,17 +68,29 @@ TEST(MapTest, Connections) {
     EXPECT_EQ(track.front(), r.get());
 }
 
+// ------------------------- Intersection Operator tests -------------------------
+TEST(IntersectionOperatorTest, Basic) {
+    auto op1 = std::make_unique<QLearningOperator>();
+    auto op2 = std::make_unique<DeepRLOperator>();
+
+    op1->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
+    op2->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
+
+    op1->learn(std::vector<int>{0,0,0}, 0, 1.0, std::vector<int>{0,0,1}, std::vector<int>{0,1});
+    op2->learn(std::vector<int>{0,0,0}, 0, 1.0, std::vector<int>{0,0,1}, std::vector<int>{0,1});
+}
+
 // ------------------------- Intersection tests -------------------------
 TEST(IntersectionTest, Basic) {
-    Intersection i1(1, std::vector<double>{0.0, 0.0});
-    Intersection i2(2, std::vector<double>{0.0, 0.0});
-    auto r = std::make_unique<Road>(1, &i1, &i2);
+    auto i1 = std::make_unique<Intersection>(1, std::vector<double>{0.0, 0.0});
+    auto i2 = std::make_unique<Intersection>(2, std::vector<double>{0.0, 10.0});
+    auto r = std::make_unique<Road>(1, i1.get(), i2.get());
 
-    i1.addInputRoad(r.get());
+    i1->addInputRoad(r.get());
 
-    EXPECT_EQ(i1.getID(), 1);
-    EXPECT_FALSE(i1.isRed(i1.getID())); // original used isRed(actual_ID) with false expected
-    EXPECT_EQ(i1.getPosition(), (std::vector<double>{0.0, 0.0}));
+    EXPECT_EQ(i1->getID(), 1);
+    EXPECT_FALSE(i1->isRed(i1->getID())); // original used isRed(actual_ID) with false expected
+    EXPECT_EQ(i1->getPosition(), (std::vector<double>{0.0, 0.0}));
 }
 
 // ------------------------- Network tests -------------------------

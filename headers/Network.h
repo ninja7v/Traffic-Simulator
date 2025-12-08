@@ -1,5 +1,5 @@
 /**
- * @brief Class making the link between every element.
+ * @brief Central class managing all components of the traffic network.
  */
 
 #pragma once
@@ -9,6 +9,7 @@
 #include <memory> // To use smart pointers
 // Header files
 #include "Intersection.h"
+#include "IntersectionOperator.h"
 #include "Road.h"
 #include "Map.h"
 
@@ -23,6 +24,8 @@ public:
 protected:
 
 private:
+/** Global Intersection Operator. */
+   std::shared_ptr<IntersectionOperator> globalOperator;
 /** Road Map. */
    Map map;
 /** Intersections. */
