@@ -17,10 +17,10 @@ Road::Road(const int id, Intersection* begin, Intersection* end)
      totalNumberOfArringVehicles(0),
      direction{ (end->getPosition()[0] - begin->getPosition()[0]) / length,
                 (end->getPosition()[1] - begin->getPosition()[1]) / length },
-     roadCoordinates{ direction[1] * constants::widthRoad / 2.0 + i1->getPosition()[0] * constants::ratioX + constants::margin,
-                     -direction[0] * constants::widthRoad / 2.0 + i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
-                      direction[1] * constants::widthRoad / 2.0 + i2->getPosition()[0] * constants::ratioX + constants::margin,
-                     -direction[0] * constants::widthRoad / 2.0 + i2->getPosition()[1] * constants::ratioY + constants::margin, 0.0 },
+     roadCoordinates{ direction[1] * constants::halfWidthRoad + i1->getPosition()[0] * constants::ratioX + constants::margin,
+                     -direction[0] * constants::halfWidthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
+                      direction[1] * constants::halfWidthRoad + i2->getPosition()[0] * constants::ratioX + constants::margin,
+                     -direction[0] * constants::halfWidthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0.0 },
      sideLeft{ i1->getPosition()[0] * constants::ratioX + constants::margin,
                i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
                i2->getPosition()[0] * constants::ratioX + constants::margin,
@@ -29,8 +29,8 @@ Road::Road(const int id, Intersection* begin, Intersection* end)
                -direction[0] * constants::widthRoad + i1->getPosition()[1] * constants::ratioY + constants::margin, 0.0,
                 direction[1] * constants::widthRoad + i2->getPosition()[0] * constants::ratioX + constants::margin,
                -direction[0] * constants::widthRoad + i2->getPosition()[1] * constants::ratioY + constants::margin, 0.0 },
-     lightCoordinates{ direction[1] * constants::widthRoad / 2.0 + (i2->getPosition()[0] - direction[0] * 1.0) * constants::ratioX + constants::margin,
-                      -direction[0] * constants::widthRoad / 2.0 + (i2->getPosition()[1] - direction[1] * 1.0) * constants::ratioY + constants::margin } {
+     lightCoordinates{ direction[1] * constants::halfWidthRoad + (i2->getPosition()[0] - direction[0] * 1.0) * constants::ratioX + constants::margin,
+                      -direction[0] * constants::halfWidthRoad + (i2->getPosition()[1] - direction[1] * 1.0) * constants::ratioY + constants::margin } {
 }
 
 Road::~Road(){}
@@ -101,16 +101,18 @@ void Road::moveVehicles() {
 
 void Road::displayRoad() const {
    glEnable(GL_LINE_SMOOTH);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
    glEnableClientState(GL_VERTEX_ARRAY);
-   glScalef(1.f, 1.f, 0);
+   glScaled(1.0, 1.0, 0.0);
    // Road
-   glColor3f(0.3f, 0.3f, 0.3f); // Grey
-   glLineWidth(constants::widthRoad);
+   glColor3d(0.3, 0.3, 0.3); // Grey
+   glLineWidth(static_cast<float>(constants::widthRoad));
    glVertexPointer(3, GL_DOUBLE, 0, roadCoordinates);
    glDrawArrays(GL_LINES, 0, 2);
    // Sides
-   glColor3f(1.0f, 1.0f, 1.0f); // White
-   glLineWidth(constants::widthRoad / 10.0f);
+   glColor3d(1.0, 1.0, 1.0); // White
+   glLineWidth(static_cast<float>(constants::widthRoad) / 10.0f);
    glVertexPointer(3, GL_DOUBLE, 0, sideLeft);
    glDrawArrays(GL_LINES, 0, 2);
    glVertexPointer(3, GL_DOUBLE, 0, sideRight);
@@ -121,18 +123,17 @@ void Road::displayRoad() const {
 
 void Road::displayLight() const {
    // Outline
-   glColor3f(0.0f, 0.0f, 0.0f); // Black
+   glColor3d(0.0, 0.0, 0.0); // Black
    glPointSize(static_cast<float>(constants::widthRoad) * 0.7f);
    glEnable(GL_POINT_SMOOTH);
    glBegin(GL_POINTS);
-   glVertex2f(static_cast<float>(lightCoordinates[0]), static_cast<float>(lightCoordinates[1]));
+   glVertex2d(lightCoordinates[0], lightCoordinates[1]);
    glEnd();
    // Outline without overlay
-   //const GLfloat twoPi = 6.283f; // = 2.0f * 3.1415f
    //const int nStep = 10; // # of triangles used to draw the circle
    //const GLfloat step = 6.283f / nStep;
    //glLineWidth(constants::widthRoad / 5);
-   //glColor3f(0.0f, 0.0f, 0.0f); // Black
+   //glColor3d(0.0, 0.0, 0.0); // Black
    //glBegin(GL_LINE_LOOP);
    //for (int i = 0; i <= nStep; i++)
    //   glVertex2f(lightCoordinates[0] + (diameter * cos(i * step) / 2),
@@ -141,9 +142,9 @@ void Road::displayLight() const {
    //glEnd();
    // Inside
    if (i2->isRed(idRoad))
-      glColor3f(1.0f, 0.0f, 0.0f); // Red
+      glColor3d(1.0, 0.0, 0.0); // Red
    else
-      glColor3f(0.0f, 1.0f, 0.0f); // Green
+      glColor3d(0.0, 1.0, 0.0); // Green
    glPointSize(static_cast<float>(constants::widthRoad) * 0.5f);
    glBegin(GL_POINTS);
    glVertex2f(static_cast<float>(lightCoordinates[0]), static_cast<float>(lightCoordinates[1]));

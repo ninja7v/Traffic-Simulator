@@ -6,7 +6,7 @@
 
 const double Car::width        = constants::widthCar;
 const double Car::height       = constants::heightCar;
-const std::array<float, 3> Car::color{ 0.0f, 0.4f, 0.9f }; // Blue
+const std::array<double, 3> Car::color{ 0.0, 0.4, 0.9 }; // Blue
 const bool Car::type = false;
 
 double Car::getSpeedMax() const {
@@ -25,7 +25,7 @@ double Car::getHeight() const {
    return height;
 }
 
-std::array<float, 3> Car::getColor() const {
+std::array<double, 3> Car::getColor() const {
    return color;
 }
 

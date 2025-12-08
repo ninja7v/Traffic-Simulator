@@ -85,7 +85,7 @@ public:
    virtual double getHeight() const = 0;
 /** @brief Getter.
   * @return Vehicle color */
-   virtual std::array<float, 3> getColor() const = 0;
+   virtual std::array<double, 3> getColor() const = 0;
 /** @brief Getter.
   * @return Vehicle type */
    virtual bool is2Wheeler() const = 0;

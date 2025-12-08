@@ -145,7 +145,7 @@ TEST(BikeTest, Properties) {
     EXPECT_DOUBLE_EQ(bike.getHeight(), constants::heightBike);
 
     auto color = bike.getColor();
-    std::array<float,3> expect_color{0.0f, 0.9f, 0.9f};
+    std::array<double, 3> expect_color{0.0, 0.9, 0.9};
     EXPECT_EQ(color, expect_color);
 }
 
@@ -164,7 +164,7 @@ TEST(CarTest, Properties) {
     EXPECT_DOUBLE_EQ(car.getHeight(), constants::heightCar);
 
     auto color = car.getColor();
-    std::array<float,3> expect_color{0.0f, 0.4f, 0.9f};
+    std::array<double,3> expect_color{0.0, 0.4, 0.9};
     EXPECT_EQ(color, expect_color);
 }
 
@@ -183,6 +183,6 @@ TEST(TruckTest, Properties) {
     EXPECT_DOUBLE_EQ(truck.getHeight(), constants::heightTruck);
 
     auto color = truck.getColor();
-    std::array<float,3> expect_color{0.0f, 0.0f, 0.9f};
+    std::array<double,3> expect_color{0.0, 0.0, 0.9};
     EXPECT_EQ(color, expect_color);
 }

@@ -27,6 +27,8 @@ namespace constants {
 /**@{*/
 /** Width Road in pixel. It must be a positive number. */
    constexpr double widthRoad{ 10.0 * zoom };
+/** Half width Road in pixel. It must be a positive number. */
+   constexpr double halfWidthRoad{ widthRoad / 2.0 };
 /**@}*/
 /** @defgroup Vehicle parameters */
 /**@{*/

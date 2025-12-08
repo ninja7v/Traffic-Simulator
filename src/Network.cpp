@@ -12,9 +12,6 @@
 #include <memory>          // To use smart pointers
 #include <algorithm>       // To use max
 #include <delaunator.hpp>  // To compute the Delaunay triangulation
-#if DEBUG
-#include <iostream>        // To use input/output
-#endif
 // Headers
 #include "../headers/Global.h"
 #include "../headers/Car.h"
@@ -80,9 +77,6 @@ Network::Network() {
       Intersections.push_back(std::make_unique<Intersection>(k, position, globalOperator));
       card.emplace(position, Intersections.back().get()); //
    }
-#if DEBUG
-   std::cout << "x   Intersection initialized" << std::endl;
-#endif
    // Roads
    delaunator::Delaunator d(positions); // Informations here: https://github.com/delfrrr/delaunator-cpp
    int id = 0;
@@ -110,10 +104,6 @@ Network::Network() {
       constants::maxConnectedInputRoads = std::max(constants::maxConnectedInputRoads, i->getNumberInputRoads());
    }
    constants::stateSize = 1 + 3 * constants::maxConnectedInputRoads;
-#if DEBUG
-   std::cout << "=   Roads initialized" << std::endl;
-   std::cout << "*   Network initialized" << std::endl;
-#endif
 }
 
 void Network::displayNetwork() {
@@ -142,14 +132,12 @@ void Network::displayNetwork() {
    glViewport(0, 0, constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT); // specifies the part of the window to which OpenGL will draw (in pixels)
    glMatrixMode(GL_PROJECTION); // Projection matrix defines the properties of the camera that views the objects in the world coordinate frame
    glLoadIdentity();            // Replace the current matrix with the identity matrix and starts us a fresh one
-   glOrtho(0, constants::SCREEN_WIDTH, 0, constants::SCREEN_HEIGHT, 0, 1); // Set coordinate system
+   glOrtho(0.0, static_cast<double>(constants::SCREEN_WIDTH), 0.0, static_cast<double>(constants::SCREEN_HEIGHT), 0.0, 1.0); // Set coordinate system
    glMatrixMode(GL_MODELVIEW);  // (default matrix mode) modelview matrix defines how objects are transformed (meaning translation, rotation and scaling)
    glLoadIdentity();            // same as above comment
    glClearColor(0.1f, 0.5f, 0.1f, 0.0f); // Set background color as green
-#if DEBUG
-   std::cout << "[]   Windows created" << std::endl;
-   //int T1 = global::t0; // For the frame timer
-#endif
+   glEnable(GL_BLEND);          // Make every component look smoother
+
    // Initialize time
    global::t0 = clock();
    double lastTime = glfwGetTime();
@@ -233,9 +221,6 @@ void Network::displayNetwork() {
                             v->displayVehicle();
                             return false; // Keep the vehicle
                          });
-#if DEBUG
-         //std::cout << "-   o-o   Vehicle deleted" << std::endl;
-#endif
       // Intersections
       for (const auto& i_ptr : Intersections) {
          Intersection* i = i_ptr.get();
@@ -259,11 +244,6 @@ void Network::displayNetwork() {
       glfwSwapBuffers(window);
       // Poll for and process events
       glfwPollEvents();
-#if DEBUG
-      //std::cout << global::numberOfVehicles << std::endl;
-      //std::cout << "Frame displayed " << clock() - T1 << "ms" << std::endl; // average frame time: 70ms
-      //T1 = clock();
-#endif
    }
    
    // Cleanup

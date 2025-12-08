@@ -25,7 +25,7 @@ public:
    double getHeight() const;
 /** @brief Getter.
     @returns Truck color*/
-   std::array<float, 3> getColor() const;
+   std::array<double, 3> getColor() const;
 /** @brief Getter.
     @returns Truck type*/
    bool is2Wheeler() const;
@@ -34,6 +34,6 @@ protected:
 private:
 /** Parameters common to all trucks. */
    static const double width, height;
-   static const std::array<float, 3> color;
+   static const std::array<double, 3> color;
    static const bool type;
 };
