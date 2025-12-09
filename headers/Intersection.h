@@ -17,57 +17,61 @@ class Road;
 class Intersection {
 public:
    Intersection() = delete;
-/** @brief Constructor.
-  * @param id Road ID
-  * @param pos Position coordinates
-  * @returns Car acceleration */
-   Intersection(const int id, const std::vector<double> pos, std::shared_ptr<IntersectionOperator> op = nullptr);
-/** @brief Get trafic light color.
-  * @param id Road ID
-  * @returns true:Red / false:Green */
+   /** @brief Constructor.
+    * @param id Road ID
+    * @param pos Position coordinates
+    * @returns Car acceleration */
+   Intersection(const int id,
+                const std::vector<double> pos,
+                std::shared_ptr<IntersectionOperator> op = nullptr);
+   /** @brief Get trafic light color.
+    * @param id Road ID
+    * @returns true:Red / false:Green */
    const bool isRed(const int id) const;
-/** @brief Display the intersection as black point.*/
+   /** @brief Display the intersection as black point.*/
    void displayIntersection() const;
-/** @brief Add an input road in the input vector.
-  * @param r Road pointer */
+   /** @brief Add an input road in the input vector.
+    * @param r Road pointer */
    void addInputRoad(Road* r);
-/** @brief Getter.
-  * @returns Intersection ID */
+   /** @brief Getter.
+    * @returns Intersection ID */
    const int getID() const;
-/** @brief Getter.
-  * @returns Position on the grid */
+   /** @brief Getter.
+    * @returns Position on the grid */
    const std::vector<double> getPosition() const;
-/** @brief Getter.
-  * @returns Number of input roads */
+   /** @brief Getter.
+    * @returns Number of input roads */
    const int getNumberInputRoads() const;
-
+   /** @brief Comparison operator. 
+    * @returns Equal? */
    bool operator == (const Intersection i);
-
    /** @brief Update the intersection lights using RL. */
    void update();
 
 protected:
 
 private:
-/** Intersection identifier. */
+   /** Intersection identifier. */
    const int idIntersection;
-/** Position on the grid. */
+   /** Position on the grid. */
    const std::vector<double> position;
-/** Position coordinates. */
+   /** Position coordinates. */
    const std::array<double, 2> coordinates;
-/** Input / output road identifiers. */
+   /** Input / output road identifiers. */
    std::vector<int> input, output;
    std::vector<Road*> inputRoads;
 
-   // RL components
-/** operator to decide traffic light actions */
+/** @defgroup RL components */
+/**@{*/
+   /** operator to decide traffic light actions */
    std::shared_ptr<IntersectionOperator> op;
-/** Index of the current green road in 'input' vector */
+   /** Index of the current green road in 'input' vector */
    int currentGreenRoadIndex; // Index in 'input' vector
-/** Last state observed */
+   /** Last state observed */
    std::vector<int> lastState;
-/** Last action taken */
+   /** Last action taken */
    int lastAction;
-/** Time of the last traffic light switch */
+   /** Time of the last traffic light switch */
    clock_t lastSwitchTime;
+/**@}*/
 };

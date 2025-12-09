@@ -1,5 +1,7 @@
 // Libraries
-#include <list> // To use lists
+#include <list>   // To use lists
+#include <vector> // To use lists
+#include <memory> // To use smart pointers
 // Header files
 #include "../headers/Map.h"
 
@@ -14,7 +16,8 @@ std::vector<std::vector <double>> Map::live_cost = { constants::nbIntersections,
 Map::Map() {
 }
 
-std::list<Road*> Map::track(const Intersection* begin, const Intersection* end) {
+std::list<Road*> Map::track(const Intersection* begin,
+                            const Intersection* end) {
    if (!begin || !end)
       return std::list<Road*>();
 
@@ -58,21 +61,22 @@ std::list<Road*> Map::track(const Intersection* begin, const Intersection* end) 
    return path;
 };
 
-Road* Map::getConnection(const int a, const int b) const {
+Road* Map::getConnection(const int a,
+                         const int b) const {
    return ((a >= 0) && (b >= 0) && (a < constants::nbIntersections) && (b < constants::nbIntersections)) ? connections[a][b] : nullptr;
 }
 
-void Map::setConnection(const int a, const int b, Road* r) {
-   if (r && (a >= 0) && (b >= 0) && (a < constants::nbIntersections) && (b < constants::nbIntersections))
-   {
+void Map::setConnection(const int a,
+                        const int b,
+                        Road* r) {
+   if (r && (a >= 0) && (b >= 0) && (a < constants::nbIntersections) && (b < constants::nbIntersections)) {
       connections[a][b] = r;
       cost[a][b] = r->getLength();
    }
 }
 
-void Map::updateConnection(const Road* r) {
-   if (r)
-   {
+void Map::updateConnection(const std::unique_ptr<Road>& r) {
+   if (r) {
       const double penalty = !r->containVehicle() ? 0.0 :
          cost[r->getStart()->getID()][r->getEnd()->getID()] / r->getVehicles().back()->distance(r->getStart()) - 1.0;
       live_cost[r->getStart()->getID()][r->getEnd()->getID()] = cost[r->getStart()->getID()][r->getEnd()->getID()] + penalty;

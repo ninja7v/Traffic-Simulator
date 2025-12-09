@@ -16,7 +16,8 @@ public:
      * @param availableActions List of valid road indices that can be green.
      * @return The index of the road to turn green.
      */
-    virtual int decide(const std::vector<int>& state, const std::vector<int>& availableActions) = 0;
+    virtual int decide(const std::vector<int>& state,
+                       const std::vector<int>& availableActions) = 0;
 
     /**
      * @brief Update the agent based on the transition.
@@ -26,5 +27,9 @@ public:
      * @param nextState Current state.
      * @param availableActions Actions available in the next state.
      */
-    virtual void learn(const std::vector<int>& state, const int action, const double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) = 0;
+    virtual void learn(const std::vector<int>& state,
+                       const int action,
+                       const double reward,
+                       const std::vector<int>& nextState,
+                       const std::vector<int>& availableActions) = 0;
 };
