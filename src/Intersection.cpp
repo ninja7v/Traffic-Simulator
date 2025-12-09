@@ -11,15 +11,17 @@
 #include "../headers/QLearningOperator.h"
 #include "../headers/DeepRLOperator.h"
 
-Intersection::Intersection(const int n, const std::vector<double> pos, std::shared_ptr<IntersectionOperator> op)
+Intersection::Intersection(const int n,
+                           const std::vector<double> pos,
+                           std::shared_ptr<IntersectionOperator> op)
    : idIntersection(n),
      position(pos),
      coordinates{ position[0] * constants::ratioX + constants::margin,
                   position[1] * constants::ratioY + constants::margin },
+     op(op),
      currentGreenRoadIndex(0),
      lastAction(0),
-     lastSwitchTime(clock()),
-     op(op) {
+     lastSwitchTime(clock()) {
 }
 
 const bool Intersection::isRed(const int id) const {
@@ -86,7 +88,7 @@ void Intersection::update() {
     constexpr double penaltyCoeff = 2.0; // Configurable
     for (const Road* r : inputRoads) {
         for (const auto& v : r->getVehicles()) {
-            const double timeOnRoad = static_cast<double>(clock() - v->getEnterRoadTime()) / CLOCKS_PER_SEC;
+            const double timeOnRoad = static_cast<double>(clock() - v->getEnterRoadTime()) / static_cast<double>(CLOCKS_PER_SEC); // in seconds
             const double dist = v->distance(r->getStart());
             const double ideal = dist / v->getSpeedMax();
             const double diff = std::max(timeOnRoad - ideal, 0.0); // safety
@@ -107,8 +109,8 @@ void Intersection::update() {
 
     // 4. Decide
     const clock_t now = clock();
-    const double timeSinceSwitch = static_cast<double>(now - lastSwitchTime) / CLOCKS_PER_SEC;
-    if (timeSinceSwitch > 0.5) { // Minimum 0.5 seconds green
+    const double timeSinceSwitch = static_cast<double>(now - lastSwitchTime) / static_cast<double>(CLOCKS_PER_SEC); // in seconds
+    if (timeSinceSwitch > constants::trafficLightPeriod) {
         const int action = op->decide(state, availableActions);
         
         if (action != -1) {

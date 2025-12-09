@@ -10,7 +10,8 @@ DeepRLOperator::DeepRLOperator() {
     rng.seed(rd());
 }
 
-int DeepRLOperator::decide(const std::vector<int>& state, const std::vector<int>& availableActions) {
+int DeepRLOperator::decide(const std::vector<int>& state,
+                           const std::vector<int>& availableActions) {
     if (availableActions.empty()) return -1;
 
     // Lazy initialization of the neural network
@@ -51,7 +52,11 @@ int DeepRLOperator::decide(const std::vector<int>& state, const std::vector<int>
     return bestAction;
 }
 
-void DeepRLOperator::learn(const std::vector<int>& state, const int action, const double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) {
+void DeepRLOperator::learn(const std::vector<int>& state,
+                           const int action,
+                           const double reward,
+                           const std::vector<int>& nextState,
+                           const std::vector<int>& availableActions) {
     if (!isInitialized) return;
 
     std::vector<double> s(state.begin(), state.end());

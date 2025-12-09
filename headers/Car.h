@@ -11,28 +11,28 @@
 class Car : public Vehicle {
 public:
    using Vehicle::Vehicle;
-/** @brief Getter.
-    @returns Car maximum speed*/
+   /** @brief Getter.
+       @returns Car maximum speed*/
    double getSpeedMax() const;
-/** @brief Getter.
-    @returns Car acceleration*/
+   /** @brief Getter.
+       @returns Car acceleration*/
    double getAcceleration() const;
-/** @brief Getter.
-    @returns Car width*/
+   /** @brief Getter.
+       @returns Car width*/
    double getWidth() const;
-/** @brief Getter.
-    @returns Car height*/
+   /** @brief Getter.
+       @returns Car height*/
    double getHeight() const;
-/** @brief Getter.
-    @returns Car color*/
+   /** @brief Getter.
+       @returns Car color*/
    std::array<double, 3> getColor() const;
-/** @brief Getter.
-    @returns Car type*/
+   /** @brief Getter.
+       @returns Car type*/
    bool is2Wheeler() const;
 protected:
 
 private:
-/** Parameters common to all cars. */
+   /** Parameters common to all cars. */
    static const double width, height;
    static const std::array<double, 3> color;
    static const bool type;

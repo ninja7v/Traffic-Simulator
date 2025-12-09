@@ -17,112 +17,114 @@ class Road;
  */
 class Vehicle {
 public:
-/** @brief Constructor.
-  * @param i1 Start Intersection
-  * @param i2 End Intersection
-  * @param id Vehicle ID
-  * @param target Destination
-  * @param track Itinerary
-  * @returns Vehicle*/
-   Vehicle(const Intersection* i1, const Intersection* i2, const int id, Intersection* target, const std::list<Road*> track);
-/** @brief Destructor. */
+   /** @brief Constructor.
+    * @param i1 Start Intersection
+    * @param i2 End Intersection of the starting road to compute the direction
+    * @param id Vehicle ID
+    * @param target Destination
+    * @param track Itinerary
+    * @returns Vehicle*/
+   Vehicle(const Intersection* i1,
+           const Intersection* i2,
+           const int id,
+           Intersection* target,
+           const std::list<Road*> track);
+   /** @brief Destructor. */
    ~Vehicle();
-/** @brief Theoritical speed function.
-  * @param dist Distance with the front obstacle
-  * @return Speed */
+   /** @brief Theoritical speed function.
+    * @param dist Distance with the front obstacle
+    * @return Speed */
    double breakingSpeed(const double dist) const;
-/** @brief Adjust the speed to approach the theoritical speed function.
-  * @param v Vehicle in front */
+   /** @brief Adjust the speed to approach the theoritical speed function.
+    * @param v Vehicle in front */
    void moveToVehicle(const std::shared_ptr<Vehicle> v);
-/** @brief Adjust the speed to approach the theoritical speed function.
-  * @param i Intersection in front
-  * @param idRoad Road ID of the Road the Vehicle is*/
-   void moveToIntersection(const Intersection* i, const int idRoad);
-/** @brief Update Vehicle itilerary when arriving at the end of the Road. */
+   /** @brief Adjust the speed to approach the theoritical speed function.
+    * @param i Intersection in front
+    * @param idRoad Road ID of the Road the Vehicle is*/
+   void moveToIntersection(const Intersection* i,
+                           const int idRoad);
+   /** @brief Update Vehicle itilerary when arriving at the end of the Road. */
    void updateItinerary();
-/** @brief Display the Vehicle. */
+   /** @brief Display the Vehicle. */
    void displayVehicle();
-/** @brief GPS.
-  * @return Next Road fromt the itinerary */
+   /** @brief GPS.
+    * @return Next Road fromt the itinerary */
    Road* nextRoad();
-/** @brief Calculate the distance with the front Vehicle.
-  * @param v Vehicle in front
-  * @return Distance */
+   /** @brief Calculate the distance with the front Vehicle.
+    * @param v Vehicle in front
+    * @return Distance */
    double distance(const std::shared_ptr<Vehicle> v) const;
-/** @brief Calculate the distance with the front Intersection.
-  * @param i Intersection in front
-  * @return Distance */
+   /** @brief Calculate the distance with the front Intersection.
+    * @param i Intersection in front
+    * @return Distance */
    double distance(const Intersection* i) const;
-/** @brief Getter.
-  * @return Vehicle ID */
+   /** @brief Getter.
+    * @return Vehicle ID */
    int getID() const;
-/** @brief Getter.
-  * @return Arrived at destination? */
+   /** @brief Getter.
+    * @return Arrived at destination? */
    bool getStatus() const;
-/** @brief Getter.
-  * @return Vehicle Speed */
+   /** @brief Getter.
+    * @return Vehicle Speed */
    double getSpeed() const;
-/** @brief Getter.
-  * @return Vehicle destination */
+   /** @brief Getter.
+    * @return Vehicle destination */
    Intersection* getDestination() const;
-/** @brief Getter.
-  * @return Vehicle itinerary */
+   /** @brief Getter.
+    * @return Vehicle itinerary */
    std::list<Road*> getItinerary() const;
-/** @brief Getter.
-  * @return Vehicle position */
+   /** @brief Getter.
+    * @return Vehicle position */
    std::vector<double> getPosition() const;
-/** @brief Getter.
-  * @return Vehicle speed max */
+   /** @brief Getter.
+    * @return Vehicle speed max */
    virtual double getSpeedMax() const = 0;
-/** @brief Getter.
-  * @return Vehicle acceleration */
+   /** @brief Getter.
+    * @return Vehicle acceleration */
    virtual double getAcceleration() const = 0;
-/** @brief Getter.
-  * @return Vehicle width */
+   /** @brief Getter.
+    * @return Vehicle width */
    virtual double getWidth() const = 0;
-/** @brief Getter.
-  * @return Vehicle height */
+   /** @brief Getter.
+    * @return Vehicle height */
    virtual double getHeight() const = 0;
-/** @brief Getter.
-  * @return Vehicle color */
+   /** @brief Getter.
+    * @return Vehicle color */
    virtual std::array<double, 3> getColor() const = 0;
-/** @brief Getter.
-  * @return Vehicle type */
+   /** @brief Getter.
+    * @return Vehicle type */
    virtual bool is2Wheeler() const = 0;
-/** @brief Getter.
-  * @return Time when vehicle entered current road */
+   /** @brief Getter.
+    * @return Time when vehicle entered current road */
    clock_t getEnterRoadTime() const;
-/** @brief Setter. */
+   /** @brief Setter. */
    void setDirection(const Intersection* i);
-/** @brief Setter. */
+   /** @brief Setter. */
    void setPosition(const std::vector<double>);
-/** @brief Setter. */
+   /** @brief Setter. */
    void setNewItinerary(const std::list<Road*> track);
-/** @brief Setter. */
+   /** @brief Setter. */
    void setStatus(const bool arrived);
-/** @brief Setter. */
+   /** @brief Setter. */
    void setEnterRoadTime(clock_t t);
 
 protected:
-/** Vehicle ID. */
+   /** Vehicle ID. */
    const int idVehicle;
-   //int tc = 0;
-/** Arrived at destination? */
+   /** Arrived at destination? */
    bool isArrived;
-/** Vehicle is braking */
+   /** Vehicle is braking */
    bool isBraking;
-/** Vehicle speed. */
+   /** Vehicle speed in pixel per second. */
    double speed;
-/** Vehicle destination. */
+   /** Vehicle destination. */
    Intersection* destination;
-/** Vehicle position. */
+   /** Vehicle position. */
    std::vector<double> position;
-/** Vehicle direction. */
+   /** Vehicle direction. */
    std::array<double, 2> direction;
-/** Vehicle itinerary. */
+   /** Vehicle itinerary. */
    std::list<Road*> itinerary;
-/** Time when vehicle entered current road. */
+   /** Time when vehicle entered current road. */
    clock_t enterRoadTime;
-
-
 };

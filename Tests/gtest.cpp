@@ -59,7 +59,7 @@ TEST(MapTest, Connections) {
 
     Map m;
     m.setConnection(1, 2, r.get());
-    m.updateConnection(r.get());
+    m.updateConnection(r);
 
     EXPECT_EQ(m.getConnection(1, 2), r.get());
 

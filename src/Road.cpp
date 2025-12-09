@@ -10,8 +10,12 @@
 #include "../headers/Map.h"
 #include "../headers/Constants.h"
 
-Road::Road(const int id, Intersection* begin, Intersection* end)
-   : idRoad(id), i1(begin), i2(end),
+Road::Road(const int id,
+           Intersection* begin,
+           Intersection* end)
+   : idRoad(id),
+     i1(begin),
+     i2(end),
      length(sqrt(pow(begin->getPosition()[0] - end->getPosition()[0], 2) +
                  pow(begin->getPosition()[1] - end->getPosition()[1], 2))),
      totalNumberOfArringVehicles(0),
@@ -145,7 +149,7 @@ void Road::displayLight() const {
       glColor3d(1.0, 0.0, 0.0); // Red
    else
       glColor3d(0.0, 1.0, 0.0); // Green
-   glPointSize(static_cast<float>(constants::widthRoad) * 0.5f);
+   glPointSize(static_cast<float>(constants::halfWidthRoad));
    glBegin(GL_POINTS);
    glVertex2f(static_cast<float>(lightCoordinates[0]), static_cast<float>(lightCoordinates[1]));
    glEnd();

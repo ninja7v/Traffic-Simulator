@@ -7,8 +7,8 @@
 #include <GLFW/glfw3.h>    // To display
 #include <ctime>           // To use clock()
 #include <unordered_map>   // To use unordered_map
-#include <vector>          // To vectors
-#include <array>           // To arrays
+#include <vector>          // To use vectors
+#include <array>           // To use arrays
 #include <memory>          // To use smart pointers
 #include <algorithm>       // To use max
 #include <delaunator.hpp>  // To compute the Delaunay triangulation
@@ -33,7 +33,8 @@ struct VectorHash {
 };
 
 struct VectorEqual {
-   bool operator()(const std::vector<double>& vec1, const std::vector<double>& vec2) const {
+   bool operator()(const std::vector<double>& vec1,
+                   const std::vector<double>& vec2) const {
       return vec1 == vec2;
    }
 };
@@ -100,7 +101,7 @@ Network::Network() {
       }
    }
    // Constants
-   for (auto& i : Intersections) {
+   for (const auto& i : Intersections) {
       constants::maxConnectedInputRoads = std::max(constants::maxConnectedInputRoads, i->getNumberInputRoads());
    }
    constants::stateSize = 1 + 3 * constants::maxConnectedInputRoads;
@@ -203,8 +204,7 @@ void Network::displayNetwork() {
 
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
-      for (const auto& r_ptr : Roads) {
-         Road* r = r_ptr.get();
+      for (const auto& r : Roads) {
          if (r)
          {
             r->displayRoad();
@@ -212,8 +212,8 @@ void Network::displayNetwork() {
          }
       }
       // Vehicle
-      this->addVehicle();
-      this->updateVehiclesPosition();
+      addVehicle();
+      updateVehiclesPosition();
       Vehicles.remove_if([](std::shared_ptr<Vehicle> v) {
                             if (v->getStatus()) {
                                return true; // Remove the vehicle
@@ -222,16 +222,14 @@ void Network::displayNetwork() {
                             return false; // Keep the vehicle
                          });
       // Intersections
-      for (const auto& i_ptr : Intersections) {
-         Intersection* i = i_ptr.get();
+      for (const auto& i : Intersections) {
          if (i) {
             i->update(); // Update RL logic
             i->displayIntersection();
          }
       }
       // Traffic lights
-      for (const auto& r_ptr : Roads) {
-         Road* r = r_ptr.get();
+      for (const auto& r : Roads) {
          if (r)
             r->displayLight();
       }
@@ -256,13 +254,14 @@ void Network::displayNetwork() {
 
 void Network::addVehicle() {
    // To Do: add check target
-   auto target = [&](int idStart) {int destination;
-                                   do {destination = rand() % constants::nbIntersections;
-                                   } while (destination == idStart);
-                                   return Intersections[destination].get();};
+   auto target = [&](const int idStart) {
+      int destination;
+      do {destination = rand() % constants::nbIntersections;
+      } while (destination == idStart);
+      return Intersections[destination].get();
+   };
    if (Vehicles.size() < constants::nbVehicleMax)
-      for (const auto& r_ptr : Roads) {
-         Road* r = r_ptr.get();
+      for (const auto& r : Roads) {
          if (r &&
              ((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
               !r->containVehicle()) &&
@@ -297,8 +296,7 @@ void Network::addVehicle() {
 }
 
 void Network::updateVehiclesPosition() {
-   for (const auto& r_ptr : Roads) {
-      Road* r = r_ptr.get();
+   for (const auto& r : Roads) {
       if (r)
          r->moveVehicles();
    }

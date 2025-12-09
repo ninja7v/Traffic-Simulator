@@ -15,27 +15,27 @@
 
 class Network {
 public:
-/** @brief Default constructor.
-  * @returns Network */
+   /** @brief Default constructor.
+    * @returns Network */
    Network();
-/** @brief Network display. */
+   /** @brief Network display. */
    void displayNetwork();
 
 protected:
 
 private:
-/** Global Intersection Operator. */
+   /** Global Intersection Operator. */
    std::shared_ptr<IntersectionOperator> globalOperator;
-/** Road Map. */
+   /** Road Map. */
    Map map;
-/** Intersections. */
+   /** Intersections. */
    std::vector<std::unique_ptr<Intersection>> Intersections;
-/** Roads. */
+   /** Roads. */
    std::vector<std::unique_ptr<Road>> Roads;
-/** Vehicles */
+   /** Vehicles */
    std::list<std::shared_ptr<Vehicle>> Vehicles;
-/** @brief Add vehicle to the simulation. */
+   /** @brief Add vehicle to the simulation. */
    void addVehicle();
-/** @brief Move the Vehicle for the next frame. */
+   /** @brief Move the Vehicle for the next frame. */
    void updateVehiclesPosition();
 };

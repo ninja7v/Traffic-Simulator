@@ -4,6 +4,7 @@
  
 #pragma once
 // Libraries
+#include <vector> // To use vectors
 #include <random> // To use std::mt19937
 // Headers
 #include "IntersectionOperator.h"
@@ -26,7 +27,8 @@ public:
      * @param availableActions List of available actions.
      * @return int Chosen action.
      */
-    int decide(const std::vector<int>& state, const std::vector<int>& availableActions) override;
+    int decide(const std::vector<int>& state,
+               const std::vector<int>& availableActions) override;
     /**
      * @brief Learn from the environment.
      * @param state Current state of the environment.
@@ -35,7 +37,11 @@ public:
      * @param nextState Resulting state.
      * @param availableActions List of available actions.
      */
-    void learn(const std::vector<int>& state, const int action, const double reward, const std::vector<int>& nextState, const std::vector<int>& availableActions) override;
+    void learn(const std::vector<int>& state,
+               const int action,
+               const double reward,
+               const std::vector<int>& nextState,
+               const std::vector<int>& availableActions) override;
 
 private:
     NeuralNetwork policyNetwork;

@@ -12,14 +12,21 @@
 #include "../headers/Constants.h"
 #include "../headers/Vehicle.h"
 
-Vehicle::Vehicle(const Intersection* i1, const Intersection* i2, const int id, Intersection* target, const std::list<Road*> track)
-   : idVehicle(id), destination(target), itinerary(track) {
+Vehicle::Vehicle(const Intersection* i1,
+                 const Intersection* i2,
+                 const int id,
+                 Intersection* target,
+                 const std::list<Road*> track)
+   : idVehicle(id),
+     isArrived(false),
+     isBraking(false),
+     speed(0.0),
+     destination(target),
+     itinerary(track),
+     enterRoadTime(0) {
    if (i1)
       position = i1->getPosition();
    setDirection(i2);
-   isArrived = false;
-   isBraking = false;
-   speed = 0.0; // Unit is pixel per seconds
 }
 
 Vehicle::~Vehicle(){}
@@ -63,7 +70,8 @@ void Vehicle::moveToVehicle(const std::shared_ptr<Vehicle> v) {
    }
 }
 
-void Vehicle::moveToIntersection(const Intersection* i, const int idRoad) {
+void Vehicle::moveToIntersection(const Intersection* i,
+                                 const int idRoad) {
    if (i)
    {
       const double previousSpeed = speed;
@@ -152,12 +160,16 @@ Road* Vehicle::nextRoad() {
 }
 
 double Vehicle::distance(const std::shared_ptr<Vehicle> v) const {
-   return v ? std::max(std::sqrt(std::pow(position[0] - v->position[0], 2) + std::pow(position[1] - v->position[1], 2)) - (getHeight() + v->getHeight()) / 7.0, 0.0) :
+   return v ? std::max(std::sqrt(std::pow(position[0] - v->position[0], 2) + std::pow(position[1] - v->position[1], 2)) -
+                       (getHeight() + v->getHeight()) / 7.0,
+                       0.0) :
               0.0;
 }
 
 double Vehicle::distance(const Intersection* i) const {
-   return i ? std::max(std::sqrt(std::pow(position[0] - i->getPosition()[0], 2) + std::pow(position[1] - i->getPosition()[1], 2)) - (getHeight() + constants::diameterIntersection) / 12.0, 0.0) :
+   return i ? std::max(std::sqrt(std::pow(position[0] - i->getPosition()[0], 2) + std::pow(position[1] - i->getPosition()[1], 2)) -
+                       (getHeight() + constants::diameterIntersection) / 12.0,
+                       0.0) :
               0.0;
 }
 
@@ -193,17 +205,14 @@ void Vehicle::setDirection(const Intersection* i) {
    if (i)
    {
       // We don't take the direction from road to avoid circular dependencies
-      try{
-         const double d = sqrt(pow((i->getPosition()[0] - position[0]), 2) + pow((i->getPosition()[1] - position[1]), 2));
-         if (d == 0.0)
-            throw  std::runtime_error("Division by zero");
-         direction = { (i->getPosition()[0] - position[0]) / d,
-                       (i->getPosition()[1] - position[1]) / d };
-      }
-      catch (const std::runtime_error& e) {
-         std::cerr << e.what() << std::endl;
+      const std::array<double, 2> delta { i->getPosition()[0] - position[0],
+                                          i->getPosition()[1] - position[1] };
+      if (delta[0] == 0.0 && delta[1] == 0.0) {
+         std::cerr << "Error: Vehicle " << idVehicle << " is already at the target Intersection " << std::endl;
          exit(-1);
       }
+      const double d = sqrt(pow(delta[0], 2) + pow(delta[1], 2)); // cannot be zero here
+      direction = { delta[0] / d, delta[1] / d };
    }
 }
 
