@@ -43,15 +43,26 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y ninja-build libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libglfw3-dev libx11-dev libxrandr-dev libxi-dev
+          sudo apt install -y ninja-build libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev libglfw3-dev libx11-dev libxrandr-dev libxi-dev gcovr
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        run: |
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
+          else
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          fi
+        shell: bash
 
       - name: Build
-        run: cmake --build build --config Release
+        run: cmake --build build --config ${{ runner.os == 'Linux' && 'Debug' || 'Release' }}
 
       - name: Run Tests
         run: |
           cd build
-          ctest -C Release --output-on-failure
+          ctest --output-on-failure -C ${{ runner.os == 'Linux' && 'Debug' || 'Release' }}
+
+      - name: Generate and Check Coverage (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          gcovr -r .. --fail-under-line 80 --exclude-directories "Tests|Dependencies" --print-summary
