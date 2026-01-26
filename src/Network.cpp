@@ -187,7 +187,7 @@ void Network::displayNetwork() {
          ImGui::Text("Using %s method", method);
          ImGui::Text("%d Intersections ", constants::nbIntersections);
          ImGui::Text("%d Vehicles", global::numberOfVehicles);
-         ImGui::Text("%d Average time lost", 0.0); // To Do
+         ImGui::Text("%f Average time lost", 0.0); // To Do
          ImGui::Text("%d FPS", lastFPS);
          
          ImGui::Separator();
