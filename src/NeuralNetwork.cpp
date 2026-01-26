@@ -87,7 +87,7 @@ void NeuralNetwork::train(const std::vector<double>& input, const std::vector<do
     }
 
     // Backpropagate
-    for (int i = layers.size() - 1; i >= 0; --i) {
+    for (int i = static_cast<int>(layers.size()) - 1; i >= 0; --i) {
         Layer& layer = layers[i];
         std::vector<double> nextErrors(layer.inputSize, 0.0);
 

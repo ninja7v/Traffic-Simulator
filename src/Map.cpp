@@ -2,16 +2,17 @@
 #include <list>   // To use lists
 #include <vector> // To use lists
 #include <memory> // To use smart pointers
+#include <limits> // To use infinity
 // Header files
 #include "../headers/Map.h"
 
 namespace {
-   const double INFINTY = std::numeric_limits<double>::infinity();
+   const double INF_VAL = std::numeric_limits<double>::infinity();
 }
 
 decltype(Map::connections) Map::connections{};
-std::vector<std::vector <double>> Map::cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INFINTY) };
-std::vector<std::vector <double>> Map::live_cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INFINTY) };
+std::vector<std::vector <double>> Map::cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INF_VAL) };
+std::vector<std::vector <double>> Map::live_cost = { constants::nbIntersections, std::vector<double>(constants::nbIntersections, INF_VAL) };
 
 Map::Map() {
 }
@@ -37,7 +38,7 @@ std::list<Road*> Map::track(const Intersection* begin,
    int nextnode;
    double mindistance;
    for (int j = 1; j < constants::nbIntersections; j ++) {
-      mindistance = INFINTY;
+      mindistance = INF_VAL;
       for (int i = 0; i < constants::nbIntersections; i++)
          if (distance[i] <= mindistance && !visited[i]) {
             mindistance = distance[i];
