@@ -53,6 +53,19 @@ target_link_libraries(TrafficSimulator PRIVATE TrafficLib)
 
 # Tests
 enable_testing()
+option(ENABLE_COVERAGE "Enable code coverage" OFF)
+
+if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    add_library(coverage_flags INTERFACE)
+    target_compile_options(coverage_flags INTERFACE
+        -O0
+        -g
+        --coverage
+    )
+    target_link_options(coverage_flags INTERFACE
+        --coverage
+    )
+endif()
 
 include(FetchContent)
 FetchContent_Declare(
@@ -68,7 +81,7 @@ if(NOT googletest_POPULATED)
     add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 endif()
 
-file(GLOB TEST_SOURCES "tests/*.cpp")
+file(GLOB TEST_SOURCES "Tests/*.cpp")
 
 add_executable(unit_tests ${TEST_SOURCES})
 
@@ -78,6 +91,10 @@ target_link_libraries(unit_tests
     gtest
     gtest_main
 )
+
+if(ENABLE_COVERAGE AND TARGET coverage_flags)
+    target_link_libraries(unit_tests PRIVATE coverage_flags)
+endif()
 
 target_include_directories(unit_tests PRIVATE headers)
 
