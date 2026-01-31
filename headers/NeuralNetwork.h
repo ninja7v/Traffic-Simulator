@@ -28,13 +28,6 @@ public:
      * @param learningRate Learning rate for the network. */
     NeuralNetwork(const std::vector<int>& topology,
                   double learningRate = 0.01);
-
-    /** @brief Initialize the network.
-     * @param topology Vector of integers representing the number of neurons in each layer.
-     * @param learningRate Learning rate for the network.
-     */
-    void init(const std::vector<int>& topology,
-              double learningRate = 0.01);
     /** @brief Make a prediction.
      * @param input Input vector.
      * @return std::vector<double> Output vector (size = number of layers * number of actions)

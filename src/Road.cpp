@@ -90,14 +90,13 @@ void Road::moveVehicles() {
       // For the folowing cars
       // We ignore the case atIntersection = true, were the first car is gone
       if (Vehicles.size() > 1) {
-         std::list<std::shared_ptr<Vehicle>>::iterator v;
-         std::shared_ptr<Vehicle> VehicleNext = *Vehicles.begin();
-         for (v = std::next(Vehicles.begin()); v != Vehicles.end(); ++v){
-            if (*v)
+         v = *Vehicles.begin();
+         for (auto it = std::next(Vehicles.begin()); it != Vehicles.end(); ++it){
+            if (*it)
             {
-               (*v)->moveToVehicle(VehicleNext);
-               VehicleNext = (*v);
-            }
+               (*it)->moveToVehicle(v);
+               v = *it;
+            }int i;
          }
       }
    }

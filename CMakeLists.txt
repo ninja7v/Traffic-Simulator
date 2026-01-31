@@ -145,6 +145,11 @@ if(WIN32)
         )
     endif()
 
+    # Warning flags for MSVC
+    target_compile_options(TrafficLib PRIVATE /W4 /permissive-)
+    target_compile_options(TrafficSimulator PRIVATE /W4 /permissive-)
+    target_compile_options(unit_tests PRIVATE /W4 /permissive-)
+
 elseif(UNIX AND NOT APPLE)
     # Linux Dependencies
     find_package(OpenGL REQUIRED)
@@ -171,10 +176,16 @@ elseif(UNIX AND NOT APPLE)
         Xrandr
         Xi
         dl
-    )  # If your lib needs these
+    )
     
     target_include_directories(TrafficSimulator PRIVATE ${GLFW3_INCLUDE_DIRS})
     target_include_directories(TrafficLib PRIVATE ${GLFW3_INCLUDE_DIRS})
+
+    # Warning flags for GCC/Clang
+    target_compile_options(TrafficLib PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(TrafficSimulator PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(unit_tests PRIVATE -Wall -Wextra -Wpedantic)
+
 elseif(APPLE)
     # macOS Dependencies (Basic setup, might need adjustment)
     find_package(OpenGL REQUIRED)
@@ -190,5 +201,11 @@ elseif(APPLE)
         ${OPENGL_LIBRARIES}
         ${GLUT_LIBRARIES}
         glfw
-    )  # If your lib needs these
+    )
+
+    # Warning flags for Clang
+    target_compile_options(TrafficLib PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(TrafficSimulator PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(unit_tests PRIVATE -Wall -Wextra -Wpedantic)
+
 endif()

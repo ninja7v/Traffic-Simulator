@@ -35,7 +35,7 @@ std::list<Road*> Map::track(const Intersection* begin,
    distance[begin->getID()] = 0;
    visited[begin->getID()] = 1;
    // Find shortest path
-   int nextnode;
+   int nextnode = -1;
    double mindistance;
    for (int j = 1; j < constants::nbIntersections; j ++) {
       mindistance = INF_VAL;
@@ -44,6 +44,7 @@ std::list<Road*> Map::track(const Intersection* begin,
             mindistance = distance[i];
             nextnode = i;
          }
+      if (nextnode == -1) break;
       visited[nextnode] = 1;
       for (int i = 0; i < constants::nbIntersections; i++)
          if (!visited[i])
