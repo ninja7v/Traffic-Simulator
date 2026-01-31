@@ -65,5 +65,5 @@ jobs:
       - name: Generate and Check Coverage (Linux)
         if: runner.os == 'Linux'
         run: |
-          gcovr -r . --exclude 'build/.*' --exclude 'Tests/.*' --exclude 'Dependencies/.*' --fail-under-line 80 --print-summary
+          gcovr -r .. --object-directory . --exclude '_deps/.*' --exclude 'Tests/.*' --exclude 'Dependencies/.*' --fail-under-line 80 --print-summary
           
