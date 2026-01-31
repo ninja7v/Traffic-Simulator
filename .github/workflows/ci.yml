@@ -65,5 +65,5 @@ jobs:
       - name: Generate and Check Coverage (Linux)
         if: runner.os == 'Linux'
         run: |
-          gcovr -r .. --object-directory . --exclude-directories '_deps' --exclude-directories 'Tests' --exclude-directories 'Dependencies' --exclude '_deps/.*' --exclude 'Tests/.*' --exclude 'Dependencies/.*' --fail-under-line 80 --print-summary
+          gcovr -r .. --object-directory . --exclude-directories 'Tests' --exclude-directories 'Dependencies' --include 'Traffic-Simulator/src/.*' --include 'Traffic-Simulator/headers/.*' --fail-under-line 80 --print-summary
           
