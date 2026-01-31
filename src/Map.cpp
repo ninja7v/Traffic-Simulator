@@ -19,8 +19,9 @@ Map::Map() {
 
 std::list<Road*> Map::track(const Intersection* begin,
                             const Intersection* end) {
+   std::list<Road*> path;
    if (!begin || !end)
-      return std::list<Road*>();
+      return path;
 
    double distance[constants::nbIntersections];
    int pred[constants::nbIntersections];
@@ -54,12 +55,13 @@ std::list<Road*> Map::track(const Intersection* begin,
             }
    }
    // Affect result
-   std::list<Road*> path;
-   int i = end->getID();
-   while (i != begin->getID()) {
-      path.push_front(connections[pred[i]][i]);
-      i = pred[i];
-   };
+   if (distance[end->getID()] != INF_VAL) { // Check if reachable
+      int i = end->getID();
+      while (i != begin->getID()) {
+         path.push_front(connections[pred[i]][i]);
+         i = pred[i];
+      }
+   }
    return path;
 };
 

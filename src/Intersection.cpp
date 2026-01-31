@@ -25,7 +25,7 @@ Intersection::Intersection(const int n,
 }
 
 const bool Intersection::isRed(const int id) const {
-   return input.at(currentGreenRoadIndex) != id;
+   return !input.empty() ? input.at(currentGreenRoadIndex) != id : true;
 }
 
 void Intersection::displayIntersection() const {

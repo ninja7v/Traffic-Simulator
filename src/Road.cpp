@@ -96,7 +96,7 @@ void Road::moveVehicles() {
             {
                (*it)->moveToVehicle(v);
                v = *it;
-            }int i;
+            }
          }
       }
    }
