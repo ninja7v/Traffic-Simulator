@@ -66,9 +66,9 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           gcovr -r .. . \
-            --filter '../src/' \
-            --filter '../headers/' \
+            --filter '^src/' \
+            --filter '^headers/' \
+            --exclude-directories 'Dependencies' \
             --gcov-ignore-parse-errors \
-            --exclude-unreachable-branches \
-            --fail-under-line 80 \
-            --print-summary
+            --print-summary \
+            --fail-under-line 80
