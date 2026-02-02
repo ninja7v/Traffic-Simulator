@@ -19,8 +19,9 @@ Map::Map() {
 
 std::list<Road*> Map::track(const Intersection* begin,
                             const Intersection* end) {
+   std::list<Road*> path;
    if (!begin || !end)
-      return std::list<Road*>();
+      return path;
 
    double distance[constants::nbIntersections];
    int pred[constants::nbIntersections];
@@ -35,7 +36,7 @@ std::list<Road*> Map::track(const Intersection* begin,
    distance[begin->getID()] = 0;
    visited[begin->getID()] = 1;
    // Find shortest path
-   int nextnode;
+   int nextnode = -1;
    double mindistance;
    for (int j = 1; j < constants::nbIntersections; j ++) {
       mindistance = INF_VAL;
@@ -44,6 +45,7 @@ std::list<Road*> Map::track(const Intersection* begin,
             mindistance = distance[i];
             nextnode = i;
          }
+      if (nextnode == -1) break;
       visited[nextnode] = 1;
       for (int i = 0; i < constants::nbIntersections; i++)
          if (!visited[i])
@@ -53,12 +55,13 @@ std::list<Road*> Map::track(const Intersection* begin,
             }
    }
    // Affect result
-   std::list<Road*> path;
-   int i = end->getID();
-   while (i != begin->getID()) {
-      path.push_front(connections[pred[i]][i]);
-      i = pred[i];
-   };
+   if (distance[end->getID()] != INF_VAL) { // Check if reachable
+      int i = end->getID();
+      while (i != begin->getID()) {
+         path.push_front(connections[pred[i]][i]);
+         i = pred[i];
+      }
+   }
    return path;
 };
 

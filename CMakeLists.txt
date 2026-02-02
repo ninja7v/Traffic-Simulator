@@ -23,17 +23,6 @@ file(GLOB HEADERS "headers/*.h")
 set(LIB_SOURCES ${SOURCES})
 list(FILTER LIB_SOURCES EXCLUDE REGEX "Main.cpp$")
 
-# Include directories
-include_directories(
-    headers
-    Dependencies/GLFW/include
-    Dependencies/GL/include
-    Dependencies/stb/include
-    Dependencies/delaunator/include
-    Dependencies/imgui
-    Dependencies/imgui/backends
-)
-
 # ImGui Sources
 set(IMGUI_SOURCES
     Dependencies/imgui/imgui.cpp
@@ -47,8 +36,18 @@ set(IMGUI_SOURCES
 # Create a static library from non-main sources
 add_library(TrafficLib STATIC ${LIB_SOURCES} ${HEADERS} ${IMGUI_SOURCES})
 
+# Include directories
+target_include_directories(TrafficLib PRIVATE
+    headers
+    Dependencies/stb/include
+    Dependencies/delaunator/include
+    Dependencies/imgui
+    Dependencies/imgui/backends
+)
+
 # Main executable
 add_executable(TrafficSimulator src/Main.cpp)
+target_include_directories(TrafficSimulator PRIVATE headers)
 target_link_libraries(TrafficSimulator PRIVATE TrafficLib)
 
 # Tests
@@ -145,6 +144,17 @@ if(WIN32)
         )
     endif()
 
+    # Include directories
+    target_include_directories(TrafficLib PRIVATE
+        Dependencies/GLFW/include
+        Dependencies/GL/include
+    )
+
+    # Warning flags for MSVC
+    target_compile_options(TrafficLib PRIVATE /W4 /permissive-)
+    target_compile_options(TrafficSimulator PRIVATE /W4 /permissive-)
+    target_compile_options(unit_tests PRIVATE /W4 /permissive-)
+
 elseif(UNIX AND NOT APPLE)
     # Linux Dependencies
     find_package(OpenGL REQUIRED)
@@ -171,10 +181,17 @@ elseif(UNIX AND NOT APPLE)
         Xrandr
         Xi
         dl
-    )  # If your lib needs these
+    )
     
+    # Include directories
     target_include_directories(TrafficSimulator PRIVATE ${GLFW3_INCLUDE_DIRS})
     target_include_directories(TrafficLib PRIVATE ${GLFW3_INCLUDE_DIRS})
+
+    # Warning flags for GCC/Clang
+    target_compile_options(TrafficLib PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(TrafficSimulator PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(unit_tests PRIVATE -Wall -Wextra -Wpedantic)
+
 elseif(APPLE)
     # macOS Dependencies (Basic setup, might need adjustment)
     find_package(OpenGL REQUIRED)
@@ -190,5 +207,11 @@ elseif(APPLE)
         ${OPENGL_LIBRARIES}
         ${GLUT_LIBRARIES}
         glfw
-    )  # If your lib needs these
+    )
+
+    # Warning flags for Clang
+    target_compile_options(TrafficLib PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(TrafficSimulator PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(unit_tests PRIVATE -Wall -Wextra -Wpedantic)
+
 endif()
