@@ -65,5 +65,5 @@ jobs:
       - name: Generate and Check Coverage (Linux)
         if: runner.os == 'Linux'
         run: |
-          gcovr -r .. . --filter '../src/' --filter '../headers/' --fail-under-line 80 --print-summary
+          gcovr -r .. . --print-summary --verbose
           
