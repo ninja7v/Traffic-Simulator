@@ -63,7 +63,7 @@ std::list<Road*> Map::track(const Intersection* begin,
       }
    }
    return path;
-};
+}
 
 Road* Map::getConnection(const int a,
                          const int b) const {

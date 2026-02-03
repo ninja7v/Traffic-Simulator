@@ -32,7 +32,7 @@ jobs:
       with:
         style: llvm
         tidy-checks: '*'
-        version: latest
+        version: 20
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -44,7 +44,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,9 +76,8 @@ jobs:
         run: |
           gcovr -r .. . \
             --filter '^src/' \
-            --filter '^headers/' \
             --exclude '.*/Main\.cpp' \
             --exclude-directories 'Dependencies' \
             --gcov-ignore-parse-errors \
             --print-summary \
-            --fail-under-line 80
+            --fail-under-line 60

@@ -71,9 +71,6 @@ public:
     * @return Vehicle destination */
    Intersection* getDestination() const;
    /** @brief Getter.
-    * @return Vehicle itinerary */
-   std::list<Road*> getItinerary() const;
-   /** @brief Getter.
     * @return Vehicle position */
    std::vector<double> getPosition() const;
    /** @brief Getter.
@@ -108,7 +105,7 @@ public:
    /** @brief Setter. */
    void setEnterRoadTime(clock_t t);
 
-protected:
+private:
    /** Vehicle ID. */
    const int idVehicle;
    /** Arrived at destination? */

@@ -23,7 +23,7 @@ Vehicle::Vehicle(const Intersection* i1,
      speed(0.0),
      destination(target),
      itinerary(track),
-     enterRoadTime(0) {
+     enterRoadTime(clock()) {
    if (i1)
       position = i1->getPosition();
    setDirection(i2);
@@ -189,10 +189,6 @@ Intersection* Vehicle::getDestination() const {
    return destination;
 }
 
-std::list<Road*> Vehicle::getItinerary() const {
-   return itinerary;
-}
-
 std::vector<double> Vehicle::getPosition() const {
    return position;
 }
@@ -207,12 +203,10 @@ void Vehicle::setDirection(const Intersection* i) {
       // We don't take the direction from road to avoid circular dependencies
       const std::array<double, 2> delta { i->getPosition()[0] - position[0],
                                           i->getPosition()[1] - position[1] };
-      if (delta[0] == 0.0 && delta[1] == 0.0) {
-         std::cerr << "Error: Vehicle " << idVehicle << " is already at the target Intersection " << std::endl;
-         exit(-1);
+      if (delta[0] != 0.0 || delta[1] != 0.0) {
+         const double d = sqrt(pow(delta[0], 2) + pow(delta[1], 2)); // cannot be zero here
+         direction = { delta[0] / d, delta[1] / d };
       }
-      const double d = sqrt(pow(delta[0], 2) + pow(delta[1], 2)); // cannot be zero here
-      direction = { delta[0] / d, delta[1] / d };
    }
 }
 

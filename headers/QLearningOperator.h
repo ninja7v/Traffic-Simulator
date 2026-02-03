@@ -39,7 +39,7 @@ private:
     /** Discount Factor: Importance of future rewards (0 = short-sighted, 1 = long-sighted) */
     static constexpr inline double gamma = 0.95;
     /** Exploration Rate: Probability of choosing a random action */
-    double epsilon = 1.0;
+    static constexpr inline double epsilon = 0.1; // 10% exploration
     /** Random number generator */
     std::mt19937 rng;
 /**@}*/

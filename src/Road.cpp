@@ -204,4 +204,3 @@ std::tuple<int, int, int> Road::getVehicleStats(double averageNewVehicles) const
 
    return std::make_tuple(occupancy, speedState, usage);
 }
-
