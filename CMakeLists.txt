@@ -93,6 +93,8 @@ target_link_libraries(unit_tests
 
 if(ENABLE_COVERAGE AND TARGET coverage_flags)
     target_link_libraries(unit_tests PRIVATE coverage_flags)
+    target_link_libraries(TrafficLib PRIVATE coverage_flags)
+    target_link_libraries(TrafficSimulator PRIVATE coverage_flags)
 endif()
 
 target_include_directories(unit_tests PRIVATE headers)

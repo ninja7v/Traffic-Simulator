@@ -65,5 +65,11 @@ jobs:
       - name: Generate and Check Coverage (Linux)
         if: runner.os == 'Linux'
         run: |
-          gcovr -r .. . --filter '../src/' --filter '../headers/' --fail-under-line 80 --print-summary
-          
+          gcovr -r .. . \
+            --filter '^src/' \
+            --filter '^headers/' \
+            --exclude '.*/Main\.cpp' \
+            --exclude-directories 'Dependencies' \
+            --gcov-ignore-parse-errors \
+            --print-summary \
+            --fail-under-line 80
