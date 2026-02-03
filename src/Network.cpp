@@ -107,26 +107,26 @@ Network::Network() {
    constants::stateSize = 1 + 3 * constants::maxConnectedInputRoads;
 }
 
-void Network::displayNetwork() {
+GLFWwindow* Network::initWindowAndImGui() {
    // Initialize GLFW
    if (!glfwInit()) {
-      return;
+       return nullptr;
    }
    // Create windows
    GLFWwindow* window = glfwCreateWindow(constants::SCREEN_WIDTH, constants::SCREEN_HEIGHT, "Traffic Simulator", nullptr, nullptr);
    if (!window) {
-      glfwTerminate();
-      return;
+       glfwTerminate();
+       return nullptr;
    }
    // Add icon
    int width, height, channels; // Doesn't need to be initialized
    unsigned char* pixels = stbi_load("Graphics/logo_TS.png", &width, &height, &channels, 4);
    if (pixels) {
-      GLFWimage logo;
-      logo.width  = width;
-      logo.height = height;
-      logo.pixels = pixels;
-      glfwSetWindowIcon(window, 1, &logo);
+       GLFWimage logo;
+       logo.width = width;
+       logo.height = height;
+       logo.pixels = pixels;
+       glfwSetWindowIcon(window, 1, &logo);
    }
    // Make the window's context current
    glfwMakeContextCurrent(window);
@@ -135,29 +135,30 @@ void Network::displayNetwork() {
    glLoadIdentity();            // Replace the current matrix with the identity matrix and starts us a fresh one
    glOrtho(0.0, static_cast<double>(constants::SCREEN_WIDTH), 0.0, static_cast<double>(constants::SCREEN_HEIGHT), 0.0, 1.0); // Set coordinate system
    glMatrixMode(GL_MODELVIEW);  // (default matrix mode) modelview matrix defines how objects are transformed (meaning translation, rotation and scaling)
-   glLoadIdentity();            // same as above comment
+   glLoadIdentity();
    glClearColor(0.1f, 0.5f, 0.1f, 0.0f); // Set background color as green
    glEnable(GL_BLEND);          // Make every component look smoother
+   // Setup Dear ImGui context
+   IMGUI_CHECKVERSION();
+   ImGui::CreateContext();
+   ImGuiIO& io = ImGui::GetIO(); (void)io;
+   ImGui::StyleColorsDark();
+   ImGui_ImplGlfw_InitForOpenGL(window, true);
+   ImGui_ImplOpenGL3_Init();
+   return window;
+}
 
+void Network::displayNetwork() {
+   GLFWwindow* window = initWindowAndImGui();
+    if (!window) {
+        return;
+    }
    // Initialize time
    global::t0 = clock();
    double lastTime = glfwGetTime();
    int nbFrames = 0;
    int lastFPS = 0;
-
-   // Setup Dear ImGui context
-   IMGUI_CHECKVERSION();
-   ImGui::CreateContext();
-   ImGuiIO& io = ImGui::GetIO(); (void)io;
-   //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-
-   // Setup Dear ImGui style
-   ImGui::StyleColorsDark();
-
-   // Setup Platform/Renderer backends
-   ImGui_ImplGlfw_InitForOpenGL(window, true);
-   ImGui_ImplOpenGL3_Init();
-
+   // Main loop (1 frame)
    while (!glfwWindowShouldClose(window)) {
       // FPS Counter
       const double currentTime = glfwGetTime();
@@ -167,41 +168,35 @@ void Network::displayNetwork() {
          nbFrames = 0;
          lastTime = currentTime;
       }
-
       // Start the Dear ImGui frame
       ImGui_ImplOpenGL3_NewFrame();
       ImGui_ImplGlfw_NewFrame();
       ImGui::NewFrame();
-
       // UI Window
+      ImGui::Begin("Simulation Control");
+      ImGui::Text("Metrics");
+      const char* method = nullptr;
+      switch (constants::learningType)
       {
-         ImGui::Begin("Simulation Control");
-         ImGui::Text("Metrics");
-         const char* method = nullptr;
-         switch (constants::learningType)
-         {
-            case LearningType::Q_LEARNING:  method = "Q-Learning"; break;
-            case LearningType::DQN:         method = "DQN";        break;
-            default:                        method = "None";       break;
-         }
-         ImGui::Text("Using %s method", method);
-         ImGui::Text("%d Intersections ", constants::nbIntersections);
-         ImGui::Text("%d Vehicles", global::numberOfVehicles);
-         ImGui::Text("%f Average time lost", 0.0); // To Do
-         ImGui::Text("%d FPS", lastFPS);
-         
-         ImGui::Separator();
-         ImGui::Text("Parameters");
-         float temp = static_cast<float>(constants::boost);
-         if (ImGui::SliderFloat("Boost", &temp, 0, 100)){
-            constants::boost = static_cast<double>(temp);
-            constants::updateBoostDependentConstants();
-         }
-         ImGui::SliderInt("Max number vehicle", &constants::nbVehicleMax, 0, 100);
-
-         ImGui::End();
+         case LearningType::Q_LEARNING:  method = "Q-Learning"; break;
+         case LearningType::DQN:         method = "DQN";        break;
+         default:                        method = "None";       break;
       }
-
+      ImGui::Text("Using %s method", method);
+      ImGui::Text("%d Intersections ", constants::nbIntersections);
+      ImGui::Text("%d Vehicles", global::numberOfVehicles);
+      ImGui::Text("%f Average time lost", 0.0); // To Do
+      ImGui::Text("%d FPS", lastFPS);
+      ImGui::Separator();
+      ImGui::Text("Parameters");
+      float temp = static_cast<float>(constants::boost);
+      if (ImGui::SliderFloat("Boost", &temp, 0, 100)){
+         constants::boost = static_cast<double>(temp);
+         constants::updateBoostDependentConstants();
+      }
+      ImGui::SliderInt("Max number vehicle", &constants::nbVehicleMax, 0, 100);
+      ImGui::End();
+      // Clear the screen
       glClear(GL_COLOR_BUFFER_BIT);
       // Roads
       for (const auto& r : Roads) {
@@ -233,22 +228,18 @@ void Network::displayNetwork() {
          if (r)
             r->displayLight();
       }
-
       // Rendering panel
       ImGui::Render();
       ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
       // Swap front and back buffers
       glfwSwapBuffers(window);
       // Poll for and process events
       glfwPollEvents();
    }
-   
    // Cleanup
    ImGui_ImplOpenGL3_Shutdown();
    ImGui_ImplGlfw_Shutdown();
    ImGui::DestroyContext();
-
    glfwTerminate();
 }
 
