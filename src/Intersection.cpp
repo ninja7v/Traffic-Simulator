@@ -24,7 +24,7 @@ Intersection::Intersection(const int n,
      lastSwitchTime(clock()) {
 }
 
-const bool Intersection::isRed(const int id) const {
+bool Intersection::isRed(const int id) const {
    return !input.empty() ? input.at(currentGreenRoadIndex) != id : true;
 }
 
@@ -45,7 +45,7 @@ void Intersection::addInputRoad(Road* r) {
    }
 }
 
-const int Intersection::getID() const {
+int Intersection::getID() const {
    return idIntersection;
 }
 
@@ -53,7 +53,7 @@ const std::vector<double> Intersection::getPosition() const {
    return position;
 }
 
-const int Intersection::getNumberInputRoads() const {
+int Intersection::getNumberInputRoads() const {
    return static_cast<int>(inputRoads.size());
 }
 

@@ -42,7 +42,7 @@ int DeepRLOperator::decide(const std::vector<int>& state,
     double maxQ = -1e9;
 
     for (int action : availableActions) {
-        if (action >= 0 && action < qValues.size()) {
+        if (action >= 0 && action < static_cast<int>(qValues.size())) {
             if (qValues[action] > maxQ) {
                 maxQ = qValues[action];
                 bestAction = action;
@@ -76,7 +76,7 @@ void DeepRLOperator::learn(const std::vector<int>& state,
     if (replayBuffer.size() < batchSize) return;
 
     // 2. Train on a random batch of experiences
-    for (int i = 0; i < batchSize; ++i) {
+    for (size_t i = 0; i < batchSize; ++i) {
         std::uniform_int_distribution<size_t> dist(0, replayBuffer.size() - 1);
         const auto& exp = replayBuffer[dist(rng)];
 
@@ -87,7 +87,7 @@ void DeepRLOperator::learn(const std::vector<int>& state,
         bool foundNext = false;
         
         for (int nextAction : availableActions) {
-             if (nextAction >= 0 && nextAction < nextQ.size()) {
+             if (nextAction >= 0 && nextAction < static_cast<int>(nextQ.size())) {
                  if (nextQ[nextAction] > maxNextQ) {
                      maxNextQ = nextQ[nextAction];
                      foundNext = true;
@@ -97,7 +97,7 @@ void DeepRLOperator::learn(const std::vector<int>& state,
         if (!foundNext) maxNextQ = 0.0;
         
         // Update the Q-value for the specific action taken
-        if (exp.action >= 0 && exp.action < targetQ.size()) {
+        if (exp.action >= 0 && exp.action < static_cast<int>(targetQ.size())) {
             // Bellman Equation: Target = Reward + Gamma * max(Q(next_state))
             // We want the current Q-value to move towards this target.
             targetQ[exp.action] = exp.reward + gamma * maxNextQ;

@@ -27,7 +27,7 @@ public:
    /** @brief Get trafic light color.
     * @param id Road ID
     * @returns true:Red / false:Green */
-   const bool isRed(const int id) const;
+   bool isRed(const int id) const;
    /** @brief Display the intersection as black point.*/
    void displayIntersection() const;
    /** @brief Add an input road in the input vector.
@@ -35,13 +35,13 @@ public:
    void addInputRoad(Road* r);
    /** @brief Getter.
     * @returns Intersection ID */
-   const int getID() const;
+   int getID() const;
    /** @brief Getter.
     * @returns Position on the grid */
    const std::vector<double> getPosition() const;
    /** @brief Getter.
     * @returns Number of input roads */
-   const int getNumberInputRoads() const;
+   int getNumberInputRoads() const;
    /** @brief Comparison operator. 
     * @returns Equal? */
    bool operator == (const Intersection i);
@@ -59,6 +59,7 @@ private:
    const std::array<double, 2> coordinates;
    /** Input / output road identifiers. */
    std::vector<int> input, output;
+   /** Input / output roads. */
    std::vector<Road*> inputRoads;
 
 /** @defgroup RL components */
@@ -66,7 +67,7 @@ private:
    /** operator to decide traffic light actions */
    std::shared_ptr<IntersectionOperator> op;
    /** Index of the current green road in 'input' vector */
-   int currentGreenRoadIndex; // Index in 'input' vector
+   int currentGreenRoadIndex;
    /** Last state observed */
    std::vector<int> lastState;
    /** Last action taken */
