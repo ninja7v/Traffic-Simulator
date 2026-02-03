@@ -11,20 +11,30 @@ jobs:
   lint:
     name: Lint / Format / Static Analysis
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      # Clang-Format + Clang-Tidy combined linter
-      - name: Run cpp-linter (clang-format + clang-tidy)
-        uses: cpp-linter/cpp-linter-action@v2
-        with:
-          style: llvm            # use default LLVM formatting
-          tidy-checks: '*'       # run default clang-tidy checks
-          version: latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install Lizard
+      run: pip install lizard
+
+    - name: Run Lizard (Code Complexity)
+      run: |
+        lizard src/ headers/ \
+          -w \
+          --CCN 15 \
+          --length 100 \
+          --arguments 10 \
+          --exclude "*/Dependencies/*"
+
+    - name: Run cpp-linter (clang-format + clang-tidy)
+      uses: cpp-linter/cpp-linter-action@v2
+      with:
+        style: llvm
+        tidy-checks: '*'
+        version: latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build_and_test:
     name: Build & Test (${{ matrix.os }})

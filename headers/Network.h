@@ -24,6 +24,8 @@ public:
 protected:
 
 private:
+   /** @brief Helper to initialize the window and ImGui. */
+   GLFWwindow* initWindowAndImGui();
    /** Global Intersection Operator. */
    std::shared_ptr<IntersectionOperator> globalOperator;
    /** Road Map. */
