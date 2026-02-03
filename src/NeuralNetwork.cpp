@@ -92,7 +92,7 @@ void NeuralNetwork::train(const std::vector<double>& input, const std::vector<do
         std::vector<double> nextErrors(layer.inputSize, 0.0);
 
         for (int n = 0; n < layer.outputSize; ++n) {         
-            const double derivative = (i == layers.size() - 1) ? 1.0 : reluDerivative(layer.z_values[n]); 
+            const double derivative = (i == static_cast<int>(layers.size()) - 1) ? 1.0 : reluDerivative(layer.z_values[n]); 
             const double delta = errors[n] * derivative;
 
             // Update weights and biases

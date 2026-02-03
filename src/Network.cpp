@@ -260,7 +260,7 @@ void Network::addVehicle() {
       } while (destination == idStart);
       return Intersections[destination].get();
    };
-   if (Vehicles.size() < constants::nbVehicleMax)
+   if (static_cast<int>(Vehicles.size()) < constants::nbVehicleMax)
       for (const auto& r : Roads) {
          if (r &&
              ((r->containVehicle() && r->getVehicles().back()->distance(r->getStart()) > 0.001) ||
@@ -289,7 +289,7 @@ void Network::addVehicle() {
             r->addVehicle(v);
             global::numberOfVehicles += 1;
          }
-         if (Vehicles.size() >= constants::nbVehicleMax) {
+         if (static_cast<int>(Vehicles.size()) >= constants::nbVehicleMax) {
             break;
          }
       }
