@@ -68,6 +68,7 @@ jobs:
           gcovr -r .. . \
             --filter '^src/' \
             --filter '^headers/' \
+            --exclude '.*/Main\.cpp' \
             --exclude-directories 'Dependencies' \
             --gcov-ignore-parse-errors \
             --print-summary \
