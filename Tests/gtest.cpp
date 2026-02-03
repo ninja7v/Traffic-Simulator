@@ -62,13 +62,12 @@ TEST(RoadTest, VehicleMovement) {
     auto car2 = std::make_shared<Car>(i1.get(), i2.get(), 1, i2.get(), track);
     r->addVehicle(car1);
     r->addVehicle(car2);
+    EXPECT_TRUE(r->containVehicle());
     
     // Move cars on road
     r->moveVehicles();
-    
     EXPECT_FALSE(car1->getStatus());
     EXPECT_FALSE(car2->getStatus());
-    EXPECT_TRUE(r->containVehicle());
 }
 
 // ------------------------- Map tests -------------------------
@@ -139,6 +138,16 @@ TEST(VehicleTest, Properties) {
     Bike b(i1.get(), i2.get(), 1, i2.get(), track);
     Car c(i1.get(), i2.get(), 2, i2.get(), track);
     Truck t(i1.get(), i2.get(), 3, i2.get(), track);
+
+    // ID
+    EXPECT_EQ(b.getID(), 1);
+
+    // Destination
+    EXPECT_EQ(c.getDestination(), i2.get());
+    EXPECT_EQ(c.nextRoad(), nullptr);
+
+    // enterRoadTime
+    EXPECT_GT(t.getEnterRoadTime(), 0);
 
     // Speed: Truck < Car < Bike
     EXPECT_GT(b.getSpeedMax(), c.getSpeedMax());
@@ -213,16 +222,24 @@ TEST(IntersectionOperatorTest, Basic) {
     const std::vector<int> actions = {0, 1};
     const double reward = 1.0;
 
-    const int action1 = op1->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
-    const int action2 = op2->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
+    int action1 = op1->decide(state, actions);
+    int action2 = op2->decide(state, actions);
 
+    op1->learn(state, action1, reward, state, actions);
+    op2->learn(state, action2, reward, state, actions);
+
+    // Same state
+    action1 = op1->decide(state, actions);
+    action2 = op2->decide(state, actions);
+
+    op1->learn(state, action1, reward, state, actions);
+    op2->learn(state, action2, reward, state, actions);
+    
+    // New state
     std::vector<int> nextState1 = {1, 1, 1, 1, 1, 1, 1};
     std::vector<int> nextState2 = {1, 1, 1, 1, 1, 1, 1};
-    op1->learn(state, action1, reward, nextState1, actions);
-    op2->learn(state, action2, reward, nextState2, actions);
-
-    const int nextAction1 = op1->decide(std::vector<int>{0,0,1}, std::vector<int>{0,1});
-    const int nextAction2 = op2->decide(std::vector<int>{0,0,1}, std::vector<int>{0,1});
+    const int nextAction1 = op1->decide(nextState1, actions);
+    const int nextAction2 = op2->decide(nextState2, actions);
     EXPECT_TRUE(nextAction1 == 0 || nextAction1 == 1);
     EXPECT_TRUE(nextAction2 == 0 || nextAction2 == 1);
 }
