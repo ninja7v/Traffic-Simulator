@@ -13,6 +13,9 @@
 #include "Road.h"
 #include "Map.h"
 
+// Forward declaration
+struct GLFWwindow;
+
 class Network {
 public:
    /** @brief Default constructor.

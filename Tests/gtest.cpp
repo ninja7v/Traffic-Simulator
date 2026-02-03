@@ -21,16 +21,13 @@
 TEST(RoadTest, BasicBehavior) {
     auto i1 = std::make_unique<Intersection>(1, std::vector<double>{0.0, 0.0});
     auto i2 = std::make_unique<Intersection>(2, std::vector<double>{0.0, 10.0});
-
-    // Road expects raw pointers
     auto r = std::make_unique<Road>(1, i1.get(), i2.get());
+    if (r == nullptr) {
+        FAIL() << "Failed to create Road instances.";
+    }
+
     std::list<Road*> track{ r.get() };
     auto car = std::make_shared<Car>(i1.get(), i2.get(), 1, i2.get(), track);
-
-    ASSERT_NE(i1.get(), nullptr);
-    ASSERT_NE(i2.get(), nullptr);
-    ASSERT_NE(r, nullptr);
-    ASSERT_NE(car, nullptr);
 
     EXPECT_FALSE(r->containVehicle());
     EXPECT_EQ(r->getID(), 1);
@@ -55,20 +52,22 @@ TEST(RoadTest, BasicBehavior) {
     EXPECT_FALSE(r->containVehicle());
 }
 
-
 TEST(RoadTest, VehicleMovement) {
     auto i1 = std::make_unique<Intersection>(1, std::vector<double>{0.0, 0.0});
     auto i2 = std::make_unique<Intersection>(2, std::vector<double>{0.0, 10.0});
     auto r = std::make_unique<Road>(1, i1.get(), i2.get());
     
     std::list<Road*> track; // Empty track means i2 is final destination
-    auto car = std::make_shared<Car>(i1.get(), i2.get(), 1, i2.get(), track);
-    r->addVehicle(car);
+    auto car1 = std::make_shared<Car>(i1.get(), i2.get(), 1, i2.get(), track);
+    auto car2 = std::make_shared<Car>(i1.get(), i2.get(), 1, i2.get(), track);
+    r->addVehicle(car1);
+    r->addVehicle(car2);
     
-    // Move car on road
+    // Move cars on road
     r->moveVehicles();
     
-    EXPECT_FALSE(car->getStatus());
+    EXPECT_FALSE(car1->getStatus());
+    EXPECT_FALSE(car2->getStatus());
     EXPECT_TRUE(r->containVehicle());
 }
 
@@ -90,47 +89,10 @@ TEST(MapTest, Connections) {
     EXPECT_EQ(existing_track.front(), r.get());
     
     auto non_existing_track = m.track(i2.get(), i1.get());
-    EXPECT_TRUE(m.track(i2.get(), i1.get()).empty());
-}
+    EXPECT_TRUE(non_existing_track.empty());
 
-// ------------------------- Intersection Operator tests -------------------------
-TEST(IntersectionOperatorTest, Basic) {
-    auto op1 = std::make_unique<QLearningOperator>();
-    auto op2 = std::make_unique<DeepRLOperator>();
-
-    op1->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
-    op2->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
-
-    op1->learn(std::vector<int>{0,0,0}, 0, 1.0, std::vector<int>{0,0,1}, std::vector<int>{0,1});
-    op2->learn(std::vector<int>{0,0,0}, 0, 1.0, std::vector<int>{0,0,1}, std::vector<int>{0,1});
-}
-
-// ------------------------- Intersection tests -------------------------
-TEST(IntersectionTest, Basic) {
-    auto op = std::make_shared<QLearningOperator>();
-    auto i1 = std::make_unique<Intersection>(1, std::vector<double>{10.0, 20.0}, op);
-    auto i2 = std::make_unique<Intersection>(2, std::vector<double>{10.0, 30.0}, op);
-    auto i3 = std::make_unique<Intersection>(3, std::vector<double>{10.0, 40.0}, op);
-    auto r1 = std::make_unique<Road>(1, i1.get(), i3.get());
-    auto r2 = std::make_unique<Road>(2, i2.get(), i3.get());
-
-    i3->addInputRoad(r1.get());
-    i3->addInputRoad(r2.get());
-
-    EXPECT_EQ(i1->getID(), 1);
-    EXPECT_EQ(i1->getPosition()[0], 10.0);
-    EXPECT_EQ(i1->getPosition()[1], 20.0);
-    
-    // Initially green
-    EXPECT_FALSE(i3->isRed(1));
-    
-    EXPECT_EQ(i3->getNumberInputRoads(), 2);
-    
-    // Test that it doesn't crash during update
-    for (int k=0; k<10; ++k) {
-        i3->update();
-    }
-    SUCCEED();
+    auto nothing_track = m.track(i1.get(), i1.get());
+    EXPECT_TRUE(nothing_track.empty());
 }
 
 // ------------------------- Network tests -------------------------
@@ -169,9 +131,7 @@ TEST(VehicleTest, MovementLogic) {
     EXPECT_LT(car.getPosition()[1], 50.0);
 }
 
-
-// ------------------------- Vehicle Subtypes -------------------------
-TEST(SubtypesTest, Properties) {
+TEST(VehicleTest, Properties) {
     auto i1 = std::make_unique<Intersection>(1, std::vector<double>{0,0});
     auto i2 = std::make_unique<Intersection>(2, std::vector<double>{0,10});
     std::list<Road*> track;
@@ -200,9 +160,73 @@ TEST(SubtypesTest, Properties) {
     EXPECT_NE(b.getColor(), c.getColor());
     EXPECT_NE(c.getColor(), t.getColor());
     EXPECT_NE(b.getColor(), t.getColor());
+
+    // Type
+    EXPECT_TRUE(b.is2Wheeler());
+    EXPECT_FALSE(c.is2Wheeler());
+    EXPECT_FALSE(t.is2Wheeler());
 }
 
-// ------------------------- Neural Network tests -------------------------
+// ------------------------- Intersection tests -------------------------
+TEST(IntersectionTest, Basic) {
+    auto op = std::make_shared<QLearningOperator>();
+    auto i1 = std::make_unique<Intersection>(1, std::vector<double>{10.0, 20.0}, op);
+    auto i2 = std::make_unique<Intersection>(2, std::vector<double>{10.0, 30.0}, op);
+    auto i3 = std::make_unique<Intersection>(3, std::vector<double>{10.0, 40.0}, op);
+    if (i1 == nullptr || i2 == nullptr || i3 == nullptr) {
+        FAIL() << "Failed to create Intersection instances.";
+    }
+
+    auto r1 = std::make_unique<Road>(1, i1.get(), i3.get());
+    auto r2 = std::make_unique<Road>(2, i2.get(), i3.get());
+
+    i3->addInputRoad(r1.get());
+    i3->addInputRoad(r2.get());
+
+    EXPECT_EQ(i1->getID(), 1);
+    EXPECT_EQ(i1->getPosition()[0], 10.0);
+    EXPECT_EQ(i1->getPosition()[1], 20.0);
+    EXPECT_TRUE(*i1 == *i1);
+    EXPECT_FALSE(*i1 == *i2);
+    
+    // Initially green
+    EXPECT_FALSE(i3->isRed(1));
+    
+    EXPECT_EQ(i3->getNumberInputRoads(), 2);
+    
+    // Test that it doesn't crash during update
+    for (int k=0; k<10; ++k) {
+        i3->update();
+    }
+    SUCCEED();
+}
+
+// ------------------------- Intersection Operator tests -------------------------
+TEST(IntersectionOperatorTest, Basic) {
+    auto op1 = std::make_unique<QLearningOperator>();
+    auto op2 = std::make_unique<DeepRLOperator>();
+    if (op1 == nullptr || op2 == nullptr) {
+        FAIL() << "Failed to create IntersectionOperator instances.";
+    }
+
+    const std::vector<int> state = {1, 0, 1, 0, 1, 0, 1}; // size 7
+    const std::vector<int> actions = {0, 1};
+    const double reward = 1.0;
+
+    const int action1 = op1->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
+    const int action2 = op2->decide(std::vector<int>{0,0,0}, std::vector<int>{0,1});
+
+    std::vector<int> nextState1 = {1, 1, 1, 1, 1, 1, 1};
+    std::vector<int> nextState2 = {1, 1, 1, 1, 1, 1, 1};
+    op1->learn(state, action1, reward, nextState1, actions);
+    op2->learn(state, action2, reward, nextState2, actions);
+
+    const int nextAction1 = op1->decide(std::vector<int>{0,0,1}, std::vector<int>{0,1});
+    const int nextAction2 = op2->decide(std::vector<int>{0,0,1}, std::vector<int>{0,1});
+    EXPECT_TRUE(nextAction1 == 0 || nextAction1 == 1);
+    EXPECT_TRUE(nextAction2 == 0 || nextAction2 == 1);
+}
+
 TEST(NeuralNetworkTest, BasicTraining) {
     std::vector<int> topology = {2, 4, 1};
     NeuralNetwork nn(topology, 0.1);
@@ -220,24 +244,4 @@ TEST(NeuralNetworkTest, BasicTraining) {
     // Prediction should change
     auto p2 = nn.predict(input);
     EXPECT_NE(p1[0], p2[0]);
-}
-
-// ------------------------- DeepRLOperator tests -------------------------
-TEST(DeepRLOperatorTest, Robustness) {
-    DeepRLOperator op;
-    std::vector<int> state = {1, 0, 1, 0, 1, 0, 1}; // size 7
-    std::vector<int> actions = {0, 1};
-    
-    // Test decision
-    const int action = op.decide(state, actions);
-    EXPECT_TRUE(action == 0 || action == 1);
-    
-    // Test learning
-    std::vector<int> nextState = {1, 1, 1, 1, 1, 1, 1};
-    op.learn(state, action, 1.0, nextState, actions);
-    
-    // Should still work
-    const int nextAction = op.decide(nextState, actions);
-    EXPECT_TRUE(nextAction == 0 || nextAction == 1);
-
 }
